@@ -16,6 +16,8 @@ public enum Permission
 	CHAT("chat"),
 	CHATSPY("chatspy"),
 	CLAIM("claim"),
+	COADMIN("coadmin"),
+	COADMIN_ANY("coadmin.any"),
 	CONFIG("config"),
 	CREATE("create"),
 	DEINVITE("deinvite"),
@@ -59,13 +61,20 @@ public enum Permission
 	SAVE("save"),
 	SETHOME("sethome"),
 	SETHOME_ANY("sethome.any"),
+	SETWARP("setwarp"),
 	SHOW("show"),
 	TAG("tag"),
 	TITLE("title"),
 	UNCLAIM("unclaim"),
 	UNCLAIM_ALL("unclaimall"),
-	VERSION("version"),
-	;
+	VERSION("version"), 
+	WARP("warp"), 
+	OFFICER("officer"),
+	OFFICER_ANY("officer.any"), 
+	PERM("perm"), 
+	PERM_SHOW("perm.show"), 
+	PRUNE("prune"), CLEAN("clean"),
+	SHOW_ROLES("showroles");
 	
 	public final String node;
 	

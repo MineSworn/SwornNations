@@ -1,7 +1,7 @@
-name: Factions
-version: 1.6.8
+name: SwornNations
+version: 1.0
 main: com.massivecraft.factions.P
-authors: [Olof Larsson, Brett Flannigan]
+authors: [Olof Larsson, Brett Flannigan, t7seven7t]
 softdepend: [PermissionsEx, Permissions, Essentials, EssentialsChat, HeroChat, iChat, LocalAreaChat, LWC, nChat, ChatManager, CAPI, AuthMe, Vault, Spout, WorldEdit, WorldGuard, AuthDB, CaptureThePoints, CombatTag]
 commands:
   factions:
@@ -16,6 +16,8 @@ permissions:
       factions.lock: true
       factions.reload: true
       factions.save: true
+      factions.prune: true
+      factions.clean: true
   factions.*:
     description: This is just an alias for factions.kit.admin
     children:
@@ -35,6 +37,8 @@ permissions:
       factions.join.others: true
       factions.admin.any: true
       factions.mod.any: true
+      factions.officer.any: true
+      factions.coadmin.any: true
   factions.kit.halfmod:
     description: Zones, bypassing, kicking, and chatspy
     children:
@@ -58,6 +62,7 @@ permissions:
       factions.autoclaim: true
       factions.chat: true
       factions.claim: true
+      factions.coadmin: true
       factions.deinvite: true
       factions.description: true
       factions.disband: true
@@ -85,6 +90,12 @@ permissions:
       factions.version: true
       factions.unclaim: true
       factions.unclaimall: true
+      factions.warp: true
+      factions.setwarp: true
+      factions.perm: true
+      factions.perm.show: true
+      factions.officer: true
+      factions.showroles: true
   factions.admin:
     description: hand over your admin rights
   factions.admin.any:
@@ -222,3 +233,25 @@ permissions:
     description: unclaim the land where you are standing
   factions.unclaimall:
     description: unclaim all of your factions land
+  factions.warp:
+    description: warp to faction warp
+  factions.setwarp:
+    description: set the faction warp
+  factions.officer:
+    description: promote user to officer
+  factions.officer.any:
+    description: promote any user to officer
+  factions.perm:
+    description: change faction perms
+  factions.perm.show:
+    description: show faction perms
+  factions.prune:
+    description: prune faction claims
+  factions.clean:
+    description: cleans players from factions file
+  factions.showroles:
+    description: show faction roles
+  factions.coadmin:
+    description: promote user to co-admin
+  factions.coadmin.any:
+    description: promote any user to co-admin

@@ -71,6 +71,7 @@ public class CmdList extends FCommand
 		});
 		
 		ArrayList<String> lines = new ArrayList<String>();
+		/*
 		lines.add(p.txt.parse("<i>Factionless<i> %d online", Factions.i.getNone().getFPlayersWhereOnline(true).size()));
 		for (Faction faction : factionList)
 		{
@@ -85,6 +86,34 @@ public class CmdList extends FCommand
 		}
 		
 		sendMessage(p.txt.getPage(lines, this.argAsInt(0, 1), "Faction List"));
+		*/
+		
+		factionList.add(0, Factions.i.getNone());
+		final int pageHeight = 9;
+		int pageNumber = this.argAsInt(0, 1);
+		int pageCount = (factionList.size() / pageHeight) + 1;
+		int start = (pageNumber - 1) * pageHeight;
+		int end = start + pageHeight;
+		if (end > factionList.size())
+			end = factionList.size();
+		
+		lines.add(p.txt.titleize("Faction List " + pageNumber + "/" + pageCount));
+		
+		for (Faction faction : factionList.subList(start, end)) {
+			if (faction.isNone()) {
+				lines.add(p.txt.parse("<i>Factionless<i> %d online", Factions.i.getNone().getFPlayersWhereOnline(true).size()));
+				continue;
+			}
+			lines.add(	p.txt.parse("%s<i> %d/%d online, %d/%d/%d",
+						faction.getTag(fme),
+						faction.getFPlayersWhereOnline(true).size(),
+						faction.getFPlayers().size(),
+						faction.getLandRounded(),
+						faction.getPowerRounded(),
+						faction.getPowerMaxRounded()));
+		}
+		
+		sendMessage(lines);
 	}
 	
 }

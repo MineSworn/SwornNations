@@ -7,14 +7,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import me.t7seven7t.factions.util.MyMaterial;
+import me.t7seven7t.factions.util.MyMaterialTypeAdapter;
+import me.t7seven7t.factions.util.NPermissionManagerTypeAdapter;
+import me.t7seven7t.swornnations.npermissions.NPermissionManager;
+
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-
 import com.massivecraft.factions.cmd.CmdAutoHelp;
 import com.massivecraft.factions.cmd.FCmdRoot;
 import com.massivecraft.factions.integration.Econ;
@@ -30,6 +35,7 @@ import com.massivecraft.factions.listeners.FactionsExploitListener;
 import com.massivecraft.factions.listeners.FactionsPlayerListener;
 import com.massivecraft.factions.listeners.FactionsServerListener;
 import com.massivecraft.factions.struct.ChatMode;
+import com.massivecraft.factions.util.AutoCleanupTask;
 import com.massivecraft.factions.util.AutoLeaveTask;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MapFLocToStringSetTypeAdapter;
@@ -37,9 +43,21 @@ import com.massivecraft.factions.util.MyLocationTypeAdapter;
 import com.massivecraft.factions.zcore.MPlugin;
 import com.massivecraft.factions.zcore.util.TextUtil;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
+import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 
+/**
+ * 
+ * @author t7seven7t
+ * 
+ * This plugin was forked from Olof Larsson and Brett Flannigan's original 
+ * Factions plugin: https://github.com/MassiveCraft/Factions
+ * 
+ * The goal of the SwornFactions fork is to add extra functionality to the
+ * original plugin and continue support of the 1.6 branch of Factions for
+ * future Minecraft updates.
+ *
+ */
 
 public class P extends MPlugin
 {
@@ -63,7 +81,7 @@ public class P extends MPlugin
 	// Commands
 	public FCmdRoot cmdBase;
 	public CmdAutoHelp cmdAutoHelp;
-	
+	 
 	public P()
 	{
 		p = this;
@@ -87,6 +105,16 @@ public class P extends MPlugin
 		FPlayers.i.loadFromDisc();
 		Factions.i.loadFromDisc();
 		Board.load();
+		//BackupHandler.chkBackupNeeded();
+		
+		if (Conf.resetAllPerms) {
+			for (Faction f : Factions.i.get()) {
+				f.resetPermManager();
+			}
+			Conf.resetAllPerms = false;
+			Factions.i.saveToDisc();
+			Conf.save();
+		}
 		
 		// Add Base Commands
 		this.cmdBase = new FCmdRoot();
@@ -104,6 +132,9 @@ public class P extends MPlugin
 			Worldguard.init(this);
 		}
 
+		//start up task which runs the autoRemoveClaimsAfterTime routine
+		startAutoCleanupTask();
+		
 		// start up task which runs the autoLeaveAfterDaysOfInactivity routine
 		startAutoLeaveTask(false);
 
@@ -132,7 +163,9 @@ public class P extends MPlugin
 		.disableHtmlEscaping()
 		.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
 		.registerTypeAdapter(LazyLocation.class, new MyLocationTypeAdapter())
-		.registerTypeAdapter(mapFLocToStringSetType, new MapFLocToStringSetTypeAdapter());
+		.registerTypeAdapter(MyMaterial.class, new MyMaterialTypeAdapter())
+		.registerTypeAdapter(mapFLocToStringSetType, new MapFLocToStringSetTypeAdapter())
+		.registerTypeAdapter(NPermissionManager.class, new NPermissionManagerTypeAdapter());
 	}
 
 	@Override
@@ -143,6 +176,7 @@ public class P extends MPlugin
 		{
 			Board.save();
 			Conf.save();
+			//BackupHandler.chkBackupNeeded();
 		}
 		EssentialsFeatures.unhookChat();
 		if (AutoLeaveTask != null)
@@ -165,6 +199,13 @@ public class P extends MPlugin
 		{
 			long ticks = (long)(20 * 60 * Conf.autoLeaveRoutineRunsEveryXMinutes);
 			AutoLeaveTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoLeaveTask(), ticks, ticks);
+		}
+	}
+	
+	public void startAutoCleanupTask() {
+		if (Conf.autoCleanupClaimsRunsEveryXMinutes > 0.0) {
+			long ticks = (long)(20 * 60 * Conf.autoCleanupClaimsRunsEveryXMinutes);
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new AutoCleanupTask(), ticks, ticks);
 		}
 	}
 
@@ -222,7 +263,7 @@ public class P extends MPlugin
 	// enabled or use of the Factions f command without a slash; combination of isPlayerFactionChatting() and isFactionsCommand()
 	
 	
-	public boolean shouldLetFactionsHandleThisChat(PlayerChatEvent event)
+	public boolean shouldLetFactionsHandleThisChat(AsyncPlayerChatEvent event)
 	{
 		if (event == null) return false;
 		return (isPlayerFactionChatting(event.getPlayer()) || isFactionsCommand(event.getMessage()));
@@ -340,7 +381,7 @@ public class P extends MPlugin
 	// check if player is allowed to build/destroy in a particular location
 	public boolean isPlayerAllowedToBuildHere(Player player, Location location)
 	{
-		return FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "", true);
+		return FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "", true, location.getWorld().getBlockAt(location).getType());
 	}
 
 	// check if player is allowed to interact with the specified block (doors/chests/whatever)
@@ -350,8 +391,8 @@ public class P extends MPlugin
 	}
 
 	// check if player is allowed to use a specified item (flint&steel, buckets, etc) in a particular location
-	public boolean isPlayerAllowedToUseThisHere(Player player, Location location, Material material)
+	public boolean isPlayerAllowedToUseThisHere(Player player, Location location, ItemStack item)
 	{
-		return FactionsPlayerListener.playerCanUseItemHere(player, location, material, true);
+		return FactionsPlayerListener.playerCanUseItemHere(player, location, item, true);
 	}
 }

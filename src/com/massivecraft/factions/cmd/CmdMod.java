@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.struct.Permission;
@@ -23,6 +25,7 @@ public class CmdMod extends FCommand
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.MODERATOR;
 	}
 	
 	@Override
@@ -40,12 +43,6 @@ public class CmdMod extends FCommand
 			return;
 		}
 
-		if (fme != null && fme.getRole() != Role.ADMIN && !permAny)
-		{
-			msg("<b>You are not the faction admin.");
-			return;
-		}
-
 		if (you == fme && !permAny)
 		{
 			msg("<b>The target player musn't be yourself.");
@@ -57,12 +54,18 @@ public class CmdMod extends FCommand
 			msg("<b>The target player is a faction admin. Demote them first.");
 			return;
 		}
+		
+		if (you.getRole() == Role.COADMIN)
+		{
+			msg("<b>The target player is a faction co-admin. Demote them first.");
+			return;
+		}
 
 		if (you.getRole() == Role.MODERATOR)
 		{
 			// Revoke
 			you.setRole(Role.NORMAL);
-			targetFaction.msg("%s<i> is no longer moderator in your faction.", you.describeTo(targetFaction, true));
+			targetFaction.msg("%s<i> is no longer a moderator in your nation.", you.describeTo(targetFaction, true));
 			msg("<i>You have removed moderator status from %s<i>.", you.describeTo(fme, true));
 		}
 		else

@@ -76,7 +76,7 @@ public class CmdAdmin extends FCommand
 
 		// promote target player, and demote existing admin if one exists
 		if (admin != null)
-			admin.setRole(Role.MODERATOR);
+			admin.setRole(Role.COADMIN);
 		fyou.setRole(Role.ADMIN);
 		msg("<i>You have promoted %s<i> to the position of faction admin.", fyou.describeTo(fme, true));
 

@@ -8,6 +8,7 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 
 public class CmdShow extends FCommand
@@ -44,6 +45,8 @@ public class CmdShow extends FCommand
 		if ( ! payForCommand(Conf.econCostShow, "to show faction information", "for showing faction information")) return;
 
 		Collection<FPlayer> admins = faction.getFPlayersWhereRole(Role.ADMIN);
+		Collection<FPlayer> coadmins = faction.getFPlayersWhereRole(Role.COADMIN);
+		Collection<FPlayer> officers = faction.getFPlayersWhereRole(Role.OFFICER);
 		Collection<FPlayer> mods = faction.getFPlayersWhereRole(Role.MODERATOR);
 		Collection<FPlayer> normals = faction.getFPlayersWhereRole(Role.NORMAL);
 		
@@ -96,28 +99,20 @@ public class CmdShow extends FCommand
 		String enemyList = p.txt.parse("<a>Enemies: ");
 		for (Faction otherFaction : Factions.i.get())
 		{
-			if (otherFaction == faction)
-			{
-				continue;
-			}
+			if (otherFaction == faction) continue;
+			
+			Relation rel = otherFaction.getRelationTo(faction);
+			if (!rel.isAlly() && !rel.isEnemy()) continue;
 			listpart = otherFaction.getTag(fme)+p.txt.parse("<i>")+", ";
-			if (otherFaction.getRelationTo(faction).isAlly())
-			{
+			if (rel.isAlly())
 				allyList += listpart;
-			}
-			else if (otherFaction.getRelationTo(faction).isEnemy())
-			{
+			else if (rel.isEnemy())
 				enemyList += listpart;
-			}
 		}
 		if (allyList.endsWith(", "))
-		{
 			allyList = allyList.substring(0, allyList.length()-2);
-		}
 		if (enemyList.endsWith(", "))
-		{
 			enemyList = enemyList.substring(0, enemyList.length()-2);
-		}
 		
 		sendMessage(allyList);
 		sendMessage(enemyList);
@@ -137,12 +132,32 @@ public class CmdShow extends FCommand
 				offlineList += listpart;
 			}
 		}
+		for (FPlayer follower : coadmins)
+		{
+			listpart = follower.getNameAndTitle(fme)+p.txt.parse("<i>")+", ";
+			if (follower.isOnlineAndVisibleTo(me))
+			{
+				onlineList += listpart;
+			}
+			else
+			{
+				offlineList += listpart;
+			}
+		}
 		for (FPlayer follower : mods)
 		{
 			listpart = follower.getNameAndTitle(fme)+p.txt.parse("<i>")+", ";
 			if
 			(follower.isOnlineAndVisibleTo(me))
 			{
+				onlineList += listpart;
+			} else {
+				offlineList += listpart;
+			}
+		}
+		for (FPlayer follower : officers) {
+			listpart = follower.getNameAndTitle(fme)+p.txt.parse("<i>")+", ";
+			if (follower.isOnlineAndVisibleTo(me)) {
 				onlineList += listpart;
 			} else {
 				offlineList += listpart;

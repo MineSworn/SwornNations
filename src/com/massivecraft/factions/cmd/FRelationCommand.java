@@ -25,7 +25,7 @@ public abstract class FRelationCommand extends FCommand
 		
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
-		senderMustBeModerator = true;
+		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
 	}
 	

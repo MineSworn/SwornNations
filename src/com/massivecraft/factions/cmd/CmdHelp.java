@@ -84,6 +84,20 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdSethome.getUseageTemplate(true) );
 		helpPages.add(pageLines);
 		
+		pageLines = new ArrayList<String>();
+		pageLines.add(p.cmdBase.cmdSetwarp.getUseageTemplate(true));
+		pageLines.add(p.cmdBase.cmdWarp.getUseageTemplate(true));
+		pageLines.add(p.txt.parse("<i>Use the following commands to modify permissions"));
+		pageLines.add(p.txt.parse("<i>for each role or player in your faction"));
+		pageLines.add(p.cmdBase.cmdPerm.getUseageTemplate(true));
+		pageLines.add(p.cmdBase.cmdShowPerms.getUseageTemplate(true));
+		pageLines.add(p.cmdBase.cmdShowRoles.getUseageTemplate(true));
+		pageLines.add("");
+		pageLines.add("");
+
+
+		helpPages.add(pageLines);
+		
 		if (Econ.isSetup() && Conf.econEnabled && Conf.bankEnabled)
 		{
 			pageLines = new ArrayList<String>();
@@ -105,7 +119,9 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdUnclaim.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdUnclaimall.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdKick.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdOfficer.getUseageTemplate(true));
 		pageLines.add( p.cmdBase.cmdMod.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdCoadmin.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdAdmin.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdTitle.getUseageTemplate(true) );
 		pageLines.add( p.txt.parse("<i>Player titles are just for fun. No rules connected to them." ));

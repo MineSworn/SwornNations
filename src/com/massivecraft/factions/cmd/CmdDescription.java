@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
@@ -22,8 +24,9 @@ public class CmdDescription extends FCommand
 		
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
-		senderMustBeModerator = true;
+		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.DESCRIPTION;
 	}
 	
 	@Override

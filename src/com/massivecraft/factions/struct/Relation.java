@@ -7,7 +7,8 @@ import com.massivecraft.factions.Conf;
 
 public enum Relation
 {
-	MEMBER(3, "member"),
+	MEMBER(4, "member"),
+	CONFED(3, "confed"),
 	ALLY(2, "ally"),
 	NEUTRAL(1, "neutral"),
 	ENEMY(0, "enemy");
@@ -26,11 +27,13 @@ public enum Relation
 	{
 		return this.nicename;
 	}
-	
+		
 	public boolean isMember()
 	{
 		return this == MEMBER;
 	}
+	
+	public boolean isConfed() {return this == CONFED;}
 	
 	public boolean isAlly()
 	{
@@ -61,6 +64,8 @@ public enum Relation
 	{
 		if (this == MEMBER)
 			return Conf.colorMember;
+		else if (this == CONFED)
+			return Conf.colorConfed;
 		else if (this == ALLY)
 			return Conf.colorAlly;
 		else if (this == NEUTRAL)
@@ -81,6 +86,8 @@ public enum Relation
 				return Conf.territoryEnemyDenyBuild;
 			else if (isAlly())
 				return Conf.territoryAllyDenyBuild;
+			else if (isConfed())
+				return Conf.territoryConfedDenyBuild;
 			else
 				return Conf.territoryDenyBuild;
 		}
@@ -90,6 +97,8 @@ public enum Relation
 				return Conf.territoryEnemyDenyBuildWhenOffline;
 			else if (isAlly())
 				return Conf.territoryAllyDenyBuildWhenOffline;
+			else if (isConfed())
+				return Conf.territoryConfedDenyBuildWhenOffline;
 			else
 				return Conf.territoryDenyBuildWhenOffline;
 		}
@@ -105,7 +114,7 @@ public enum Relation
 		{
 			if (isEnemy())
 				return Conf.territoryEnemyPainBuild;
-			else if (isAlly())
+			else if (isAlly() || isConfed())
 				return Conf.territoryAllyPainBuild;
 			else
 				return Conf.territoryPainBuild;
@@ -114,7 +123,7 @@ public enum Relation
 		{
 			if (isEnemy()) 
 				return Conf.territoryEnemyPainBuildWhenOffline;
-			else if (isAlly())
+			else if (isAlly() || isConfed())
 				return Conf.territoryAllyPainBuildWhenOffline;
 			else
 				return Conf.territoryPainBuildWhenOffline;
@@ -130,6 +139,8 @@ public enum Relation
 			return Conf.territoryEnemyDenyUseage;
 		else if (isAlly())
 			return Conf.territoryAllyDenyUseage;
+		else if (isConfed())
+			return Conf.territoryConfedDenyUseage;
 		else
 			return Conf.territoryDenyUseage;
 	}
@@ -140,6 +151,8 @@ public enum Relation
 			return Conf.econCostEnemy;
 		else if (isAlly())
 			return Conf.econCostAlly;
+		else if (isConfed())
+			return Conf.econCostConfed;
 		else
 			return Conf.econCostNeutral;
 	}

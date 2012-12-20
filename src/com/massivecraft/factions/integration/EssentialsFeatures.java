@@ -56,26 +56,12 @@ public class EssentialsFeatures
 			Class.forName("com.earth2me.essentials.chat.EssentialsLocalChatEvent");
 			integrateChat(essChat);
 		}
-		catch (ClassNotFoundException ex)
-		{
-			// no? try older Essentials 2.x integration method
-			try
-			{
-				EssentialsOldVersionFeatures.integrateChat(essChat);
-			}
-			catch (NoClassDefFoundError ex2) { /* no known integration method, then */ }
-		}
+		catch (ClassNotFoundException ex) {}
 	}
 
 	public static void unhookChat()
 	{
 		if (essChat == null) return;
-
-		try
-		{
-			EssentialsOldVersionFeatures.unhookChat();
-		}
-		catch (NoClassDefFoundError ex) {}
 	}
 
 
@@ -121,7 +107,6 @@ public class EssentialsFeatures
 
 	private static class LocalChatListener implements Listener
 	{
-		@SuppressWarnings("unused")
 		@EventHandler(priority = EventPriority.NORMAL)
 		public void onPlayerChat(EssentialsLocalChatEvent event)
 		{

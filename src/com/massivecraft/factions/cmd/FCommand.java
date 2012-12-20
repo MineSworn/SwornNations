@@ -2,6 +2,10 @@ package com.massivecraft.factions.cmd;
 
 import java.util.List;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,6 +16,7 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.P;
+import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.zcore.MCommand;
 
@@ -23,8 +28,11 @@ public abstract class FCommand extends MCommand<P>
 	public FPlayer fme;
 	public Faction myFaction;
 	public boolean senderMustBeMember;
+	public boolean senderMustBeOfficer;
 	public boolean senderMustBeModerator;
 	public boolean senderMustBeAdmin;
+	public boolean commandNotNeedFaction;
+	public NPermission senderMustHaveNPermission;
 	
 	public boolean isMoneyCommand;
 	
@@ -39,8 +47,11 @@ public abstract class FCommand extends MCommand<P>
 		isMoneyCommand = false;
 		
 		senderMustBeMember = false;
+		senderMustBeOfficer = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		commandNotNeedFaction = false;
+		senderMustHaveNPermission = null;
 	}
 	
 	@Override
@@ -89,15 +100,23 @@ public abstract class FCommand extends MCommand<P>
 		boolean superValid = super.validSenderType(sender, informSenderIfNot);
 		if ( ! superValid) return false;
 		
-		if ( ! (this.senderMustBeMember || this.senderMustBeModerator || this.senderMustBeAdmin)) return true;
+		if ( ! (this.senderMustBeMember || this.senderMustBeModerator || this.senderMustBeAdmin || this.senderMustHaveNPermission != null)) return true;
 		
 		if ( ! (sender instanceof Player)) return false;
 		
 		FPlayer fplayer = FPlayers.i.get((Player)sender);
 		
+		if ( fplayer.isAdminBypassing() && commandNotNeedFaction)
+			return true;
+		
 		if ( ! fplayer.hasFaction())
 		{
 			sender.sendMessage(p.txt.parse("<b>You are not member of any faction."));
+			return false;
+		}
+		
+		if (this.senderMustBeOfficer && !fplayer.getRole().isAtLeast(Role.OFFICER)) {
+			sender.sendMessage(p.txt.parse("<b>Only faction officers can %s.", this.getHelpShort()));
 			return false;
 		}
 		
@@ -110,6 +129,11 @@ public abstract class FCommand extends MCommand<P>
 		if (this.senderMustBeAdmin && ! fplayer.getRole().isAtLeast(Role.ADMIN))
 		{
 			sender.sendMessage(p.txt.parse("<b>Only faction admins can %s.", this.getHelpShort()));
+			return false;
+		}
+		
+		if (this.senderMustHaveNPermission != null && !fplayer.getFaction().playerHasPermission(fplayer, this.senderMustHaveNPermission) && !fplayer.isAdminBypassing()) {
+			sender.sendMessage(p.txt.parse("<b>You don't have permission to %s.", this.getHelpShort()));
 			return false;
 		}
 			
@@ -305,9 +329,9 @@ public abstract class FCommand extends MCommand<P>
 				i.sendMessage(p.txt.parse("<b>Moderators can't control each other..."));
 			}
 		}
-		else
+		else 
 		{
-			i.sendMessage(p.txt.parse("<b>You must be a faction moderator to do that."));
+			//i.sendMessage(p.txt.parse("<b>You must be a faction moderator to do that."));
 		}
 		
 		return false;
@@ -333,5 +357,57 @@ public abstract class FCommand extends MCommand<P>
 			return Econ.hasAtLeast(myFaction, -cost, toDoThis);
 		else
 			return Econ.hasAtLeast(fme, -cost, toDoThis);
+	}
+	
+	public boolean payPowerForCommandF(int cost) {
+		if (cost == 0 || fme.isAdminBypassing()) return true;
+		
+		Faction faction = this.argAsFaction(0, myFaction);
+		
+		for (FPlayer fme : faction.getFPlayers()) {
+			fme.payPower(cost, true);
+		}
+		
+		return true;
+	}
+	
+	public boolean isEnemyNearby(Faction faction, Location loc) {
+		if (Conf.homesTeleportAllowedEnemyDistance > 0
+				&& !faction.isSafeZone()
+				&& (!fme.isInOwnTerritory() || (fme.isInOwnTerritory() && !Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory))) {
+			World w = loc.getWorld();
+			double x = loc.getX();
+			double y = loc.getY();
+			double z = loc.getZ();
+
+			for (Player p : me.getServer().getOnlinePlayers()) {
+				if (p == null || !p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
+					continue;
+
+				FPlayer fp = FPlayers.i.get(p);
+				if (fme.getRelationTo(fp) != Relation.ENEMY)
+					continue;
+
+				Location l = p.getLocation();
+				double dx = Math.abs(x - l.getX());
+				double dy = Math.abs(y - l.getY());
+				double dz = Math.abs(z - l.getZ());
+				double max = Conf.homesTeleportAllowedEnemyDistance;
+
+				// box-shaped distance check
+				if (dx > max || dy > max || dz > max)
+					continue;
+
+				fme.msg("<b>You cannot teleport while an enemy is within " + Conf.homesTeleportAllowedEnemyDistance + " blocks of you.");
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean payPowerForCommand(int cost) {
+		if (cost == 0 || fme.isAdminBypassing()) return true;
+				
+		return fme.payPower(cost, false);
 	}
 }

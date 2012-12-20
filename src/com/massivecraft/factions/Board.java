@@ -1,26 +1,25 @@
 package com.massivecraft.factions;
 
-import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.ChatColor;
-import com.google.gson.reflect.TypeToken;
 import com.massivecraft.factions.integration.LWCFeatures;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.util.AsciiCompass;
-import com.massivecraft.factions.zcore.util.DiscUtil;
 
 
 public class Board
 {
-	private static transient File file = new File(P.p.getDataFolder(), "board.json");
-	private static transient HashMap<FLocation, String> flocationIds = new HashMap<FLocation, String>();
+	private static transient ConcurrentHashMap<FLocation, String> flocationIds = new ConcurrentHashMap<FLocation, String>();
+	private static transient ConcurrentHashMap<FLocation, Long> flocationClaimTimes = new ConcurrentHashMap<FLocation, Long>();
+	private static Map<String, Map<String, String>> worldCoordIds;
+	private static Map<String, String> flocationClaimSaves;
 	
 	//----------------------------------------------//
 	// Get and Set
@@ -37,6 +36,17 @@ public class Board
 	
 	public static Faction getFactionAt(FLocation flocation)
 	{
+		if (flocation.getY() < Conf.territoryProtectMinimumHeight || flocation.getY() > Conf.territoryProtectMaximumHeight) {
+			if (getAbsoluteFactionAt(flocation).isWarZone() || getAbsoluteFactionAt(flocation).isSafeZone() || getAbsoluteFactionAt(flocation).isPeaceful())
+				return getAbsoluteFactionAt(flocation);
+			
+			return Factions.i.getNone();
+		}
+		
+		return Factions.i.get(getIdAt(flocation));
+	}
+	
+	public static Faction getAbsoluteFactionAt(FLocation flocation) {
 		return Factions.i.get(getIdAt(flocation));
 	}
 	
@@ -49,6 +59,7 @@ public class Board
 			removeAt(flocation);
 		}
 		
+		flocationClaimTimes.put(flocation, System.currentTimeMillis());
 		flocationIds.put(flocation, id);
 	}
 	
@@ -60,13 +71,14 @@ public class Board
 	public static void removeAt(FLocation flocation)
 	{
 		clearOwnershipAt(flocation);
+		flocationClaimTimes.remove(flocation);
 		flocationIds.remove(flocation);
 	}
 	
 	// not to be confused with claims, ownership referring to further member-specific ownership of a claim
 	public static void clearOwnershipAt(FLocation flocation)
 	{
-		Faction faction = getFactionAt(flocation);
+		Faction faction = getAbsoluteFactionAt(flocation);
 		if (faction != null && faction.isNormal())
 		{
 			faction.clearClaimOwnership(flocation);
@@ -105,7 +117,7 @@ public class Board
 		FLocation b = flocation.getRelative(-1, 0);
 		FLocation c = flocation.getRelative(0, 1);
 		FLocation d = flocation.getRelative(0, -1);
-		return faction != getFactionAt(a) || faction != getFactionAt(b) || faction != getFactionAt(c) || faction != getFactionAt(d);
+		return faction != getAbsoluteFactionAt(a) || faction != getAbsoluteFactionAt(b) || faction != getAbsoluteFactionAt(c) || faction != getAbsoluteFactionAt(d);
 	}
 
 	// Is this coord connected to any coord claimed by the specified faction?
@@ -115,9 +127,45 @@ public class Board
 		FLocation b = flocation.getRelative(-1, 0);
 		FLocation c = flocation.getRelative(0, 1);
 		FLocation d = flocation.getRelative(0, -1);
-		return faction == getFactionAt(a) || faction == getFactionAt(b) || faction == getFactionAt(c) || faction == getFactionAt(d);
+		return faction == getAbsoluteFactionAt(a) || faction == getAbsoluteFactionAt(b) || faction == getAbsoluteFactionAt(c) || faction == getAbsoluteFactionAt(d);
 	}
 	
+	
+	//Cleanup faction claims which are not near f home.
+	public static void autoCleanupClaimsRoutine() {
+		for (Entry<FLocation, Long> entry : flocationClaimTimes.entrySet()) {
+			Faction faction = getAbsoluteFactionAt(entry.getKey());
+			if (faction.isNormal()) {
+				if ((entry.getValue() - System.currentTimeMillis()) < (long)(60 * 1000 * 60 * Conf.autoCleanupClaimsAfterXHours)) {
+					if (faction.hasHome()) {
+						FLocation home = new FLocation(faction.getHome());
+						if (home.getDistanceTo(entry.getKey()) > 20.0) {
+							removeAt(entry.getKey());
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public static int cleanupClaims() {
+		int x = 0;
+		for (Entry<FLocation, String> entry : flocationIds.entrySet()) {
+			Faction faction = getAbsoluteFactionAt(entry.getKey());
+			if (faction.isNormal()) {
+				P.p.log("faction is normal: " + faction.getTag());
+				if (faction.hasHome()) {
+					P.p.log("homes found for " + faction.getTag());
+					FLocation home = new FLocation(faction.getHome());
+					if (home.getDistanceTo(entry.getKey()) > 20.0) {
+						removeAt(entry.getKey());
+						x++;
+					}
+				}
+			}
+		}
+		return x;
+	}
 	
 	//----------------------------------------------//
 	// Cleaner. Remove orphaned foreign keys
@@ -189,7 +237,7 @@ public class Board
 	public static ArrayList<String> getMap(Faction faction, FLocation flocation, double inDegrees)
 	{
 		ArrayList<String> ret = new ArrayList<String>();
-		Faction factionLoc = getFactionAt(flocation);
+		Faction factionLoc = getAbsoluteFactionAt(flocation);
 		ret.add(P.p.txt.titleize("("+flocation.getCoordString()+") "+factionLoc.getTag(faction)));
 		
 		int halfWidth = Conf.mapWidth / 2;
@@ -220,7 +268,7 @@ public class Board
 				else
 				{
 					FLocation flocationHere = topLeft.getRelative(dx, dz);
-					Faction factionHere = getFactionAt(flocationHere);
+					Faction factionHere = getAbsoluteFactionAt(flocationHere);
 					Relation relation = faction.getRelationTo(factionHere);
 					if (factionHere.isNone())
 					{
@@ -290,7 +338,12 @@ public class Board
 	
 	public static Map<String,Map<String,String>> dumpAsSaveFormat()
 	{
-		Map<String,Map<String,String>> worldCoordIds = new HashMap<String,Map<String,String>>(); 
+		worldCoordIds = new HashMap<String,Map<String,String>>(); 
+		flocationClaimSaves = new HashMap<String, String>();
+		
+		for (Entry<FLocation, Long> entry : flocationClaimTimes.entrySet()) {
+			flocationClaimSaves.put(entry.getKey().getWorldName() + ":" +  entry.getKey().getCoordString(), entry.getValue().toString());
+		}
 		
 		String worldName, coords;
 		String id;
@@ -311,9 +364,20 @@ public class Board
 		return worldCoordIds;
 	}
 	
-	public static void loadFromSaveFormat(Map<String,Map<String,String>> worldCoordIds)
+	public static void loadFromSaveFormat(Map<String,Map<String,String>> worldCoordIds, Map<String,String> flocationClaimTs)
 	{
 		flocationIds.clear();
+		flocationClaimTimes.clear();
+		
+		for (Entry<String, String> entry : flocationClaimTs.entrySet()) {
+			String[] ll = entry.getKey().split(":");
+			String[] coords = ll[1].split(",");
+			try {
+			flocationClaimTimes.put(new FLocation(ll[0], Integer.parseInt(coords[0]), Integer.parseInt(coords[1])), Long.parseLong(entry.getValue()));
+			} catch (NumberFormatException ex) {
+				P.p.log("Could not load claim time data from board.json");
+			}
+		}
 		
 		String worldName;
 		String[] coords;
@@ -334,21 +398,27 @@ public class Board
 		}
 	}
 	
+	public static transient Board i = new Board();
+	
 	public static boolean save()
 	{
-		//Factions.log("Saving board to disk");
-		
-		try
-		{
-			DiscUtil.write(file, P.p.gson.toJson(dumpAsSaveFormat()));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			P.p.log("Failed to save the board to disk.");
-			return false;
-		}
-		
+		P.p.log("Saving board to disk");
+		dumpAsSaveFormat();
+		P.p.persist.save(i);
+
+//		try
+//		{
+//			DiscUtil.write(file, P.p.gson.toJson(dumpAsSaveFormat()));
+//			DiscUtil.write(file, P.p.gson.toJson(flocationClaimTimes));
+//		}
+//		catch (Exception e)
+//		{
+//			e.printStackTrace();
+//			P.p.log("Failed to save the board to disk.");
+//			return false;
+//		}
+//		
+//		return true;
 		return true;
 	}
 	
@@ -356,25 +426,29 @@ public class Board
 	{
 		P.p.log("Loading board from disk");
 		
-		if ( ! file.exists())
-		{
-			P.p.log("No board to load from disk. Creating new file.");
-			save();
-			return true;
-		}
+		P.p.persist.loadOrSaveDefault(i, Board.class, "board");
+		if (worldCoordIds != null && flocationClaimSaves != null)
+			loadFromSaveFormat(worldCoordIds, flocationClaimSaves);
 		
-		try
-		{
-			Type type = new TypeToken<Map<String,Map<String,String>>>(){}.getType();
-			Map<String,Map<String,String>> worldCoordIds = P.p.gson.fromJson(DiscUtil.read(file), type);
-			loadFromSaveFormat(worldCoordIds);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			P.p.log("Failed to load the board from disk.");
-			return false;
-		}
+//		if ( ! file.exists())
+//		{
+//			P.p.log("No board to load from disk. Creating new file.");
+//			save();
+//			return true;
+//		}
+//		
+//		try
+//		{
+//			Type type = new TypeToken<Map<String,Map<String,String>>>(){}.getType();
+//			Map<String,Map<String,String>> worldCoordIds = P.p.gson.fromJson(DiscUtil.read(file), type);
+//			loadFromSaveFormat(worldCoordIds, null);
+//		}
+//		catch (Exception e)
+//		{
+//			e.printStackTrace();
+//			P.p.log("Failed to load the board from disk.");
+//			return false;
+//		}
 			
 		return true;
 	}

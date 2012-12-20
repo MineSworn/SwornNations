@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.struct.Permission;
 
@@ -20,8 +22,9 @@ public class CmdDeinvite extends FCommand
 		
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
-		senderMustBeModerator = true;
+		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.INVITE;
 	}
 	
 	@Override

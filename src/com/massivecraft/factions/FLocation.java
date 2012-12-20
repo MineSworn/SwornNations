@@ -18,6 +18,7 @@ public class FLocation
 	private String worldName = "world";
 	private int x = 0;
 	private int z = 0;
+	private int y = 0;
 	
 	//----------------------------------------------//
 	// Constructors
@@ -38,6 +39,7 @@ public class FLocation
 	public FLocation(Location location)
 	{
 		this( location.getWorld().getName(), blockToChunk(location.getBlockX()), blockToChunk(location.getBlockZ()) );
+		this.y = location.getBlockY();
 	}
 	
 	public FLocation(Player player)
@@ -58,7 +60,7 @@ public class FLocation
 	//----------------------------------------------//
 	// Getters and Setters
 	//----------------------------------------------//
-	
+		
 	public String getWorldName()
 	{
 		return worldName;
@@ -93,6 +95,8 @@ public class FLocation
 	{
 		this.z = z;
 	}
+	
+	public long getY() {return y;}
 	
 	public String getCoordString()
 	{
@@ -217,5 +221,15 @@ public class FLocation
 
 		FLocation that = (FLocation) obj;
 		return this.x == that.x && this.z == that.z && ( this.worldName==null ? that.worldName==null : this.worldName.equals(that.worldName) );
+	}
+	
+	public boolean yequals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof FLocation))
+			return false;
+		
+		FLocation that = (FLocation) obj;
+		return this.x == that.x && this.z == that.z && this.y == that.y && (this.worldName == null ? that.worldName == null : this.worldName.equals(that.worldName));
 	}
 }

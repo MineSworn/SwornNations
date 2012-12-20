@@ -4,6 +4,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map.Entry;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+import me.t7seven7t.swornnations.npermissions.NPermissionManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -28,6 +31,8 @@ public class Faction extends Entity implements EconomyParticipator
 	// FIELD: claimOwnership
 	private Map<FLocation, Set<String>> claimOwnership = new ConcurrentHashMap<FLocation, Set<String>>();
 
+	private NPermissionManager permManager;
+	
 	// FIELD: fplayers
 	// speedy lookup of players in faction
 	private transient Set<FPlayer> fplayers = new HashSet<FPlayer>();
@@ -115,6 +120,29 @@ public class Faction extends Entity implements EconomyParticipator
 		this.home = null;
 	}
 	
+	private LazyLocation warp;
+	private long warpSaveTime;
+	public void setWarp(Location warp) {
+		this.warp = new LazyLocation(warp);
+		warpSaveTime = System.currentTimeMillis();
+	}
+	
+	public boolean hasWarp() {
+		return this.getWarp() != null;
+	}
+	
+	public Location getWarp() {
+		confirmValidWarp();
+		return (this.warp != null) ? this.warp.getLocation() : null;
+	}
+	
+	public void confirmValidWarp() {		
+		if ((System.currentTimeMillis() - this.warpSaveTime) > (long)(Conf.warpsDecayTime * 60 * 1000)) {
+			msg("<b>Your faction warp has been un-set.");
+			this.warp = null;
+		}
+	}
+	
 	// FIELD: lastPlayerLoggedOffTime
 	private transient long lastPlayerLoggedOffTime;
 	
@@ -162,6 +190,9 @@ public class Faction extends Entity implements EconomyParticipator
 		this.permanent = false;
 		this.money = 0.0;
 		this.powerBoost = 0.0;
+		
+		if (permManager == null)
+			resetPermManager();
 	}
 	
 	// -------------------------------------------- //
@@ -697,6 +728,49 @@ public class Faction extends Entity implements EconomyParticipator
 		return false;
 	}
 	
+	public boolean playerHasPermission(FPlayer player, NPermission perm) {
+		if (player.getFaction() == this) {
+			if (this.isNone())
+				return true;
+			if (permManager.isDeniedPerm(player, perm))
+				return false;
+			if (permManager.hasPerm(player, perm))
+				return true;
+			if (permManager.hasPerm(player.getRole(), perm))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean roleHasPermission(Role role, NPermission perm) {
+		if (permManager.hasPerm(role, perm))
+			return true;
+		return false;
+	}
+	
+	public void addPermission(FPlayer player, NPermission perm) {
+		if (player.getFaction() == this) {
+			permManager.addPerm(player, perm);
+		}
+	}
+	
+	public void addPermission(Role role, NPermission perm) {
+		permManager.addPerm(role, perm);
+	}
+	
+	public void removePermission(FPlayer player, NPermission perm) {
+		if (player.getFaction() == this) {
+			permManager.removePerm(player, perm);
+		}
+	}
+	
+	public void removePermission(Role role, NPermission perm) {
+		permManager.removePerm(role, perm);
+	}
+	
+	public void resetPermManager() {
+		permManager = new NPermissionManager();
+	}
 	
 	//----------------------------------------------//
 	// Persistance and entity management

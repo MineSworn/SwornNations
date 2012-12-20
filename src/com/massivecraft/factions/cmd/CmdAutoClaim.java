@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
@@ -21,11 +23,17 @@ public class CmdAutoClaim extends FCommand
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.CLAIM;
+		commandNotNeedFaction = true;
 	}
 
 	@Override
 	public void perform()
 	{
+		if (!fme.hasFaction() && args.size() == 0) {
+			msg("<b>You cannot claim land for no faction.");
+			return;
+		}
 		Faction forFaction = this.argAsFaction(0, myFaction);
 		if (forFaction == null || forFaction == fme.getAutoClaimFor())
 		{

@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.Board;
@@ -30,13 +32,14 @@ public class CmdUnclaim extends FCommand
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.UNCLAIM;
 	}
 	
 	@Override
 	public void perform()
 	{
 		FLocation flocation = new FLocation(fme);
-		Faction otherFaction = Board.getFactionAt(flocation);
+		Faction otherFaction = Board.getAbsoluteFactionAt(flocation);
 		
 		if (otherFaction.isSafeZone())
 		{

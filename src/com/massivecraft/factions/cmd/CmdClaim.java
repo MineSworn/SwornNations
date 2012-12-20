@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FLocation;
@@ -26,11 +28,17 @@ public class CmdClaim extends FCommand
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.CLAIM;
+		commandNotNeedFaction = true;
 	}
 	
 	@Override
 	public void perform()
 	{
+		if (!fme.hasFaction() && args.size() == 0) {
+			msg("<b>You cannot claim land for no faction.");
+			return;
+		}
 		// Read and validate input
 		final Faction forFaction = this.argAsFaction(0, myFaction);
 		int radius = this.argAsInt(1, 1);

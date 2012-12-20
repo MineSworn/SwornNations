@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
@@ -18,6 +19,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Wither;
+import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,9 +33,9 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.painting.PaintingBreakByEntityEvent;
-import org.bukkit.event.painting.PaintingBreakEvent;
-import org.bukkit.event.painting.PaintingPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -54,7 +57,7 @@ public class FactionsEntityListener implements Listener
 	{
 		this.p = p;
 	}
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDeath(EntityDeathEvent event)
 	{
@@ -163,7 +166,7 @@ public class FactionsEntityListener implements Listener
 		}
 		else if
 		(
-			boomer instanceof Fireball
+			(boomer instanceof Fireball || boomer instanceof WitherSkull || boomer instanceof Wither)
 			&&
 			(
 				(faction.isNone() && Conf.wildernessBlockFireballs && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
@@ -221,6 +224,8 @@ public class FactionsEntityListener implements Listener
 						target.breakNaturally();
 				}
 			}
+		} else if (!(boomer instanceof TNTPrimed || boomer instanceof Creeper || boomer instanceof Fireball)){
+			event.setCancelled(true);
 		}
 	}
 
@@ -482,33 +487,33 @@ public class FactionsEntityListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPaintingBreak(PaintingBreakEvent event)
+	public void onPaintingBreak(HangingBreakEvent event)
 	{
 		if (event.isCancelled()) return;
 		
-		if (! (event instanceof PaintingBreakByEntityEvent))
+		if (! (event instanceof HangingBreakByEntityEvent))
 		{
 			return;
 		}
 
-		Entity breaker = ((PaintingBreakByEntityEvent)event).getRemover();
+		Entity breaker = ((HangingBreakByEntityEvent)event).getRemover();
 		if (! (breaker instanceof Player))
 		{
 			return;
 		}
 
-		if ( ! FactionsBlockListener.playerCanBuildDestroyBlock((Player)breaker, event.getPainting().getLocation(), "remove paintings", false))
+		if ( ! FactionsBlockListener.playerCanBuildDestroyBlock((Player)breaker, event.getEntity().getLocation(), "remove paintings", false, Material.PAINTING))
 		{
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPaintingPlace(PaintingPlaceEvent event)
+	public void onPaintingPlace(HangingPlaceEvent event)
 	{
 		if (event.isCancelled()) return;
 
-		if ( ! FactionsBlockListener.playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "place paintings", false) )
+		if ( ! FactionsBlockListener.playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "place paintings", false, Material.PAINTING) )
 		{
 			event.setCancelled(true);
 		}
@@ -519,9 +524,28 @@ public class FactionsEntityListener implements Listener
 	{
 		if (event.isCancelled()) return;
 
-		// for now, only interested in Enderman tomfoolery
-		if (!(event.getEntity() instanceof Enderman)) return;
+//		// for now, only interested in Enderman tomfoolery
+//		if (!(event.getEntity() instanceof Enderman)) return;
 
+		Entity entity = event.getEntity();
+		
+		// for now only interested in Enderman and Wither boss tomfoolery
+		if (!(entity instanceof Enderman) && !(entity instanceof Wither)) return;
+		
+		Location loc = event.getBlock().getLocation();
+		
+		if (entity instanceof Enderman) {
+			if (stopEndermanBlockManipulation(loc))
+				event.setCancelled(true);
+		} else if (entity instanceof Wither) {
+			Faction faction = Board.getFactionAt(new FLocation(loc));
+			if ((	faction.isNone() && Conf.wildernessBlockFireballs && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
+					|| (faction.isNormal() && (faction.hasPlayersOnline() ? Conf.territoryBlockFireballs : Conf.territoryBlockFireballsWhenOffline))
+					|| (faction.isWarZone() && Conf.warZoneBlockFireballs)
+					|| faction.isSafeZone())
+					event.setCancelled(true);
+		}
+		
 		if (stopEndermanBlockManipulation(event.getBlock().getLocation()))
 		{
 			event.setCancelled(true);

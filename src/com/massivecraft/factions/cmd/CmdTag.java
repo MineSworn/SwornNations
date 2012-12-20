@@ -2,6 +2,8 @@ package com.massivecraft.factions.cmd;
 
 import java.util.ArrayList;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.Conf;
@@ -27,8 +29,9 @@ public class CmdTag extends FCommand
 		
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
-		senderMustBeModerator = true;
+		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.TAG;
 	}
 	
 	@Override

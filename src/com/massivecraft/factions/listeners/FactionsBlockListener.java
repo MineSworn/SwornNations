@@ -1,5 +1,7 @@
 package com.massivecraft.factions.listeners;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -44,7 +46,7 @@ public class FactionsBlockListener implements Listener
 			return;
 		}
 
-		if ( ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "build", false))
+		if ( ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "build", false, event.getBlock().getType()))
 			event.setCancelled(true);
 	}
 
@@ -53,7 +55,7 @@ public class FactionsBlockListener implements Listener
 	{
 		if (event.isCancelled()) return;
 
-		if ( ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false))
+		if ( ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -64,7 +66,7 @@ public class FactionsBlockListener implements Listener
 	{
 		if (event.isCancelled()) return;
 
-		if (event.getInstaBreak() && ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false))
+		if (event.getInstaBreak() && ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -159,7 +161,7 @@ public class FactionsBlockListener implements Listener
 		return true;
 	}
 
-	public static boolean playerCanBuildDestroyBlock(Player player, Location location, String action, boolean justCheck)
+	public static boolean playerCanBuildDestroyBlock(Player player, Location location, String action, boolean justCheck, Material mat)
 	{
 		String name = player.getName();
 		if (Conf.playersWhoBypassAllProtection.contains(name)) return true;
@@ -169,15 +171,18 @@ public class FactionsBlockListener implements Listener
 
 		FLocation loc = new FLocation(location);
 		Faction otherFaction = Board.getFactionAt(loc);
+		Faction absoluteFaction = Board.getAbsoluteFactionAt(new FLocation(location));
 
 		if (otherFaction.isNone())
 		{
-			if (!Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName()))
-				return true; // This is not faction territory. Use whatever you like here.
+			if (!Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName())) {
+				if (mat != Material.TNT || (mat == Material.TNT && absoluteFaction.isNone()))
+					return true; // This is not faction territory. Use whatever you like here.
+			}
 
 			if (!justCheck)
 				me.msg("<b>You can't "+action+" in the wilderness.");
-
+			
 			return false;
 		}
 		else if (otherFaction.isSafeZone())
@@ -224,7 +229,24 @@ public class FactionsBlockListener implements Listener
 
 			return false;
  		}
-
+		
+		if (action.equalsIgnoreCase("destroy")) {
+			if (!otherFaction.playerHasPermission(me, NPermission.BREAK)) {
+				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
+				return false;
+			}
+		} else if (action.equalsIgnoreCase("build")) {
+			if (!otherFaction.playerHasPermission(me, NPermission.BUILD)) {
+				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
+				return false;
+			}
+		}
+		
+		if (mat.equals(Material.TNT) && me.getFaction().getRelationTo(absoluteFaction).confDenyBuild(otherFaction.hasPlayersOnline())) {
+			me.msg("<b>You can't place tnt under, in, or over the territory of "+otherFaction.getTag(me.getFaction()));
+			return false;
+		}
+		
 		// Also cancel and/or cause pain if player doesn't have ownership rights for this claim
 		if (Conf.ownedAreasEnabled && (Conf.ownedAreaDenyBuild || Conf.ownedAreaPainBuild) && !otherFaction.playerHasOwnershipRights(me, loc))
 		{

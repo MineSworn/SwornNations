@@ -4,8 +4,10 @@ import com.massivecraft.factions.Conf;
 
 public enum Role
 {
-	ADMIN(2, "admin"),
-	MODERATOR(1, "moderator"),
+	ADMIN(4, "admin"),
+	COADMIN(3, "co-admin"),
+	MODERATOR(2, "moderator"),
+	OFFICER(1, "officer"),
 	NORMAL(0, "normal member");
 	
 	public final int value;
@@ -40,11 +42,36 @@ public enum Role
 			return Conf.prefixAdmin;
 		} 
 		
+		if (this == Role.COADMIN) 
+		{
+			return Conf.prefixCoadmin;
+		}
+		
 		if (this == Role.MODERATOR)
 		{
 			return Conf.prefixMod;
 		}
 		
+		if (this == Role.OFFICER) {
+			return Conf.prefixOfficer;
+		}
+		
 		return "";
+	}
+	
+	public static Role get(int id) {
+		for (Role r : Role.values()) {
+			if (r.value == id)
+				return r;
+		}
+		return null;
+	}
+	
+	public static Role match(String s) {
+		for (Role r : Role.values()) {
+			if (s.equalsIgnoreCase(r.name()))
+				return r;
+		}
+		return null;
 	}
 }

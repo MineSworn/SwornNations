@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.Conf;
@@ -26,8 +28,9 @@ public class CmdKick extends FCommand
 		
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
-		senderMustBeModerator = true;
+		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.KICK;
 	}
 	
 	@Override
@@ -54,7 +57,7 @@ public class CmdKick extends FCommand
 				return;
 			}
 
-			if (you.getRole().value >= fme.getRole().value)
+			if (you.getRole().value >= fme.getRole().value && you.getRole() != Role.NORMAL)
 			{
 				// TODO add more informative messages.
 				msg("<b>Your rank is too low to kick this player.");

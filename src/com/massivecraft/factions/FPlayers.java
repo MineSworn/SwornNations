@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.google.gson.reflect.TypeToken;
+import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
+
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.zcore.persist.PlayerEntityCollection;
 
@@ -74,6 +75,14 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 				}
 
 				fplayer.leave(false);
+				fplayer.detach();
+			}
+		}
+	}
+	
+	public void cleanWildernessPlayers() {
+		for (FPlayer fplayer : FPlayers.i.get()) {
+			if (fplayer.getFaction().isNone()) {
 				fplayer.detach();
 			}
 		}

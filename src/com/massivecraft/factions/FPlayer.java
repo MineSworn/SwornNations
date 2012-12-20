@@ -3,6 +3,8 @@ package com.massivecraft.factions;
 import java.util.HashSet;
 import java.util.Set;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -459,6 +461,24 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		return this.power;
 	}
 	
+	public boolean payPower(double delta, boolean force) {
+		
+		double p = this.power;
+		
+		p -= delta;
+		if (p < this.getPowerMin()) {
+			if (force) {
+				p = this.getPowerMin();
+			} else {
+				msg("<b>You must have power to do this.");
+				return false;
+			}
+		} 
+		
+		this.power = p;
+		return true;
+	}
+	
 	protected void alterPower(double delta)
 	{
 		this.power += delta;
@@ -572,7 +592,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		{
 			return;
 		}
-		Faction factionHere = Board.getFactionAt(new FLocation(this));
+		Faction factionHere = Board.getFactionAt(this.getLastStoodAt());
 		String msg = P.p.txt.parse("<i>")+" ~ "+factionHere.getTag(this);
 		if (factionHere.getDescription().length() > 0)
 		{
@@ -662,7 +682,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		if
 		(
 			   this.isAdminBypassing()
-			|| (forFaction == this.getFaction() && this.getRole().isAtLeast(Role.MODERATOR))
+			|| (forFaction == this.getFaction() && this.getFaction().playerHasPermission(this, NPermission.CLAIM))
 			|| (forFaction.isSafeZone() && Permission.MANAGE_SAFE_ZONE.has(getPlayer()))
 			|| (forFaction.isWarZone() && Permission.MANAGE_WAR_ZONE.has(getPlayer()))
 		)
@@ -678,7 +698,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		String error = null;
 		FLocation flocation = new FLocation(location);
 		Faction myFaction = getFaction();
-		Faction currentFaction = Board.getFactionAt(flocation);
+		Faction currentFaction = Board.getAbsoluteFactionAt(flocation);
 		int ownedLand = forFaction.getLandRounded();
 		
 		if (Conf.worldGuardChecking && Worldguard.checkForRegionsInChunk(location))
@@ -708,16 +728,19 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		}
 		else if (forFaction == currentFaction)
 		{
-			error = P.p.txt.parse("%s<i> already own this land.", forFaction.describeTo(this, true));
+			error = P.p.txt.parse("%s<i> already owns this land.", forFaction.describeTo(this, true));
 		}
 		else if (this.getRole().value < Role.MODERATOR.value)
 		{
 			error = P.p.txt.parse("<b>You must be <h>%s<b> to claim land.", Role.MODERATOR.toString());
 		}
-		else if (forFaction.getFPlayers().size() < Conf.claimsRequireMinFactionMembers)
-		{
-			error = P.p.txt.parse("Factions must have at least <h>%s<b> members to claim land.", Conf.claimsRequireMinFactionMembers);
+		else if (forFaction.getFPlayers().size() < Conf.claimsRequireMinFactionMembers && ownedLand >= 1) {
+			error = P.p.txt.parse("Factions must have at least <h>%s<b> members to claim more than 1 land.", Conf.claimsRequireMinFactionMembers);
 		}
+//		else if (forFaction.getFPlayers().size() < Conf.claimsRequireMinFactionMembers && forFaction.getFPlayers().size() != 1)
+//		{
+//			error = P.p.txt.parse("Factions must have at least <h>%s<b> members to claim land.", Conf.claimsRequireMinFactionMembers);
+//		}
 		else if (currentFaction.isSafeZone())
 		{
 			error = P.p.txt.parse("<b>You can not claim a Safe Zone.");
@@ -771,6 +794,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			{
 				error = P.p.txt.parse("<b>You must start claiming land at the border of the territory.");
 			}
+		} else if (currentFaction.hasHome() && Conf.homesMustBeLastClaimed && new FLocation(currentFaction.getHome()).equals(flocation) && Board.getFactionCoordCount(currentFaction) > 1) {
+			error = P.p.txt.parse("<b>You cannot claim %s's faction home while they have other land left.", currentFaction.getTag(this));
 		}
 		
 		if (notifyFailure && error != null)
@@ -786,7 +811,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		// return value is false on failure, true on success
 		
 		FLocation flocation = new FLocation(location);
-		Faction currentFaction = Board.getFactionAt(flocation);
+		Faction currentFaction = Board.getAbsoluteFactionAt(flocation);
 		
 		int ownedLand = forFaction.getLandRounded();
 		

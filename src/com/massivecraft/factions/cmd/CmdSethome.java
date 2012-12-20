@@ -1,11 +1,12 @@
 package com.massivecraft.factions.cmd;
 
+import me.t7seven7t.swornnations.npermissions.NPermission;
+
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.struct.Role;
 
 public class CmdSethome extends FCommand
 {
@@ -23,6 +24,7 @@ public class CmdSethome extends FCommand
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.SETHOME;
 	}
 	
 	@Override
@@ -38,11 +40,7 @@ public class CmdSethome extends FCommand
 		if (faction == null) return;
 		
 		// Can the player set the home for this faction?
-		if (faction == myFaction)
-		{
-			if ( ! Permission.SETHOME_ANY.has(sender) && ! assertMinRole(Role.MODERATOR)) return;
-		}
-		else
+		if (faction != myFaction)
 		{
 			if (Permission.SETHOME_ANY.has(sender, true)) return;
 		}
@@ -58,6 +56,10 @@ public class CmdSethome extends FCommand
 		)
 		{
 			fme.msg("<b>Sorry, your faction home can only be set inside your own claimed territory.");
+			return;
+		}
+		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && me.getLocation().getBlockY() < Conf.homesMustBeGreaterThan) {
+			fme.msg("<b>Sorry,  your faction home can only be set above ground.");
 			return;
 		}
 

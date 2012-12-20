@@ -4,21 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.zcore.util.SmokeUtil;
-
 
 public class CmdHome extends FCommand
 {
@@ -75,55 +70,17 @@ public class CmdHome extends FCommand
 			return;
 		}
 		
+		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && myFaction.getHome().getBlockY() < Conf.homesMustBeGreaterThan) {
+			if (moveHome()) {
+				fme.msg("<b>Your faction home has been moved as it was underground.");
+			}
+		}
+		
 		Faction faction = Board.getFactionAt(new FLocation(me.getLocation()));
 		Location loc = me.getLocation().clone();
 		
+		if (isEnemyNearby(faction, loc)) return;
 		// if player is not in a safe zone or their own faction territory, only allow teleport if no enemies are nearby
-		if
-		(
-			Conf.homesTeleportAllowedEnemyDistance > 0
-			&&
-			! faction.isSafeZone()
-			&&
-			(
-				! fme.isInOwnTerritory()
-				||
-				(
-					fme.isInOwnTerritory()
-					&&
-					! Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory
-				)
-			)
-		)
-		{
-			World w = loc.getWorld();
-			double x = loc.getX();
-			double y = loc.getY();
-			double z = loc.getZ();
-
-			for (Player p : me.getServer().getOnlinePlayers())
-			{
-				if (p == null || !p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
-					continue;
-
-				FPlayer fp = FPlayers.i.get(p);
-				if (fme.getRelationTo(fp) != Relation.ENEMY)
-					continue;
-
-				Location l = p.getLocation();
-				double dx = Math.abs(x - l.getX());
-				double dy = Math.abs(y - l.getY());
-				double dz = Math.abs(z - l.getZ());
-				double max = Conf.homesTeleportAllowedEnemyDistance;
-
-				// box-shaped distance check
-				if (dx > max || dy > max || dz > max)
-					continue;
-
-				fme.msg("<b>You cannot teleport to your faction home while an enemy is within " + Conf.homesTeleportAllowedEnemyDistance + " blocks of you.");
-				return;
-			}
-		}
 
 		// if Essentials teleport handling is enabled and available, pass the teleport off to it (for delay and cooldown)
 		if (EssentialsFeatures.handleTeleport(me, myFaction.getHome())) return;
@@ -143,6 +100,26 @@ public class CmdHome extends FCommand
 		}
 		
 		me.teleport(myFaction.getHome());
+	}
+	
+	public boolean moveHome() {
+		Location home = myFaction.getHome();
+		while (home.getBlockY() < Conf.homesMustBeGreaterThan && home.getBlockY() < 256 && !checkIsValidHome(home)) {
+			home = home.add(0, 1, 0);
+		}
+		
+		if (home.getBlockY() == 256) {
+			return false;
+		}
+		
+		myFaction.setHome(home);
+		return true;
+	}
+	
+	public boolean checkIsValidHome(Location home) {
+		if (home.getWorld().getBlockAt(home).getType() == Material.AIR && home.getWorld().getBlockAt(home.clone().add(0, 1, 0)).getType() == Material.AIR && home.getWorld().getBlockAt(home.clone().subtract(0, -1, 0)).getType() != Material.AIR)
+			return true;
+		return false;
 	}
 	
 }

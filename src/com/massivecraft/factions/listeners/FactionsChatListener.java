@@ -9,8 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
-
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
@@ -29,47 +28,39 @@ public class FactionsChatListener implements Listener
 	}
 	
 	// this is for handling slashless command usage and faction/alliance chat, set at lowest priority so Factions gets to them first
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerEarlyChat(PlayerChatEvent event)
-	{
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerEarlyChat(AsyncPlayerChatEvent event) {
 		if (event.isCancelled()) return;
-	
+		
 		Player talkingPlayer = event.getPlayer();
 		String msg = event.getMessage();
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		ChatMode chat = me.getChatMode();
-
+		
 		// slashless factions commands need to be handled here if the user isn't in public chat mode
-		if (chat != ChatMode.PUBLIC && p.handleCommand(talkingPlayer, msg))
-		{
+		if (chat != ChatMode.PUBLIC && p.handleCommand(talkingPlayer, msg)) {
 			if (Conf.logPlayerCommands)
-				Bukkit.getLogger().log(Level.INFO, "[PLAYER_COMMAND] "+talkingPlayer.getName()+": "+msg);
+				Bukkit.getLogger().log(Level.INFO, "PLAYER_COMMAND] " + talkingPlayer.getName() + ": " + msg);
 			event.setCancelled(true);
 			return;
 		}
-
+		
 		// Is it a faction chat message?
-		if (chat == ChatMode.FACTION)
-		{
+		if (chat == ChatMode.FACTION) {
 			Faction myFaction = me.getFaction();
-			
 			String message = String.format(Conf.factionChatFormat, me.describeTo(myFaction), msg);
 			myFaction.sendMessage(message);
 			
-			Bukkit.getLogger().log(Level.INFO, ChatColor.stripColor("FactionChat "+myFaction.getTag()+": "+message));
-
+			Bukkit.getLogger().log(Level.INFO, ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
+			
 			//Send to any players who are spying chat
-			for (FPlayer fplayer : FPlayers.i.getOnline())
-			{
-				if(fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
-					fplayer.sendMessage("[FCspy] "+myFaction.getTag()+": "+message);
+			for (FPlayer fplayer : FPlayers.i.getOnline()) {
+				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
+					fplayer.sendMessage("[FCspy] " + myFaction.getTag() + ": " + message);
 			}
-
 			event.setCancelled(true);
-			return;
-		}
-		else if (chat == ChatMode.ALLIANCE)
-		{
+			
+		} else if (chat == ChatMode.ALLIANCE) {
 			Faction myFaction = me.getFaction();
 			
 			String message = String.format(Conf.allianceChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
@@ -94,10 +85,10 @@ public class FactionsChatListener implements Listener
 			return;
 		}
 	}
-
+	
 	// this is for handling insertion of the player's faction tag, set at highest priority to give other plugins a chance to modify chat first
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerChat(PlayerChatEvent event)
+	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
 		if (event.isCancelled()) return;
 
