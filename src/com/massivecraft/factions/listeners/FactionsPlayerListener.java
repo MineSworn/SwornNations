@@ -181,7 +181,7 @@ public class FactionsPlayerListener implements Listener
 				{
 					if (!ownersTo.isEmpty())
 						me.sendMessage(Conf.ownedLandMessage+ownersTo);
-					else if (!Conf.publicLandMessage.isEmpty())
+					else if (!Conf.publicLandMessage.isEmpty() && factionTo == myFaction && !factionTo.isNormal())
 						me.sendMessage(Conf.publicLandMessage);
 				}
 			}
@@ -264,8 +264,28 @@ public class FactionsPlayerListener implements Listener
 			event.setCancelled(true);
 			return;
 		}
+		
+		if (block.getType() == Material.BED_BLOCK) {
+			FPlayer fme = FPlayers.i.get(event.getPlayer());
+			
+			if (Board.getFactionAt(new FLocation(block)) != fme.getFaction())
+				return;
+			
+			if (fme.getFaction().hasHome()) {
+				FLocation fHome = new FLocation(fme.getFaction().getHome());
+				FLocation loc = new FLocation(fme.getPlayer().getLocation());
+				if (fHome.getDistanceTo(loc) > 20.0 || Board.getAbsoluteFactionAt(loc) != fme.getFaction()) {
+					return;
+				}
+			} else {
+				return;
+			}
+			
+			fme.setHome(fme.getPlayer().getLocation());
+			fme.msg("<i>Home set!");
+			return;
+		}
 	}
-
 
 	// for handling people who repeatedly spam attempts to open a door (or similar) in another faction's territory
 	private Map<String, InteractAttemptSpam> interactSpammers = new HashMap<String, InteractAttemptSpam>();
@@ -299,18 +319,20 @@ public class FactionsPlayerListener implements Listener
 		FLocation loc = new FLocation(location);
 		Faction otherFaction = Board.getFactionAt(loc);
 
-		if (otherFaction.hasPlayersOnline())
-		{
-			if (item != null) {
-				if ( ! Conf.territoryDenyUseageMaterials.contains(new MyMaterial(item.getTypeId())))
-					return true; // Item isn't one we're preventing for online factions.
+		if (otherFaction.isNormal()) {
+			if (otherFaction.hasPlayersOnline())
+			{
+				if (item != null) {
+					if ( ! Conf.territoryDenyUseageMaterials.contains(new MyMaterial(item.getTypeId())))
+						return true; // Item isn't one we're preventing for online factions.
+				}
 			}
-		}
-		else
-		{
-			if (item != null) {
-				if ( ! Conf.territoryDenyUseageMaterialsWhenOffline.contains(new MyMaterial(item.getTypeId())))
-					return true; // Item isn't one we're preventing for offline factions.
+			else
+			{
+				if (item != null) {
+					if ( ! Conf.territoryDenyUseageMaterialsWhenOffline.contains(new MyMaterial(item.getTypeId())))
+						return true; // Item isn't one we're preventing for offline factions.
+				}
 			}
 		}
 
@@ -328,6 +350,11 @@ public class FactionsPlayerListener implements Listener
 		{
 			if (!Conf.safeZoneDenyUseage || Permission.MANAGE_SAFE_ZONE.has(player))
 				return true;
+			
+			if (item != null) {
+				if ( ! Conf.safeZoneDenyUseageMaterials.contains(new MyMaterial(item.getTypeId())))
+					return true; // Item isn't one we're preventing for safezones.
+			}
 
 			if (!justCheck)
 				me.msg("<b>You can't use that in a safe zone.");
@@ -384,6 +411,21 @@ public class FactionsPlayerListener implements Listener
 		if (!otherFaction.isNormal())
 			return true;
 
+		if (otherFaction.isSafeZone()) {
+			if (Permission.MANAGE_SAFE_ZONE.has(player))
+				return true;
+			
+			if (block != null) {
+				if ( ! Conf.safeZoneProtectedMaterials.contains(new MyMaterial(block.getTypeId())))
+					return true; // Block isn't one we're protecting for safezones.
+			}
+			
+			return false;
+		}
+		
+		if (otherFaction.isWarZone())
+			return true;
+		
 		// We only care about some material types.
 		if (otherFaction.hasPlayersOnline())
 		{
@@ -404,7 +446,7 @@ public class FactionsPlayerListener implements Listener
 		Relation rel = myFaction.getRelationTo(otherFaction);
 
 		// You may use any block unless it is another faction's territory...
-		if (rel.isNeutral() || (rel.isEnemy() && Conf.territoryEnemyProtectMaterials) || (rel.isAlly() && Conf.territoryAllyProtectMaterials))
+		if (rel.isNeutral() || (rel.isEnemy() && Conf.territoryEnemyProtectMaterials) || (rel.isAlly() && Conf.territoryAllyProtectMaterials) || (rel.isNation() && Conf.territoryNationProtectMaterials))
 		{
 			if (block != null) {
 				if (!justCheck)
@@ -412,9 +454,6 @@ public class FactionsPlayerListener implements Listener
 			}
 			return false;
 		}
-		
-		if (otherFaction.isSafeZone() || otherFaction.isWarZone())
-			return true;
 		
 		if (block != null) {
 			if (block.getType() == Material.CHEST)
@@ -501,9 +540,6 @@ public class FactionsPlayerListener implements Listener
 
 	public static boolean preventCommand(String fullCmd, Player player)
 	{
-		if ((Conf.territoryNeutralDenyCommands.isEmpty() && Conf.territoryEnemyDenyCommands.isEmpty() && Conf.permanentFactionMemberDenyCommands.isEmpty()))
-			return false;
-
 		fullCmd = fullCmd.toLowerCase();
 
 		FPlayer me = FPlayers.i.get(player);
@@ -532,6 +568,32 @@ public class FactionsPlayerListener implements Listener
 		{
 			me.msg("<b>You can't use the command \""+fullCmd+"\" because you are in a permanent faction.");
 			return true;
+		}
+				
+		if (!me.isAdminBypassing() && fullCmd.split(" ")[0].equals("/tpa")) {
+			if (!me.hasFaction()) {
+				me.msg("<b>You need to be in a faction to use this command.");
+				return true;
+			}
+			
+			if (!me.getFaction().hasHome()) {
+				me.msg("<b>Please set a faction home first. " + (me.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
+				me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
+				return true;
+			}
+			
+			String[] args = fullCmd.split(" ");
+			if (args.length > 1) {
+				FLocation fHome = new FLocation(me.getFaction().getHome());
+				FPlayer target = FPlayers.i.get(args[1]);
+				if (target != null) {
+					FLocation loc = new FLocation(target.getPlayer().getLocation());
+					if (fHome.getDistanceTo(loc) > 40.0) {
+						me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home.");
+						return true;
+					}
+				}
+			}
 		}
 
 		if (!me.isInOthersTerritory())

@@ -52,9 +52,13 @@ public class CmdChat extends FCommand
 			{
 				modeTarget = ChatMode.FACTION;
 			}
+			else if (modeString.startsWith("n"))
+			{
+				modeTarget = ChatMode.NATION;
+			}
 			else
 			{
-				msg("<b>Unrecognised chat mode. <i>Please enter either 'a','f' or 'p'");
+				msg("<b>Unrecognised chat mode. <i>Please enter either 'a','f', 'n' or 'p'");
 				return;
 			}
 		}
@@ -68,6 +72,10 @@ public class CmdChat extends FCommand
 		else if (fme.getChatMode() == ChatMode.ALLIANCE )
 		{
 			msg("<i>Alliance only chat mode.");
+		}
+		else if (fme.getChatMode() == ChatMode.NATION )
+		{
+			msg("<i>Nation only chat mode.");
 		}
 		else
 		{

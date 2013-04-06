@@ -411,7 +411,7 @@ public class FactionsEntityListener implements Listener
 			return true;
 		
 		// You can never hurt faction members or allies
-		if (relation.isMember() || relation.isAlly())
+		if (relation.isMember() || relation.isAlly() || relation.isNation())
 		{
 			if (notify) attacker.msg("<i>You can't hurt %s<i>.", defender.describeTo(attacker));
 			return false;

@@ -143,10 +143,12 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdRelationAlly.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdRelationNeutral.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdRelationEnemy.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdRelationNation.getUseageTemplate(true) );
 		pageLines.add(p.txt.parse("<i>Set the relation you WISH to have with another faction."));
 		pageLines.add(p.txt.parse("<i>Your default relation with other factions will be neutral."));
 		pageLines.add(p.txt.parse("<i>If BOTH factions choose \"ally\" you will be allies."));
 		pageLines.add(p.txt.parse("<i>If ONE faction chooses \"enemy\" you will be enemies."));
+		pageLines.add(p.txt.parse("<i>If BOTH factions choose \"nation\" you will be formed into a nation bond only broken on agreement by both factions"));
 		helpPages.add(pageLines);
 		
 		pageLines = new ArrayList<String>();
@@ -200,6 +202,7 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdReload.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdSaveAll.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdVersion.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdFactionHome.getUseageTemplate(true) ); 
 		helpPages.add(pageLines);
 	}
 }

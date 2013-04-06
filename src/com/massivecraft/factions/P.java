@@ -11,6 +11,8 @@ import me.t7seven7t.factions.util.MyMaterial;
 import me.t7seven7t.factions.util.MyMaterialTypeAdapter;
 import me.t7seven7t.factions.util.NPermissionManagerTypeAdapter;
 import me.t7seven7t.swornnations.npermissions.NPermissionManager;
+import net.t7seven7t.commands.CmdHome;
+import net.t7seven7t.commands.CmdSetHome;
 
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -133,7 +135,8 @@ public class P extends MPlugin
 		}
 
 		//start up task which runs the autoRemoveClaimsAfterTime routine
-		startAutoCleanupTask();
+		if (Conf.autoCleanupClaimsEnabled)
+			startAutoCleanupTask();
 		
 		// start up task which runs the autoLeaveAfterDaysOfInactivity routine
 		startAutoLeaveTask(false);
@@ -148,6 +151,9 @@ public class P extends MPlugin
 
 		// since some other plugins execute commands directly through this command interface, provide it
 		this.getCommand(this.refCommand).setExecutor(this);
+		
+		this.getCommand("home").setExecutor(new CmdHome());
+		this.getCommand("sethome").setExecutor(new CmdSetHome());
 
 		postEnable();
 		this.loadSuccessful = true;

@@ -55,6 +55,11 @@ public class CmdOwner extends FCommand
 			fme.msg("<b>Sorry, but you have reached the server's <h>limit of %d <b>owned areas per faction.", Conf.ownedAreasLimitPerFaction);
 			return;
 		}
+		
+		if ( ! hasBypass && Conf.ownedAreasLimitPerPlayer > 0 && myFaction.getCountOfClaimsWithOwner(fme) >= Conf.ownedAreasLimitPerPlayer) {
+			fme.msg("<b>Sorry, but you have reached the server's <h>limit of %d <b>owned areas per player.", Conf.ownedAreasLimitPerPlayer);
+			return;
+		}
 
 		if ( ! hasBypass && !assertMinRole(Conf.ownedAreasModeratorsCanSet ? Role.MODERATOR : Role.ADMIN))
 		{
@@ -89,7 +94,20 @@ public class CmdOwner extends FCommand
 			fme.msg("%s<i> is not a member of this faction.", playerName);
 			return;
 		}
+		
+		if (Conf.ownedAreasPlayersCanOnlyClaimOwn && !target.getName().equals(fme.getName()) && !fme.isAdminBypassing()) {
+			fme.msg("<i>You can't change ownership for other players.");
+			return;
+		}
 
+		if (Conf.ownedAreasPlayersCanOnlyClaimOwn && 
+				myFaction.doesLocationHaveOwnersSet(flocation) && 
+				!myFaction.isPlayerInOwnerList(fme.getName(), flocation) &&
+				!fme.isAdminBypassing()) {
+			fme.msg("<i>You cannot claim owner on this plot, it is already owned by %s.", myFaction.getOwnerListString(flocation));
+			return;
+		}
+		
 		// if no player name was passed, and this claim does already have owners set, clear them
 		if (args.isEmpty() && myFaction.doesLocationHaveOwnersSet(flocation))
 		{

@@ -89,6 +89,18 @@ public class RelationUtil
 		{
 			return Relation.NEUTRAL;
 		}
+		
+		if (fme.isPermanentWar() && fthat.isPermanentWar()) {
+			return Relation.ENEMY;
+		} else if (fme.isPermanentWar() || fthat.isPermanentWar()) {
+			return Relation.NEUTRAL;
+		}
+		
+		if (fthat.getRelationWish(fme) == Relation.NATION || fme.getRelationWish(fme) == Relation.NATION) {
+			
+			return Relation.NATION;
+			
+		}
 
 		if (fme.getRelationWish(fthat).value >= fthat.getRelationWish(fme).value)
 		{
@@ -123,6 +135,10 @@ public class RelationUtil
 			{
 				return Conf.colorPeaceful;
 			}
+			
+//			if (thatFaction.isPermanentWar() && thatFaction != getFaction(me)) {
+//				return Conf.colorWar;
+//			}
 			
 			if (thatFaction.isSafeZone() && thatFaction != getFaction(me))
 			{

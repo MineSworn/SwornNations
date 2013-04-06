@@ -2,7 +2,8 @@ package com.massivecraft.factions.struct;
 
 public enum ChatMode
 {
-	FACTION(2, "faction chat"),
+	FACTION(3, "faction chat"),
+	NATION(2, "nation chat"),
 	ALLIANCE(1, "alliance chat"),
 	PUBLIC(0, "public chat");
 	
@@ -34,7 +35,8 @@ public enum ChatMode
 	public ChatMode getNext()
 	{
 		if (this == PUBLIC) return ALLIANCE;
-		if (this == ALLIANCE)return FACTION;
+		if (this == ALLIANCE) return NATION;
+		if (this == NATION)return FACTION;
 		return PUBLIC;
 	}
 }

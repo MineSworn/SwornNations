@@ -52,11 +52,15 @@ public enum Permission
 	OWNERLIST("ownerlist"),
 	SET_PEACEFUL("setpeaceful"),
 	SET_PERMANENT("setpermanent"),
+	SET_PERMANENTWAR("setpermanentwar"),
 	SET_PERMANENTPOWER("setpermanentpower"),
 	POWERBOOST("powerboost"),
 	POWER("power"),
 	POWER_ANY("power.any"),
 	RELATION("relation"),
+	RELATION_ENEMY("relation.enemy"),
+	RELATION_ALLY("relation.ally"),
+	RELATION_NATION("relation.nation"),
 	RELOAD("reload"),
 	SAVE("save"),
 	SETHOME("sethome"),
@@ -74,7 +78,8 @@ public enum Permission
 	PERM("perm"), 
 	PERM_SHOW("perm.show"), 
 	PRUNE("prune"), CLEAN("clean"),
-	SHOW_ROLES("showroles");
+	SHOW_ROLES("showroles"),
+	FACTION_HOME("otherfhome"); 
 	
 	public final String node;
 	

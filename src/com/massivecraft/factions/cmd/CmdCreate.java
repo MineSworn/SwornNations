@@ -52,6 +52,15 @@ public class CmdCreate extends FCommand
 			return;
 		}
 		
+		if (!fme.isAdminBypassing()) {
+			for (String name : Conf.bannedFactionNames) {
+				if (name.equalsIgnoreCase(tag)) {
+					msg("<b>You cannot use that tag.");
+					return;
+				}
+			}
+		}
+		
 		ArrayList<String> tagValidationErrors = Factions.validateTag(tag);
 		if (tagValidationErrors.size() > 0)
 		{

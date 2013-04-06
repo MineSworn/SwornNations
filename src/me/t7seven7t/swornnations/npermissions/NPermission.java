@@ -11,6 +11,7 @@ public enum NPermission {
 	INVITE,
 	KICK,
 	MODERATOR,
+	NATION,
 	NEUTRAL,
 	OFFICER,
 	OWNER,

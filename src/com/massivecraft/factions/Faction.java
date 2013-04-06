@@ -55,6 +55,10 @@ public class Faction extends Entity implements EconomyParticipator
 	public boolean isPeaceful() { return this.peaceful; }
 	public void setPeaceful(boolean isPeaceful) { this.peaceful = isPeaceful; }
 	
+	private boolean permawar;
+	public boolean isPermanentWar() { return this.permawar; }
+	public void setPermanentWar(boolean isPermanentWar) { this.permawar = isPermanentWar; }
+	
 	// FIELD: peacefulExplosionsEnabled
 	private boolean peacefulExplosionsEnabled;
 	public void setPeacefulExplosionsEnabled(boolean val) { peacefulExplosionsEnabled = val; }
@@ -186,6 +190,7 @@ public class Faction extends Entity implements EconomyParticipator
 		this.description = "Default faction description :(";
 		this.lastPlayerLoggedOffTime = 0;
 		this.peaceful = false;
+		this.permawar = false;
 		this.peacefulExplosionsEnabled = false;
 		this.permanent = false;
 		this.money = 0.0;
@@ -613,6 +618,16 @@ public class Faction extends Entity implements EconomyParticipator
 			}
 		}
 	}
+	
+	public int getCountOfClaimsWithOwner(FPlayer player) {
+		int count = 0;
+		String playerName = player.getName().toLowerCase();
+		for (Set<String> ownerData : claimOwnership.values()) {
+			if (ownerData.contains(playerName))
+				count++;
+		}
+		return count;
+	}
 
 	public int getCountOfClaimsWithOwners()
 	{
@@ -705,7 +720,8 @@ public class Faction extends Entity implements EconomyParticipator
 			fplayer.getFaction() == this
 			&&
 			(
-				fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN)
+				(fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN)
+						&& fplayer.getFaction().playerHasPermission(fplayer, NPermission.OWNER))
 				||
 				Permission.OWNERSHIP_BYPASS.has(fplayer.getPlayer())
 			)

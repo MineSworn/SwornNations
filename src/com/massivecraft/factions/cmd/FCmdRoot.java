@@ -38,12 +38,14 @@ public class FCmdRoot extends FCommand
 	public CmdPerm cmdPerm = new CmdPerm();
 	public CmdPermanent cmdPermanent = new CmdPermanent();
 	public CmdPermanentPower cmdPermanentPower = new CmdPermanentPower();
+	public CmdPermanentWar cmdPermanentWar = new CmdPermanentWar();
 	public CmdPowerBoost cmdPowerBoost = new CmdPowerBoost();
 	public CmdPower cmdPower = new CmdPower();
 	public CmdPruneClaims cmdPruneClaims = new CmdPruneClaims();
 	public CmdRelationAlly cmdRelationAlly = new CmdRelationAlly();
 	public CmdRelationEnemy cmdRelationEnemy = new CmdRelationEnemy();
 	public CmdRelationNeutral cmdRelationNeutral = new CmdRelationNeutral();
+	public CmdRelationNation cmdRelationNation = new CmdRelationNation();
 	public CmdReload cmdReload = new CmdReload();
 	public CmdSafeunclaimall cmdSafeunclaimall = new CmdSafeunclaimall();
 	public CmdSaveAll cmdSaveAll = new CmdSaveAll();
@@ -60,6 +62,7 @@ public class FCmdRoot extends FCommand
 	public CmdWarp cmdWarp = new CmdWarp();
 	public CmdWarunclaimall cmdWarunclaimall = new CmdWarunclaimall();
 	public CmdClean cmdClean = new CmdClean();
+	public CmdFactionHome cmdFactionHome = new CmdFactionHome(); 
 	
 	public FCmdRoot()
 	{
@@ -115,11 +118,13 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdPerm);
 		this.addSubCommand(this.cmdPermanent);
 		this.addSubCommand(this.cmdPermanentPower);
+		this.addSubCommand(this.cmdPermanentWar);
 		this.addSubCommand(this.cmdPower);
 		this.addSubCommand(this.cmdPowerBoost);
 		this.addSubCommand(this.cmdPruneClaims);
 		this.addSubCommand(this.cmdRelationAlly);
 		this.addSubCommand(this.cmdRelationEnemy);
+		this.addSubCommand(this.cmdRelationNation);
 		this.addSubCommand(this.cmdRelationNeutral);
 		this.addSubCommand(this.cmdReload);
 		this.addSubCommand(this.cmdSafeunclaimall);
@@ -137,6 +142,7 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdWarp);
 		this.addSubCommand(this.cmdWarunclaimall);
 		this.addSubCommand(this.cmdClean);
+		this.addSubCommand(this.cmdFactionHome);
 	}
 	
 	@Override

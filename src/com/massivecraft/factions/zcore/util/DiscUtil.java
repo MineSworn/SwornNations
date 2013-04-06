@@ -75,6 +75,7 @@ public class DiscUtil
 	// DOWNLOAD
 	// -------------------------------------------- //
 	
+	@SuppressWarnings("resource")
 	public static boolean downloadUrl(String urlstring, File file)
 	{
 		try

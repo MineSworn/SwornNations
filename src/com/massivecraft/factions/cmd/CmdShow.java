@@ -63,6 +63,10 @@ public class CmdShow extends FCommand
 			peaceStatus = "     "+Conf.colorNeutral+"This faction is Peaceful";
 		}
 		
+		if (faction.isPermanentWar()) {
+			peaceStatus = "     " + Conf.colorWar + "This faction is permanently at war with other permanent war factions.";
+		}
+		
 		msg("<a>Joining: <i>"+(faction.getOpen() ? "no invitation is needed" : "invitation is required")+peaceStatus);
 
 		double powerBoost = faction.getPowerBoost();
@@ -95,6 +99,7 @@ public class CmdShow extends FCommand
 		String listpart;
 		
 		// List relation
+		String nationList = p.txt.parse("<a>Nation: ");
 		String allyList = p.txt.parse("<a>Allies: ");
 		String enemyList = p.txt.parse("<a>Enemies: ");
 		for (Faction otherFaction : Factions.i.get())
@@ -102,18 +107,23 @@ public class CmdShow extends FCommand
 			if (otherFaction == faction) continue;
 			
 			Relation rel = otherFaction.getRelationTo(faction);
-			if (!rel.isAlly() && !rel.isEnemy()) continue;
+			if (!rel.isAlly() && !rel.isEnemy() && !rel.isNation()) continue;
 			listpart = otherFaction.getTag(fme)+p.txt.parse("<i>")+", ";
 			if (rel.isAlly())
 				allyList += listpart;
 			else if (rel.isEnemy())
 				enemyList += listpart;
+			else if (rel.isNation())
+				nationList += listpart;
 		}
 		if (allyList.endsWith(", "))
 			allyList = allyList.substring(0, allyList.length()-2);
 		if (enemyList.endsWith(", "))
 			enemyList = enemyList.substring(0, enemyList.length()-2);
+		if (nationList.endsWith(", "))
+			nationList = nationList.substring(0, nationList.length()-2);
 		
+		sendMessage(nationList);
 		sendMessage(allyList);
 		sendMessage(enemyList);
 		

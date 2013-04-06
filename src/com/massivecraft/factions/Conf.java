@@ -12,11 +12,12 @@ public class Conf
 {
 	public static boolean resetAllPerms = true;
 	public static List<String> baseCommandAliases = new ArrayList<String>();
+	public static List<String> ownTerritoryOnlyCommands = new ArrayList<String>();
 	public static boolean allowNoSlashCommand = true;
 	
 	// Colors
 	public static ChatColor colorMember = ChatColor.GREEN;
-	public static ChatColor colorConfed = ChatColor.DARK_PURPLE;
+	public static ChatColor colorNation = ChatColor.DARK_PURPLE;
 	public static ChatColor colorAlly = ChatColor.LIGHT_PURPLE;
 	public static ChatColor colorNeutral = ChatColor.WHITE;
 	public static ChatColor colorEnemy = ChatColor.RED;
@@ -75,11 +76,13 @@ public class Conf
 	public static String chatTagFormat = "%s"+ChatColor.WHITE;
 	public static String factionChatFormat = "%s:"+ChatColor.WHITE+" %s";
 	public static String allianceChatFormat = ChatColor.LIGHT_PURPLE+"%s:"+ChatColor.WHITE+" %s";
+	public static String nationChatFormat = ChatColor.DARK_PURPLE+"%s:"+ChatColor.WHITE+" %s";
 	
 	public static double autoLeaveAfterDaysOfInactivity = 14.0;
 	public static double autoLeaveRoutineRunsEveryXMinutes = 15.0;
 	public static boolean removePlayerDataWhenBanned = false;
 	
+	public static boolean autoCleanupClaimsEnabled = true;
 	public static double autoCleanupClaimsAfterXHours = 6.0;
 	public static double autoCleanupClaimsRunsEveryXMinutes = 15.0;
 
@@ -178,10 +181,10 @@ public class Conf
 	public static boolean territoryEnemyPainBuildWhenOffline = false;
 	public static boolean territoryEnemyDenyUseage = true;
 	public static boolean territoryEnemyProtectMaterials = true;
-	public static boolean territoryConfedDenyBuild = true;
-	public static boolean territoryConfedDenyBuildWhenOffline = true;
-	public static boolean territoryConfedDenyUseage = true;
-	public static boolean territoryConfedProtectMaterials = true;
+	public static boolean territoryNationDenyBuild = true;
+	public static boolean territoryNationDenyBuildWhenOffline = true;
+	public static boolean territoryNationDenyUseage = true;
+	public static boolean territoryNationProtectMaterials = true;
 	public static boolean territoryAllyDenyBuild = true;
 	public static boolean territoryAllyDenyBuildWhenOffline = true;
 	public static boolean territoryAllyPainBuild = false;
@@ -223,8 +226,10 @@ public class Conf
 	// for claimed areas where further faction-member ownership can be defined
 	public static boolean ownedAreasEnabled = true;
 	public static int ownedAreasLimitPerFaction = 0;
+	public static int ownedAreasLimitPerPlayer = 0;
 	public static boolean ownedAreasModeratorsCanSet = false;
 	public static boolean ownedAreaModeratorsBypass = true;
+	public static boolean ownedAreasPlayersCanOnlyClaimOwn = false;
 	public static boolean ownedAreaDenyBuild = true;
 	public static boolean ownedAreaPainBuild = false;
 	public static boolean ownedAreaProtectMaterials = true;
@@ -242,6 +247,8 @@ public class Conf
 	public static Set<MyMaterial> territoryDenyUseageMaterials = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> territoryProtectedMaterialsWhenOffline = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> territoryDenyUseageMaterialsWhenOffline = new HashSet<MyMaterial>();
+	public static Set<MyMaterial> safeZoneDenyUseageMaterials = new HashSet<MyMaterial>();
+	public static Set<MyMaterial> safeZoneProtectedMaterials = new HashSet<MyMaterial>();
 
 //	public static Set<Material> territoryProtectedMaterials = EnumSet.noneOf(Material.class);
 //	public static Set<Material> territoryDenyUseageMaterials = EnumSet.noneOf(Material.class);
@@ -295,7 +302,7 @@ public class Conf
 	public static double econCostShow = 0.0;
 	public static double econCostOpen = 0.0;
 	public static double econCostAlly = 0.0;
-	public static double econCostConfed = 0.0;
+	public static double econCostNation = 0.0;
 	public static double econCostEnemy = 0.0;
 	public static double econCostNeutral = 0.0;
 	public static double econCostNoBoom = 0.0;
@@ -314,6 +321,8 @@ public class Conf
 	public static Set<String> worldsIgnorePvP = new LinkedHashSet<String>();
 	public static Set<String> worldsNoWildernessProtection = new LinkedHashSet<String>();
 	
+	public static Set<String> bannedFactionNames = new LinkedHashSet<String>();
+	
 	public static HashSet<NPermission> defaultNationPermissions = new HashSet<NPermission>();
 	public static HashSet<NPermission> officerNationPermissions = new HashSet<NPermission>();
 	public static HashSet<NPermission> moderatorNationPermissions = new HashSet<NPermission>();
@@ -329,12 +338,24 @@ public class Conf
 		
 		addPerms();
 		
+		bannedFactionNames.add("xivilai");
+		ownTerritoryOnlyCommands.add("tpa");
+		
 		territoryEnemyDenyCommands.add("home");
 		territoryEnemyDenyCommands.add("sethome");
 		territoryEnemyDenyCommands.add("spawn");
 		territoryEnemyDenyCommands.add("tpahere");
 		territoryEnemyDenyCommands.add("tpaccept");
 		territoryEnemyDenyCommands.add("tpa");
+
+		safeZoneProtectedMaterials.add(new MyMaterial(Material.DISPENSER));
+		safeZoneProtectedMaterials.add(new MyMaterial(Material.DIODE_BLOCK_ON));
+		safeZoneProtectedMaterials.add(new MyMaterial(Material.DIODE_BLOCK_OFF));
+		
+		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.WATER_BUCKET));
+		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.LAVA_BUCKET));
+		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.BUCKET));
+		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.FLINT_AND_STEEL));
 
 		territoryProtectedMaterials.add(new MyMaterial(Material.WOODEN_DOOR));
 		territoryProtectedMaterials.add(new MyMaterial(Material.TRAP_DOOR));
@@ -449,6 +470,7 @@ public class Conf
 		coadminNationPermissions.addAll(moderatorNationPermissions);
 		coadminNationPermissions.add(NPermission.MODERATOR);
 		coadminNationPermissions.add(NPermission.PERM);
+		coadminNationPermissions.add(NPermission.NATION);
 	}
 }
 

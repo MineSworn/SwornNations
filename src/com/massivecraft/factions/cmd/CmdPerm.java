@@ -83,11 +83,11 @@ public class CmdPerm extends FCommand {
 				return;
 			}
 			
-			if (args.get(3).equalsIgnoreCase("t")) {
+			if (args.get(3).equalsIgnoreCase("t") || args.get(3).equalsIgnoreCase("allow")) {
 				fme.getFaction().addPermission(role, perm);
 				msg("<i>%s added to %s.", perm, role.nicename);
 			}
-			else if (args.get(3).equalsIgnoreCase("f")) {
+			else if (args.get(3).equalsIgnoreCase("f") || args.get(3).equalsIgnoreCase("deny")) {
 				fme.getFaction().removePermission(role, perm);
 				msg("<i>%s removed from from %s.", perm, role.nicename);
 			}

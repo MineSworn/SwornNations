@@ -22,6 +22,7 @@ import com.massivecraft.factions.struct.ChatMode;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.RelationUtil;
 import com.massivecraft.factions.zcore.persist.PlayerEntity;
 
@@ -761,6 +762,10 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		{
 			error = P.p.txt.parse("<b>You can't claim the land of your allies.");
 		}
+		else if (currentFaction.getRelationTo(forFaction) == Relation.NATION)
+		{
+			error = P.p.txt.parse("<b>You can't claim the land belonging to other states of your nation.");
+		}
 		else if
 		(
 			Conf.claimsMustBeConnected
@@ -884,4 +889,24 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	{
 		this.sendMessage(P.p.txt.parse(str, args));
 	}
+	
+	
+	private LazyLocation home;
+	public void setHome(Location home) {this.home = new LazyLocation(home);}
+	public boolean hasHome() {return getHome() != null;}
+	public Location getHome() {
+		confirmValidHome();
+		return home != null ? home.getLocation() : null;
+	}
+	public void removeHome() {this.home = null;}
+	
+	public void confirmValidHome()
+	{
+		if (!Conf.homesMustBeInClaimedTerritory || this.home == null || (this.home.getLocation() != null && Board.getFactionAt(new FLocation(home.getLocation())) == getFaction()))
+			return;
+
+		msg("<b>Your faction home has been un-set since it is no longer in your territory.");
+		this.home = null;
+	}
+	
 }

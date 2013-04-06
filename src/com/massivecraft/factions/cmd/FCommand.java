@@ -318,20 +318,16 @@ public abstract class FCommand extends MCommand<P>
 		{
 			i.sendMessage(p.txt.parse("<b>Only the faction admin can do that."));
 		}
-		else if (i.getRole().equals(Role.MODERATOR))
+		else
 		{
 			if ( i == you )
 			{
-				return true; //Moderators can control themselves
+				return true; //roles can control themselves
 			}
 			else
 			{
-				i.sendMessage(p.txt.parse("<b>Moderators can't control each other..."));
+				i.sendMessage(p.txt.parse("<b>%s can't control each other...", i.getRole().nicename));
 			}
-		}
-		else 
-		{
-			//i.sendMessage(p.txt.parse("<b>You must be a faction moderator to do that."));
 		}
 		
 		return false;

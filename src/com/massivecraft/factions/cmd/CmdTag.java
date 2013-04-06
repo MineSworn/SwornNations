@@ -46,6 +46,15 @@ public class CmdTag extends FCommand
 			return;
 		}
 		
+		if (!fme.isAdminBypassing()) {
+			for (String name : Conf.bannedFactionNames) {
+				if (name.equalsIgnoreCase(tag)) {
+					msg("<b>You cannot use that tag.");
+					return;
+				}
+			}
+		}
+		
 		ArrayList<String> errors = new ArrayList<String>();
 		errors.addAll(Factions.validateTag(tag));
 		if (errors.size() > 0)

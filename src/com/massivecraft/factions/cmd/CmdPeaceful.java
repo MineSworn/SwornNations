@@ -42,6 +42,7 @@ public class CmdPeaceful extends FCommand
 		{
 			change = "granted peaceful status to";
 			faction.setPeaceful(true);
+			faction.setPermanentWar(false);
 		}
 		
 		// Inform all players
