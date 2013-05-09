@@ -1,7 +1,7 @@
 name: SwornNations
 version: 1.1
 main: com.massivecraft.factions.P
-authors: [Olof Larsson, Brett Flannigan, dmuloy2, t7seven7t]
+authors: [Olof Larsson, Brett Flannigan, dmulloy2, t7seven7t]
 softdepend: [PermissionsEx, Permissions, Essentials, EssentialsChat, HeroChat, iChat, LocalAreaChat, LWC, nChat, ChatManager, CAPI, AuthMe, Vault, Spout, WorldEdit, WorldGuard, AuthDB, CaptureThePoints, CombatTag]
 commands:
   factions:

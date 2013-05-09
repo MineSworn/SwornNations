@@ -519,7 +519,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
-				fplayer.msg("The faction %s<i> was disbanded.", this.getTag(fplayer));
+				fplayer.msg("<i>The faction %s<i> was disbanded.", this.getTag(fplayer));
 			}
 
 			this.detach();

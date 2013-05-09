@@ -28,7 +28,7 @@ public class CmdChat extends FCommand
 	@Override
 	public void perform()
 	{
-		if ( ! Conf.factionOnlyChat )
+		if ( ! Conf.factionOnlyChat)
 		{
 			msg("<b>The built in chat chat channels are disabled on this server.");
 			return;
@@ -69,11 +69,11 @@ public class CmdChat extends FCommand
 		{
 			msg("<i>Public chat mode.");
 		}
-		else if (fme.getChatMode() == ChatMode.ALLIANCE )
+		else if (fme.getChatMode() == ChatMode.ALLIANCE)
 		{
 			msg("<i>Alliance only chat mode.");
 		}
-		else if (fme.getChatMode() == ChatMode.NATION )
+		else if (fme.getChatMode() == ChatMode.NATION)
 		{
 			msg("<i>Nation only chat mode.");
 		}

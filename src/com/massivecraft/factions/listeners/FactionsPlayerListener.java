@@ -569,27 +569,44 @@ public class FactionsPlayerListener implements Listener
 			me.msg("<b>You can't use the command \""+fullCmd+"\" because you are in a permanent faction.");
 			return true;
 		}
-				
-		if (!me.isAdminBypassing() && fullCmd.split(" ")[0].equals("/tpa")) {
-			if (!me.hasFaction()) {
-				me.msg("<b>You need to be in a faction to use this command.");
-				return true;
-			}
-			
-			if (!me.getFaction().hasHome()) {
-				me.msg("<b>Please set a faction home first. " + (me.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
-				me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
-				return true;
-			}
-			
+		
+		for (String territorycommands : Conf.ownTerritoryOnlyCommands)
+		{
 			String[] args = fullCmd.split(" ");
-			if (args.length > 1) {
-				FLocation fHome = new FLocation(me.getFaction().getHome());
-				FPlayer target = FPlayers.i.get(args[1]);
-				if (target != null) {
-					FLocation loc = new FLocation(target.getPlayer().getLocation());
-					if (fHome.getDistanceTo(loc) > 40.0) {
-						me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home.");
+			if (args[0].equalsIgnoreCase("/"+territorycommands))
+			{
+				if (!me.hasFaction())
+				{
+					me.msg("<b>You need to be in a faction to use this command.");
+					return true;
+				}
+			
+				if (!me.getFaction().hasHome()) 
+				{
+					me.msg("<b>Please set a faction home first. " + (me.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
+					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
+					return true;
+				}
+			
+				if (args.length > 1) 
+				{
+					FLocation fHome = new FLocation(me.getFaction().getHome());
+					FPlayer target = FPlayers.i.get(args[1]);
+					if (target != null && target.isOnline())
+					{
+						FLocation loc = new FLocation(target.getPlayer().getLocation());
+						if (loc != null)
+						{
+							if (fHome.getDistanceTo(loc) > 40.0)
+							{
+								me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home.");
+								return true;
+							}
+						}
+					}
+					else
+					{
+						me.msg("<b>Player \""+args[1]+"\" <b>not found");
 						return true;
 					}
 				}

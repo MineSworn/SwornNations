@@ -667,7 +667,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			// Remove this faction
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
-				fplayer.msg("<i>%s<i> was disbanded.", myFaction.describeTo(fplayer, true));
+				fplayer.msg("<i>The faction %s<i> was disbanded.", myFaction.describeTo(fplayer, true));
 			}
 
 			myFaction.detach();
@@ -736,7 +736,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			error = P.p.txt.parse("<b>You must be <h>%s<b> to claim land.", Role.MODERATOR.toString());
 		}
 		else if (forFaction.getFPlayers().size() < Conf.claimsRequireMinFactionMembers && ownedLand >= 1) {
-			error = P.p.txt.parse("Factions must have at least <h>%s<b> members to claim more than 1 land.", Conf.claimsRequireMinFactionMembers);
+			error = P.p.txt.parse("<b>Factions must have at least <h>%s<b> members to claim more than 1 land.", Conf.claimsRequireMinFactionMembers);
 		}
 //		else if (forFaction.getFPlayers().size() < Conf.claimsRequireMinFactionMembers && forFaction.getFPlayers().size() != 1)
 //		{
@@ -799,8 +799,10 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			{
 				error = P.p.txt.parse("<b>You must start claiming land at the border of the territory.");
 			}
-		} else if (currentFaction.hasHome() && Conf.homesMustBeLastClaimed && new FLocation(currentFaction.getHome()).equals(flocation) && Board.getFactionCoordCount(currentFaction) > 1) {
-			error = P.p.txt.parse("<b>You cannot claim %s's faction home while they have other land left.", currentFaction.getTag(this));
+		} 
+		else if (currentFaction.hasHome() && Conf.homesMustBeLastClaimed && new FLocation(currentFaction.getHome()).equals(flocation) && Board.getFactionCoordCount(currentFaction) > 1) 
+		{
+			error = P.p.txt.parse("<b>You cannot claim <h>%s<b>'s faction home while they have other land left.", currentFaction.getTag(this));
 		}
 		
 		if (notifyFailure && error != null)

@@ -58,19 +58,19 @@ public class CmdJoin extends FCommand
 
 		if (Conf.factionMemberLimit > 0 && faction.getFPlayers().size() >= Conf.factionMemberLimit)
 		{
-			msg(" <b>!<white> The faction %s is at the limit of %d members, so %s cannot currently join.", faction.getTag(fme), Conf.factionMemberLimit, fplayer.describeTo(fme, false));
+			msg("<b>The faction %s <b>is at the limit of %d <b>members, so %s <b>annot currently join.", faction.getTag(fme), Conf.factionMemberLimit, fplayer.describeTo(fme, false));
 			return;
 		}
 
 		if (fplayer.hasFaction())
 		{
-			msg("<b>%s must leave %s current faction first.", fplayer.describeTo(fme, true), (samePlayer ? "your" : "their"));
+			msg("<b>%s must leave %s <b>current faction first.", fplayer.describeTo(fme, true), (samePlayer ? "your" : "their"));
 			return;
 		}
 
 		if (!Conf.canLeaveWithNegativePower && fplayer.getPower() < 0)
 		{
-			msg("<b>%s cannot join a faction with a negative power level.", fplayer.describeTo(fme, true));
+			msg("%s <b>cannot join a faction with a negative power level.", fplayer.describeTo(fme, true));
 			return;
 		}
 
@@ -93,11 +93,11 @@ public class CmdJoin extends FCommand
 		// then make 'em pay (if applicable)
 		if (samePlayer && ! payForCommand(Conf.econCostJoin, "to join a faction", "for joining a faction")) return;
 
-		fme.msg("<i>%s successfully joined %s.", fplayer.describeTo(fme, true), faction.getTag(fme));
+		fme.msg("%s <i>successfully joined %s<i>.", fplayer.describeTo(fme, true), faction.getTag(fme));
 
 		if (!samePlayer)
-			fplayer.msg("<i>%s moved you into the faction %s.", fme.describeTo(fplayer, true), faction.getTag(fplayer));
-		faction.msg("<i>%s joined your faction.", fplayer.describeTo(faction, true));
+			fplayer.msg("%s <i>moved you into the faction %s<i>.", fme.describeTo(fplayer, true), faction.getTag(fplayer));
+		faction.msg("%s <i>joined your faction.", fplayer.describeTo(faction, true));
 
 		fplayer.resetFactionData();
 		fplayer.setFaction(faction);

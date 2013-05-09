@@ -83,6 +83,14 @@ public class FactionsEntityListener implements Listener
 				fplayer.msg("<b>The world you are in has power loss normally disabled, but you still lost power since you were in a war zone.");
 			}
 		}
+		else if (faction.isSafeZone())
+		{
+			if (Conf.safeZonePreventAllDamageToPlayers)
+			{
+				fplayer.msg("<i>You didn't lose any power since you were in a safe zone.");
+				return;
+			}
+		}
 		else if (faction.isNone() && !Conf.wildernessPowerLoss && !Conf.worldsNoWildernessProtection.contains(player.getWorld().getName()))
 		{
 			fplayer.msg("<i>You didn't lose any power since you were in the wilderness.");

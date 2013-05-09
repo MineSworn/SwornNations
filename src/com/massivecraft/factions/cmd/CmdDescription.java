@@ -35,14 +35,16 @@ public class CmdDescription extends FCommand
 		// if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
 		if ( ! payForCommand(Conf.econCostDesc, "to change faction description", "for changing faction description")) return;
 
-		myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("(&([a-f0-9]))", "& $2"));  // since "&" color tags seem to work even through plain old FPlayer.sendMessage() for some reason, we need to break those up
+//		if (sender.hasPermission("pexchat.color")||sender.hasPermission("essentials.chat.color"))
+//			myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("&", "§")); // If player has permission for chat color, let 'em use it
+//		else
+			myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("(&([a-f0-9]))", "")); // If not, replace the color tags with ""
 
 		// Broadcast the description to everyone
 		for (FPlayer fplayer : FPlayers.i.getOnline())
 		{
 			fplayer.msg("<i>The faction %s<i> changed their description to:", myFaction.describeTo(fplayer));
-			fplayer.sendMessage(myFaction.getDescription());  // players can inject "&" or "`" or "<i>" or whatever in their description; &k is particularly interesting looking
+			fplayer.sendMessage(myFaction.getDescription());
 		}
 	}
-	
 }
