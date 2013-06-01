@@ -85,6 +85,24 @@ public class CmdAdmin extends FCommand
 		{
 			fplayer.msg("%s<i> gave %s<i> the leadership of %s<i>.", senderIsConsole ? "A server admin" : fme.describeTo(fplayer, true), fyou.describeTo(fplayer), targetFaction.describeTo(fplayer));
 		}
+		
+		// Fix title
+		if (fyou.getTitle().equals("~Initiate~"))
+		{
+			fyou.setTitle("");
+		}
+		else
+		{
+			String oldTitle = fyou.getTitle().replaceAll("~", "");
+			String[] split = oldTitle.split("_");
+			StringBuilder newTitle = new StringBuilder();
+			for (int i=1; i<split.length; i++)
+			{
+				newTitle.append(split[i] + "_");
+			}
+			newTitle.deleteCharAt(newTitle.lastIndexOf("_"));
+			
+			fyou.setTitle(newTitle.toString());
+		}
 	}
-	
 }

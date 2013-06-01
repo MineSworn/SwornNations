@@ -443,7 +443,8 @@ public class Conf
 		P.p.persist.save(i);
 	}
 	
-	public static void addPerms() {
+	public static void addPerms() 
+	{
 		defaultNationPermissions.add(NPermission.BUILD);
 		defaultNationPermissions.add(NPermission.BREAK);
 		defaultNationPermissions.add(NPermission.CHEST);

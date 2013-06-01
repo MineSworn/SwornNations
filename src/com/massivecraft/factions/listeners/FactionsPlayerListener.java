@@ -10,6 +10,8 @@ import me.t7seven7t.swornnations.npermissions.NPermission;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -388,9 +390,10 @@ public class FactionsPlayerListener implements Listener
 		if (Conf.ownedAreasEnabled && Conf.ownedAreaDenyUseage && !otherFaction.playerHasOwnershipRights(me, loc))
 		{
 			if (!justCheck)
+			{
 				me.msg("<b>You can't use that in this territory, it is owned by: %s<b>.", otherFaction.getOwnerListString(loc));
-
-			return false;
+				return false;
+			}
 		}
 
 		return true;
@@ -583,7 +586,7 @@ public class FactionsPlayerListener implements Listener
 			
 				if (!me.getFaction().hasHome()) 
 				{
-					me.msg("<b>Please set a faction home first. " + (me.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
+					me.msg("<b>Please set a faction home first. " + (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
 					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
 					return true;
 				}
@@ -606,7 +609,7 @@ public class FactionsPlayerListener implements Listener
 					}
 					else
 					{
-						me.msg("<b>Player \""+args[1]+"\" <b>not found");
+						me.msg("<b>Player <b>%s<b> not found", args[1]);
 						return true;
 					}
 				}
@@ -697,6 +700,45 @@ public class FactionsPlayerListener implements Listener
 
 			badGuy.leave(false);
 			badGuy.detach();
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onInitiateInteract(PlayerInteractEvent event)
+	{
+		if (event.isCancelled())
+			return;
+		
+		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
+		if (!fplayer.hasFaction())
+			return;
+		
+		Faction faction = fplayer.getFaction();
+		
+		Role role = fplayer.getRole();
+		if (role != Role.INITIATE)
+			return;
+		
+		Faction fLoc = Board.getFactionAt(new FLocation(fplayer));
+		if (fLoc == null || fLoc != faction)
+			return;
+		
+		if (event.hasBlock())
+		{
+			Block block = event.getClickedBlock();
+			if (block == null)
+				return;
+			
+			BlockState state = block.getState();
+			if (state instanceof Chest)
+			{
+				FLocation loc = new FLocation(block);
+				if (!faction.doesLocationHaveOwnersSet(loc) || !faction.playerHasOwnershipRights(fplayer, loc))
+				{
+					fplayer.msg("<i>You do not have permission to access chests not in your area.");
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 }

@@ -9,6 +9,7 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.struct.Role;
 
 public class CmdJoin extends FCommand
 {
@@ -81,6 +82,13 @@ public class CmdJoin extends FCommand
 				faction.msg("%s<i> tried to join your faction.", fplayer.describeTo(faction, true));
 			return;
 		}
+		
+		if (!faction.isConfirmed(fme) && !fme.isAdminBypassing())
+		{
+			msg("<i>You must be confirmed to join this faction!");
+			msg("<i>Your leader must: " + p.cmdBase.cmdConfirm.getUseageTemplate(false));
+			return;
+		}
 
 		// if economy is enabled, they're not on the bypass list, and this command has a cost set, make sure they can pay
 		if (samePlayer && ! canAffordCommand(Conf.econCostJoin, "to join a faction")) return;
@@ -92,17 +100,27 @@ public class CmdJoin extends FCommand
 
 		// then make 'em pay (if applicable)
 		if (samePlayer && ! payForCommand(Conf.econCostJoin, "to join a faction", "for joining a faction")) return;
+		
 
 		fme.msg("%s <i>successfully joined %s<i>.", fplayer.describeTo(fme, true), faction.getTag(fme));
 
 		if (!samePlayer)
+		{
 			fplayer.msg("%s <i>moved you into the faction %s<i>.", fme.describeTo(fplayer, true), faction.getTag(fplayer));
+		}
 		faction.msg("%s <i>joined your faction.", fplayer.describeTo(faction, true));
-
-		fplayer.resetFactionData();
-		fplayer.setFaction(faction);
-		faction.deinvite(fplayer);
-
+		
+		faction.join(fplayer);
+		
+		if (samePlayer && ! fme.isAdminBypassing())
+		{
+			fplayer.setRole(Role.INITIATE);
+			faction.msg("%s<i> has been set to \"Initiate\". This rank does not allow the placing of TNT or access to public chests.", fplayer.getName());
+			faction.msg("<i>This status can be removed using: " + P.p.cmdBase.cmdInitiate.getUseageTemplate(false) + "<i>.");
+				
+			fplayer.setTitle("~Initiate~");
+		}
+		
 		if (Conf.logFactionJoin)
 		{
 			if (samePlayer)

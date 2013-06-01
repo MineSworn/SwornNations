@@ -22,9 +22,9 @@ public class CmdHome extends FCommand
 	{
 		super();
 		this.aliases.add("home");
+		this.aliases.add("factionhome");
 		
-		//this.requiredArgs.add("");
-		//this.optionalArgs.put("", "");
+		this.optionalArgs.put("tag", "mine");
 		
 		this.permission = Permission.HOME.node;
 		this.disableOnLock = false;
@@ -38,7 +38,28 @@ public class CmdHome extends FCommand
 	@Override
 	public void perform()
 	{
-		// TODO: Hide this command on help also.
+		if (args.size() > 0)
+		{
+			if (Permission.OTHER_HOME.has(me))
+			{
+				Faction targetFaction = this.argAsFaction(0);
+				if (targetFaction == null) 
+					return;
+		    		
+				if (targetFaction.hasHome()) 
+				{
+					Location FactionHome = targetFaction.getHome();
+					me.teleport(FactionHome);
+					fme.msg("<i>You have been teleported to the Faction home of %s<i>.", targetFaction.describeTo(fme));
+				} 
+				else 
+				{
+					fme.msg("<b>That faction doesn't have a home!");
+				}
+				return;
+			}
+		}
+
 		if ( ! Conf.homesEnabled)
 		{
 			fme.msg("<b>Sorry, Faction homes are disabled on this server.");

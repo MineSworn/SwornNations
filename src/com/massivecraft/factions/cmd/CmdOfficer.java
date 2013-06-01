@@ -70,6 +70,24 @@ public class CmdOfficer extends FCommand {
 			targetFaction.msg("%s<i> was promoted to officer in your faction.", you.describeTo(targetFaction, true));
 			msg("<i>You have promoted %s<i> to officer.", you.describeTo(fme, true));
 		}
+		
+		// Fix title
+		if (you.getTitle().equals("~Initiate~"))
+		{
+			you.setTitle("");
+		}
+		else
+		{
+			String oldTitle = you.getTitle().replaceAll("~", "");
+			String[] split = oldTitle.split("_");
+			StringBuilder newTitle = new StringBuilder();
+			for (int i=1; i<split.length; i++)
+			{
+				newTitle.append(split[i] + "_");
+			}
+			newTitle.deleteCharAt(newTitle.lastIndexOf("_"));
+			
+			you.setTitle(newTitle.toString());
+		}
 	}
-
 }

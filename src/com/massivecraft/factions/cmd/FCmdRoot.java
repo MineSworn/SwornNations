@@ -22,6 +22,8 @@ public class FCmdRoot extends FCommand
 	public CmdHelp cmdHelp = new CmdHelp();
 	public CmdHome cmdHome = new CmdHome();
 	public CmdInvite cmdInvite = new CmdInvite();
+	public CmdConfirm cmdConfirm = new CmdConfirm();
+	public CmdDeny cmdDeny = new CmdDeny();
 	public CmdJoin cmdJoin = new CmdJoin();
 	public CmdKick cmdKick = new CmdKick();
 	public CmdLeave cmdLeave = new CmdLeave();
@@ -62,7 +64,7 @@ public class FCmdRoot extends FCommand
 	public CmdWarp cmdWarp = new CmdWarp();
 	public CmdWarunclaimall cmdWarunclaimall = new CmdWarunclaimall();
 	public CmdClean cmdClean = new CmdClean();
-	public CmdFactionHome cmdFactionHome = new CmdFactionHome(); 
+	public CmdInitiate cmdInitiate = new CmdInitiate();
 	
 	public FCmdRoot()
 	{
@@ -102,6 +104,8 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdHelp);
 		this.addSubCommand(this.cmdHome);
 		this.addSubCommand(this.cmdInvite);
+		this.addSubCommand(this.cmdConfirm);
+		this.addSubCommand(this.cmdDeny);
 		this.addSubCommand(this.cmdJoin);
 		this.addSubCommand(this.cmdKick);
 		this.addSubCommand(this.cmdLeave);
@@ -142,7 +146,7 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdWarp);
 		this.addSubCommand(this.cmdWarunclaimall);
 		this.addSubCommand(this.cmdClean);
-		this.addSubCommand(this.cmdFactionHome);
+		this.addSubCommand(this.cmdInitiate);
 	}
 	
 	@Override

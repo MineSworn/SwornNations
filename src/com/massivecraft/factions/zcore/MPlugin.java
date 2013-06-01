@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
@@ -19,7 +18,6 @@ import com.massivecraft.factions.zcore.util.LibLoader;
 import com.massivecraft.factions.zcore.util.PermUtil;
 import com.massivecraft.factions.zcore.util.Persist;
 import com.massivecraft.factions.zcore.util.TextUtil;
-
 
 public abstract class MPlugin extends JavaPlugin
 {
@@ -91,7 +89,7 @@ public abstract class MPlugin extends JavaPlugin
 		long saveTicks = 20 * 60 * 30; // Approximately every 30 min
 		if (saveTask == null)
 		{
-			saveTask = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(this), saveTicks, saveTicks);
+			saveTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(this), saveTicks, saveTicks);
 		}
 
 		loadSuccessful = true;
@@ -236,7 +234,7 @@ public abstract class MPlugin extends JavaPlugin
 	// -------------------------------------------- //
 	// LOGGING
 	// -------------------------------------------- //
-	public void log(Object msg)
+	public void log(String msg)
 	{
 		log(Level.INFO, msg);
 	}
@@ -251,8 +249,8 @@ public abstract class MPlugin extends JavaPlugin
 		log(level, this.txt.parse(str, args));
 	}
 
-	public void log(Level level, Object msg)
+	public void log(Level level, String msg)
 	{
-		Bukkit.getLogger().log(level, "["+this.getDescription().getFullName()+"] "+msg);
+		getLogger().log(level, msg);
 	}
 }

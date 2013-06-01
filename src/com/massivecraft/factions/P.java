@@ -20,7 +20,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import com.massivecraft.factions.cmd.CmdAutoHelp;
 import com.massivecraft.factions.cmd.FCmdRoot;
@@ -211,7 +210,7 @@ public class P extends MPlugin
 	public void startAutoCleanupTask() {
 		if (Conf.autoCleanupClaimsRunsEveryXMinutes > 0.0) {
 			long ticks = (long)(20 * 60 * Conf.autoCleanupClaimsRunsEveryXMinutes);
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new AutoCleanupTask(), ticks, ticks);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoCleanupTask(), ticks, ticks);
 		}
 	}
 

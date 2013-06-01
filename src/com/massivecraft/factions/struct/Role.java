@@ -8,7 +8,8 @@ public enum Role
 	COADMIN(3, "co-admin"),
 	MODERATOR(2, "moderator"),
 	OFFICER(1, "officer"),
-	NORMAL(0, "normal member");
+	NORMAL(0, "normal member"),
+	INITIATE(-1, "initiate");
 	
 	public final int value;
 	public final String nicename;
@@ -52,23 +53,28 @@ public enum Role
 			return Conf.prefixMod;
 		}
 		
-		if (this == Role.OFFICER) {
+		if (this == Role.OFFICER) 
+		{
 			return Conf.prefixOfficer;
 		}
 		
 		return "";
 	}
 	
-	public static Role get(int id) {
-		for (Role r : Role.values()) {
+	public static Role get(int id) 
+	{
+		for (Role r : Role.values())
+		{
 			if (r.value == id)
 				return r;
 		}
 		return null;
 	}
 	
-	public static Role match(String s) {
-		for (Role r : Role.values()) {
+	public static Role match(String s)
+	{
+		for (Role r : Role.values())
+		{
 			if (s.equalsIgnoreCase(r.name()))
 				return r;
 		}

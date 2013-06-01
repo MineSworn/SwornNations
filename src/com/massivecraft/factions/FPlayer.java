@@ -865,6 +865,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		}
 		
 		Board.setFactionAt(forFaction, flocation);
+		forFaction.setPlayerAsOwner(getName(), flocation);
+		
 		SpoutFeatures.updateTerritoryDisplayLoc(flocation);
 
 		if (Conf.logLandClaims)

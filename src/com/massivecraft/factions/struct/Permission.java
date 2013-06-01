@@ -79,7 +79,7 @@ public enum Permission
 	PERM_SHOW("perm.show"), 
 	PRUNE("prune"), CLEAN("clean"),
 	SHOW_ROLES("showroles"),
-	FACTION_HOME("otherfhome"); 
+	OTHER_HOME("otherfhome"); 
 	
 	public final String node;
 	

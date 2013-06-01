@@ -49,6 +49,9 @@ public class NPermissionManager {
 	public void addPerm(Role rank, NPermission perm) {
 		if (rank == Role.ADMIN)
 			return;
+		if (rank == Role.INITIATE) {
+			rank = Role.NORMAL;
+		}
 		if (rankPerms.containsKey(rank)) {
 			if (!rankPerms.get(rank).contains(perm))
 				rankPerms.get(rank).add(perm);
@@ -76,6 +79,9 @@ public class NPermissionManager {
 	public void removePerm(Role rank, NPermission perm) {
 		if (rank == Role.ADMIN)
 			return;
+		if (rank == Role.INITIATE) { 
+			rank = Role.NORMAL;
+		}
 		if (hasPerm(rank, perm))
 			rankPerms.get(rank).remove(perm);
 	}
@@ -103,10 +109,12 @@ public class NPermissionManager {
 	public boolean hasPerm(Role rank, NPermission perm) {
 		if (rank == Role.ADMIN)
 			return true;
+		if (rank == Role.INITIATE) {
+			rank = Role.NORMAL;
+		}
 		if (rankPerms.containsKey(rank))
 			if (rankPerms.get(rank).contains(perm))
 				return true;
 		return false;
 	}
-	
 }

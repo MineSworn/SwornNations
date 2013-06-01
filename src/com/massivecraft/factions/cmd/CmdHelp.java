@@ -79,21 +79,23 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.txt.parse("<i>You might want to close it and use invitations:" ));
 		pageLines.add( p.cmdBase.cmdOpen.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdInvite.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdConfirm.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdDeny.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdDeinvite.getUseageTemplate(true) );
 		pageLines.add( p.txt.parse("<i>And don't forget to set your home:" ));
 		pageLines.add( p.cmdBase.cmdSethome.getUseageTemplate(true) );
 		helpPages.add(pageLines);
 		
 		pageLines = new ArrayList<String>();
-		pageLines.add(p.cmdBase.cmdSetwarp.getUseageTemplate(true));
-		pageLines.add(p.cmdBase.cmdWarp.getUseageTemplate(true));
-		pageLines.add(p.txt.parse("<i>Use the following commands to modify permissions"));
-		pageLines.add(p.txt.parse("<i>for each role or player in your faction"));
-		pageLines.add(p.cmdBase.cmdPerm.getUseageTemplate(true));
-		pageLines.add(p.cmdBase.cmdShowPerms.getUseageTemplate(true));
-		pageLines.add(p.cmdBase.cmdShowRoles.getUseageTemplate(true));
-		pageLines.add("");
-		pageLines.add("");
+		pageLines.add( p.cmdBase.cmdSetwarp.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdWarp.getUseageTemplate(true) );
+		pageLines.add( p.txt.parse("<i>Use the following commands to modify permissions") );
+		pageLines.add( p.txt.parse("<i>for each role or player in your faction") );
+		pageLines.add( p.cmdBase.cmdPerm.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdShowPerms.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdShowRoles.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdInitiate.getUseageTemplate(true) );
+		pageLines.add( "" );
 
 
 		helpPages.add(pageLines);
@@ -132,9 +134,9 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdBoom.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdOwner.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdOwnerList.getUseageTemplate(true) );
-		pageLines.add(p.txt.parse("<i>Claimed land with ownership set is further protected so"));
-		pageLines.add(p.txt.parse("<i>that only the owner(s), faction admin, and possibly the"));
-		pageLines.add(p.txt.parse("<i>faction moderators have full access."));
+		pageLines.add( p.txt.parse("<i>Claimed land with ownership set is further protected so") );
+		pageLines.add( p.txt.parse("<i>that only the owner(s), faction admin, and possibly the") );
+		pageLines.add( p.txt.parse("<i>faction moderators have full access.") );
 		helpPages.add(pageLines);
 		
 		pageLines = new ArrayList<String>();
@@ -144,11 +146,11 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdRelationNeutral.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdRelationEnemy.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdRelationNation.getUseageTemplate(true) );
-		pageLines.add(p.txt.parse("<i>Set the relation you WISH to have with another faction."));
-		pageLines.add(p.txt.parse("<i>Your default relation with other factions will be neutral."));
-		pageLines.add(p.txt.parse("<i>If BOTH factions choose \"ally\" you will be allies."));
-		pageLines.add(p.txt.parse("<i>If ONE faction chooses \"enemy\" you will be enemies."));
-		pageLines.add(p.txt.parse("<i>If BOTH factions choose \"nation\" you will be formed into a nation bond only broken on agreement by both factions"));
+		pageLines.add( p.txt.parse("<i>Set the relation you WISH to have with another faction.") );
+		pageLines.add( p.txt.parse("<i>Your default relation with other factions will be neutral.") );
+		pageLines.add( p.txt.parse("<i>If BOTH factions choose \"ally\" you will be allies.") );
+		pageLines.add( p.txt.parse("<i>If ONE faction chooses \"enemy\" you will be enemies.") );
+		pageLines.add( p.txt.parse("<i>If BOTH factions choose \"nation\" you will be formed into a nation bond only broken on agreement by both factions") );
 		helpPages.add(pageLines);
 		
 		pageLines = new ArrayList<String>();
@@ -202,7 +204,7 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdReload.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdSaveAll.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdVersion.getUseageTemplate(true) );
-		pageLines.add( p.cmdBase.cmdFactionHome.getUseageTemplate(true) ); 
+//		pageLines.add( p.cmdBase.cmdFactionHome.getUseageTemplate(true) ); 
 		helpPages.add(pageLines);
 	}
 }

@@ -49,6 +49,7 @@ public class CmdShow extends FCommand
 		Collection<FPlayer> officers = faction.getFPlayersWhereRole(Role.OFFICER);
 		Collection<FPlayer> mods = faction.getFPlayersWhereRole(Role.MODERATOR);
 		Collection<FPlayer> normals = faction.getFPlayersWhereRole(Role.NORMAL);
+		Collection<FPlayer> initiates = faction.getFPlayersWhereRole(Role.INITIATE);
 		
 		msg(p.txt.titleize(faction.getTag(fme)));
 		msg("<a>Description: <i>%s", faction.getDescription());
@@ -181,6 +182,15 @@ public class CmdShow extends FCommand
 				offlineList += listpart;
 			}
 		}
+		for (FPlayer follower : initiates) {
+			listpart = follower.getNameAndTitle(fme)+p.txt.parse("<i>")+", ";
+			if (follower.isOnlineAndVisibleTo(me)) {
+				onlineList += listpart;
+			} else {
+				offlineList += listpart;
+			}
+		}
+			
 		
 		if (onlineList.endsWith(", ")) {
 			onlineList = onlineList.substring(0, onlineList.length()-2);

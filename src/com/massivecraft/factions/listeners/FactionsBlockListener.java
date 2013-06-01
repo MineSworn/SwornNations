@@ -24,6 +24,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.struct.Role;
 
 
 public class FactionsBlockListener implements Listener
@@ -230,13 +231,18 @@ public class FactionsBlockListener implements Listener
 			return false;
  		}
 		
-		if (action.equalsIgnoreCase("destroy")) {
-			if (!otherFaction.playerHasPermission(me, NPermission.BREAK)) {
+		if (action.equalsIgnoreCase("destroy")) 
+		{
+			if (!otherFaction.playerHasPermission(me, NPermission.BREAK)) 
+			{
 				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
 				return false;
 			}
-		} else if (action.equalsIgnoreCase("build")) {
-			if (!otherFaction.playerHasPermission(me, NPermission.BUILD)) {
+		} 
+		else if (action.equalsIgnoreCase("build"))
+		{			
+			if (!otherFaction.playerHasPermission(me, NPermission.BUILD)) 
+			{
 				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
 				return false;
 			}
@@ -267,5 +273,29 @@ public class FactionsBlockListener implements Listener
 		}
 
 		return true;
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onInitiatePlace(BlockPlaceEvent event)
+	{
+		if (event.isCancelled())
+			return;
+		
+		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
+		if (fplayer == null)
+			return;
+		
+		if (fplayer.hasFaction())
+		{
+			Material mat = event.getBlock().getType();
+			if (mat == Material.TNT)
+			{
+				if (fplayer.getRole() == Role.INITIATE)
+				{
+					fplayer.msg("<i>You cannot place TNT as an initiate!");
+					event.setCancelled(true);
+				}
+			}
+		}
 	}
 }
