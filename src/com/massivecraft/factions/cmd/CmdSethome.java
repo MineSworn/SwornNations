@@ -59,7 +59,7 @@ public class CmdSethome extends FCommand
 			return;
 		}
 		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && me.getLocation().getBlockY() < Conf.homesMustBeGreaterThan) {
-			fme.msg("<b>Sorry,  your faction home can only be set above ground.");
+			fme.msg("<b>Sorry, your faction home can only be set above ground.");
 			return;
 		}
 

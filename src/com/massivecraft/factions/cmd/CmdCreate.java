@@ -52,9 +52,12 @@ public class CmdCreate extends FCommand
 			return;
 		}
 		
-		if (!fme.isAdminBypassing()) {
-			for (String name : Conf.bannedFactionNames) {
-				if (name.equalsIgnoreCase(tag)) {
+		if (!fme.isAdminBypassing())
+		{
+			for (String name : Conf.bannedFactionNames) 
+			{
+				if (name.equalsIgnoreCase(tag))
+				{
 					msg("<b>You cannot use that tag.");
 					return;
 				}
@@ -92,7 +95,7 @@ public class CmdCreate extends FCommand
 		faction.setTag(tag);
 
 		// trigger the faction join event for the creator
-		FPlayerJoinEvent joinEvent = new FPlayerJoinEvent(FPlayers.i.get(me),faction,FPlayerJoinEvent.PlayerJoinReason.CREATE);
+		FPlayerJoinEvent joinEvent = new FPlayerJoinEvent(fme, faction, FPlayerJoinEvent.PlayerJoinReason.CREATE);
 		Bukkit.getServer().getPluginManager().callEvent(joinEvent);
 		// join event cannot be cancelled or you'll have an empty faction
 

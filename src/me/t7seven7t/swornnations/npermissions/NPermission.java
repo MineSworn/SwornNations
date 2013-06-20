@@ -21,7 +21,8 @@ public enum NPermission {
 	TAG,
 	TITLE,
 	UNCLAIM,
-	WARP;
+	WARP,
+	SETOUTPOST;
 	
 	public static NPermission match(String s) {
 		for (NPermission perm : NPermission.values()) {

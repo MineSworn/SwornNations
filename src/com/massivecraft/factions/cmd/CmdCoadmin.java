@@ -73,5 +73,4 @@ public class CmdCoadmin extends FCommand
 			msg("<i>You have promoted %s<i> to co-admin.", you.describeTo(fme, true));
 		}
 	}
-	
 }

@@ -87,6 +87,8 @@ public class CmdHelp extends FCommand
 		helpPages.add(pageLines);
 		
 		pageLines = new ArrayList<String>();
+		pageLines.add( p.cmdBase.cmdOutpost.getUseageTemplate(true) );
+		pageLines.add( p.cmdBase.cmdSetoutpost.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdSetwarp.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdWarp.getUseageTemplate(true) );
 		pageLines.add( p.txt.parse("<i>Use the following commands to modify permissions") );
@@ -95,7 +97,6 @@ public class CmdHelp extends FCommand
 		pageLines.add( p.cmdBase.cmdShowPerms.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdShowRoles.getUseageTemplate(true) );
 		pageLines.add( p.cmdBase.cmdInitiate.getUseageTemplate(true) );
-		pageLines.add( "" );
 
 
 		helpPages.add(pageLines);

@@ -741,4 +741,31 @@ public class FactionsPlayerListener implements Listener
 			}
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockedItemInteract(PlayerInteractEvent event)
+	{
+		if (event.isCancelled())
+			return;
+		
+		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
+		if (fplayer == null)
+			return;
+		
+		if (!event.hasItem())
+			return;
+
+		for (MyMaterial blockedMaterial : Conf.ownTerritoryOnlyMaterials)
+		{
+			if (event.getItem().getTypeId() == blockedMaterial.getTypeId())
+			{
+				FLocation flocation = new FLocation(event.getPlayer());
+				if (Board.getFactionAt(flocation) != fplayer.getFaction())
+				{
+					fplayer.msg("<i>You cannot use this item outside your own territory!");
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
 }

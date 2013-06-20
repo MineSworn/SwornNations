@@ -1,5 +1,5 @@
 name: SwornNations
-version: 1.1.1
+version: 1.1.2
 main: com.massivecraft.factions.P
 authors: [Olof Larsson, Brett Flannigan, dmulloy2, t7seven7t]
 softdepend: [PermissionsEx, Permissions, Essentials, EssentialsChat, HeroChat, iChat, LocalAreaChat, LWC, nChat, ChatManager, CAPI, AuthMe, Vault, Spout, WorldEdit, WorldGuard, AuthDB, CaptureThePoints, CombatTag]
@@ -24,7 +24,6 @@ permissions:
       factions.save: true
       factions.prune: true
       factions.clean: true
-      factions.otherfhome: true
   factions.*:
     description: This is just an alias for factions.kit.admin
     children:
@@ -47,6 +46,9 @@ permissions:
       factions.mod.any: true
       factions.officer.any: true
       factions.coadmin.any: true
+      factions.otherfhome: true
+      factions.outpost.set.any: true
+      factions.outpost.others: true
   factions.kit.halfmod:
     description: Zones, bypassing, kicking, and chatspy
     children:
@@ -107,6 +109,8 @@ permissions:
       factions.perm.show: true
       factions.officer: true
       factions.showroles: true
+      factions.outpost: true
+      factions.outpost.set: true
   factions.admin:
     description: hand over your admin rights
   factions.admin.any:
@@ -276,3 +280,9 @@ permissions:
     description: promote any user to co-admin
   factions.otherfhome:
     description: allows you to teleport to other faction's f homes
+  factions.outpost.set.any:
+    description: allows you to set another faction's outpost
+  factions.outpost.others:
+    description: teleports you to another faction's outpost
+  factions.outpost:
+    description: teleport to your faction outpost

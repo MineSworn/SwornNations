@@ -65,6 +65,8 @@ public class FCmdRoot extends FCommand
 	public CmdWarunclaimall cmdWarunclaimall = new CmdWarunclaimall();
 	public CmdClean cmdClean = new CmdClean();
 	public CmdInitiate cmdInitiate = new CmdInitiate();
+	public CmdOutpost cmdOutpost = new CmdOutpost();
+	public CmdSetoutpost cmdSetoutpost = new CmdSetoutpost();
 	
 	public FCmdRoot()
 	{
@@ -147,6 +149,8 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdWarunclaimall);
 		this.addSubCommand(this.cmdClean);
 		this.addSubCommand(this.cmdInitiate);
+		this.addSubCommand(this.cmdOutpost);
+		this.addSubCommand(this.cmdSetoutpost);
 	}
 	
 	@Override

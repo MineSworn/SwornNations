@@ -1,5 +1,6 @@
 package com.massivecraft.factions.listeners;
 
+import me.t7seven7t.factions.util.MyMaterial;
 import me.t7seven7t.swornnations.npermissions.NPermission;
 
 import org.bukkit.Location;
@@ -35,7 +36,7 @@ public class FactionsBlockListener implements Listener
 		this.p = p;
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -51,7 +52,7 @@ public class FactionsBlockListener implements Listener
 			event.setCancelled(true);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -62,7 +63,7 @@ public class FactionsBlockListener implements Listener
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockDamage(BlockDamageEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -73,7 +74,7 @@ public class FactionsBlockListener implements Listener
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPistonExtend(BlockPistonExtendEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -98,7 +99,7 @@ public class FactionsBlockListener implements Listener
 		 */
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPistonRetract(BlockPistonRetractEvent event)
 	{
 		// if not a sticky piston, retraction should be fine
@@ -275,7 +276,7 @@ public class FactionsBlockListener implements Listener
 		return true;
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInitiatePlace(BlockPlaceEvent event)
 	{
 		if (event.isCancelled())
@@ -293,6 +294,30 @@ public class FactionsBlockListener implements Listener
 				if (fplayer.getRole() == Role.INITIATE)
 				{
 					fplayer.msg("<i>You cannot place TNT as an initiate!");
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockedItemPlace(BlockPlaceEvent event)
+	{
+		if (event.isCancelled())
+			return;
+		
+		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
+		if (fplayer == null)
+			return;
+		
+		for (MyMaterial blockedMaterial : Conf.ownTerritoryOnlyMaterials)
+		{
+			if (event.getBlock().getTypeId() == blockedMaterial.getTypeId())
+			{
+				FLocation flocation = new FLocation(event.getBlock());
+				if (Board.getFactionAt(flocation) != fplayer.getFaction())
+				{
+					fplayer.msg("<i>You cannot place this item outside your own territory!");
 					event.setCancelled(true);
 				}
 			}

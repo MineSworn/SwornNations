@@ -243,6 +243,7 @@ public class Conf
 
 	public static boolean pistonProtectionThroughDenyBuild = true;
 
+	public static Set<MyMaterial> ownTerritoryOnlyMaterials = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> territoryProtectedMaterials = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> territoryDenyUseageMaterials = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> territoryProtectedMaterialsWhenOffline = new HashSet<MyMaterial>();
@@ -288,6 +289,7 @@ public class Conf
 	public static double econCostCreate = 200.0;
 	public static double econCostOwner = 15.0;
 	public static double econCostSethome = 30.0;
+	public static double ecnCostSetoutpost = 5000.0;
 	public static double econCostJoin = 0.0;
 	public static double econCostLeave = 0.0;
 	public static double econCostKick = 0.0;
@@ -357,6 +359,8 @@ public class Conf
 		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.BUCKET));
 		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.FLINT_AND_STEEL));
 
+		ownTerritoryOnlyMaterials.add(new MyMaterial(Material.EXPLOSIVE_MINECART));
+		
 		territoryProtectedMaterials.add(new MyMaterial(Material.WOODEN_DOOR));
 		territoryProtectedMaterials.add(new MyMaterial(Material.TRAP_DOOR));
 		territoryProtectedMaterials.add(new MyMaterial(Material.FENCE_GATE));
@@ -472,6 +476,7 @@ public class Conf
 		coadminNationPermissions.add(NPermission.MODERATOR);
 		coadminNationPermissions.add(NPermission.PERM);
 		coadminNationPermissions.add(NPermission.NATION);
+		coadminNationPermissions.add(NPermission.SETOUTPOST);
 	}
 }
 

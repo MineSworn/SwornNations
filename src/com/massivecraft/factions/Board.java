@@ -131,15 +131,31 @@ public class Board
 	}
 	
 	
-	//Cleanup faction claims which are not near f home.
+	//Cleanup faction claims which are not near home OR outpost
 	public static void autoCleanupClaimsRoutine() {
 		for (Entry<FLocation, Long> entry : flocationClaimTimes.entrySet()) {
 			Faction faction = getAbsoluteFactionAt(entry.getKey());
 			if (faction.isNormal()) {
 				if ((entry.getValue() - System.currentTimeMillis()) < (long)(60 * 1000 * 60 * Conf.autoCleanupClaimsAfterXHours)) {
-					if (faction.hasHome()) {
+					if (faction.hasHome() && faction.hasOutpost()) {
+						FLocation home = new FLocation(faction.getHome());
+						FLocation outpost = new FLocation(faction.getOutpost());
+						if ((home.getDistanceTo(entry.getKey()) > 20.0)
+								&& outpost.getDistanceTo(entry.getKey()) > 20.0) {
+							removeAt(entry.getKey());
+						}
+					}
+					
+					if (faction.hasHome() && !faction.hasOutpost()) {
 						FLocation home = new FLocation(faction.getHome());
 						if (home.getDistanceTo(entry.getKey()) > 20.0) {
+							removeAt(entry.getKey());
+						}
+					}
+					
+					if (!faction.hasHome() && faction.hasOutpost()) {
+						FLocation outpost = new FLocation(faction.getOutpost());
+						if (outpost.getDistanceTo(entry.getKey()) > 20.0) {
 							removeAt(entry.getKey());
 						}
 					}
@@ -153,11 +169,31 @@ public class Board
 		for (Entry<FLocation, String> entry : flocationIds.entrySet()) {
 			Faction faction = getAbsoluteFactionAt(entry.getKey());
 			if (faction.isNormal()) {
-				P.p.log("faction is normal: " + faction.getTag());
-				if (faction.hasHome()) {
-					P.p.log("homes found for " + faction.getTag());
+				P.p.log("Faction is normal: " + faction.getTag());
+				if (faction.hasHome() && faction.hasOutpost()) {
+					P.p.log("Faction has home and outpost");
+					FLocation home = new FLocation(faction.getHome());
+					FLocation outpost = new FLocation(faction.getOutpost());
+					if ((home.getDistanceTo(entry.getKey()) > 20.0)
+							&& outpost.getDistanceTo(entry.getKey()) > 20.0) {
+						removeAt(entry.getKey());
+						x++;
+					}
+				}
+				
+				if (faction.hasHome() && !faction.hasOutpost()) {
+					P.p.log("Faction has home and no outpost");
 					FLocation home = new FLocation(faction.getHome());
 					if (home.getDistanceTo(entry.getKey()) > 20.0) {
+						removeAt(entry.getKey());
+						x++;
+					}
+				}
+				
+				if (!faction.hasHome() && faction.hasOutpost()) {
+					P.p.log("Faction has no home and an outpost");
+					FLocation outpost = new FLocation(faction.getOutpost());
+					if (outpost.getDistanceTo(entry.getKey()) > 20.0) {
 						removeAt(entry.getKey());
 						x++;
 					}
@@ -453,22 +489,3 @@ public class Board
 		return true;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

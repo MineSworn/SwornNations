@@ -22,7 +22,6 @@ import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.*;
 import com.massivecraft.factions.zcore.persist.Entity;
 
-
 public class Faction extends Entity implements EconomyParticipator
 {
 	// FIELD: relationWish
@@ -195,6 +194,24 @@ public class Faction extends Entity implements EconomyParticipator
 
 		msg("<b>Your faction home has been un-set since it is no longer in your territory.");
 		this.home = null;
+	}
+	
+	// FIELD: outpost
+	private LazyLocation outpost;
+	public void setOutpost(Location outpost) { this.outpost = new LazyLocation(outpost); }
+	public boolean hasOutpost() { return this.getOutpost() != null; }
+	public Location getOutpost()
+	{
+		confirmValidOutpost();
+		return (this.outpost != null) ? this.outpost.getLocation() : null;
+	}
+	public void confirmValidOutpost()
+	{
+		if (this.outpost == null || (this.outpost.getLocation() != null && Board.getFactionAt(new FLocation(this.outpost.getLocation())) == this))
+			return;
+
+		msg("<b>Your faction outpost has been un-set since it is no longer in your territory.");
+		this.outpost = null;
 	}
 	
 	private LazyLocation warp;

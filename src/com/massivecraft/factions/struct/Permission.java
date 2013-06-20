@@ -79,7 +79,11 @@ public enum Permission
 	PERM_SHOW("perm.show"), 
 	PRUNE("prune"), CLEAN("clean"),
 	SHOW_ROLES("showroles"),
-	OTHER_HOME("otherfhome"); 
+	OTHER_HOME("otherfhome"),
+	OUTPOST("outpost"),
+	OUTPOST_OTHERS("outpost.others"),
+	OUTPOST_SET("outpost.set"),
+	OUTPOST_SET_ANY("outpost.set.any");
 	
 	public final String node;
 	

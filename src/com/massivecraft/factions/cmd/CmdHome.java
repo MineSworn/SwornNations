@@ -17,7 +17,6 @@ import com.massivecraft.factions.zcore.util.SmokeUtil;
 
 public class CmdHome extends FCommand
 {
-	
 	public CmdHome()
 	{
 		super();
