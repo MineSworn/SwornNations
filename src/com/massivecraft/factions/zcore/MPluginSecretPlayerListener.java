@@ -1,12 +1,12 @@
 package com.massivecraft.factions.zcore;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+
 import com.massivecraft.factions.zcore.persist.EM;
 import com.massivecraft.factions.zcore.persist.Entity;
 import com.massivecraft.factions.zcore.persist.EntityCollection;
@@ -20,7 +20,7 @@ public class MPluginSecretPlayerListener implements Listener
 		this.p = p;
 	}
 	
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -28,7 +28,7 @@ public class MPluginSecretPlayerListener implements Listener
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (p.logPlayerCommands())
-				Bukkit.getLogger().info("[PLAYER_COMMAND] "+event.getPlayer().getName()+": "+event.getMessage());
+				p.log(event.getPlayer().getName() + " issued command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}
@@ -41,7 +41,7 @@ public class MPluginSecretPlayerListener implements Listener
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (p.logPlayerCommands())
-				Bukkit.getLogger().info("[PLAYER_COMMAND] "+event.getPlayer().getName()+": "+event.getMessage());
+				p.log(event.getPlayer().getName() + " issued command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}

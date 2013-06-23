@@ -3,14 +3,12 @@ package com.massivecraft.factions.zcore;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.zcore.MCommand;
 import com.massivecraft.factions.zcore.MPlugin;
 import com.massivecraft.factions.zcore.util.TextUtil;
-
 
 public abstract class MCommand<T extends MPlugin>
 {
@@ -407,7 +405,7 @@ public abstract class MCommand<T extends MPlugin>
 		
 		if (name != null)
 		{
-			Player player = Bukkit.getServer().getPlayer(name);
+			Player player = p.getServer().getPlayer(name);
 			if (player != null)
 			{
 				ret = player;
@@ -442,7 +440,7 @@ public abstract class MCommand<T extends MPlugin>
 		
 		if (name != null)
 		{
-			List<Player> players = Bukkit.getServer().matchPlayer(name);
+			List<Player> players = p.getServer().matchPlayer(name);
 			if (players.size() > 0)
 			{
 				ret = players.get(0);

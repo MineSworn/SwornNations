@@ -50,7 +50,6 @@ public abstract class MPlugin extends JavaPlugin
 	private long timeEnableStart;
 	public boolean preEnable()
 	{
-		log("=== ENABLE START ===");
 		timeEnableStart = System.currentTimeMillis();
 		
 		// Ensure basefolder exists!
@@ -98,7 +97,7 @@ public abstract class MPlugin extends JavaPlugin
 	
 	public void postEnable()
 	{
-		log("=== ENABLE DONE (Took "+(System.currentTimeMillis()-timeEnableStart)+"ms) ===");
+		log(getDescription().getFullName() + " has been enabled " +(System.currentTimeMillis()-timeEnableStart)+"ms)");
 	}
 	
 	public void onDisable()
@@ -111,7 +110,7 @@ public abstract class MPlugin extends JavaPlugin
 		// only save data if plugin actually loaded successfully
 		if (loadSuccessful)
 			EM.saveAllToDisc();
-		log("Disabled");
+		log(getDescription().getFullName() + " has been disabled");
 	}
 	
 	public void suicide()

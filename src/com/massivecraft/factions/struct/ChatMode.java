@@ -34,9 +34,9 @@ public enum ChatMode
 	
 	public ChatMode getNext()
 	{
-		if (this == PUBLIC) return ALLIANCE;
+		if (this == PUBLIC) return FACTION;
+		if (this == FACTION) return ALLIANCE;
 		if (this == ALLIANCE) return NATION;
-		if (this == NATION)return FACTION;
 		return PUBLIC;
 	}
 }

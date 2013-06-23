@@ -28,8 +28,9 @@ public class FactionsChatListener implements Listener
 	}
 	
 	// this is for handling slashless command usage and faction/alliance chat, set at lowest priority so Factions gets to them first
-	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerEarlyChat(AsyncPlayerChatEvent event) {
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerEarlyChat(AsyncPlayerChatEvent event) 
+	{
 		if (event.isCancelled()) return;
 		
 		Player talkingPlayer = event.getPlayer();
@@ -38,9 +39,10 @@ public class FactionsChatListener implements Listener
 		ChatMode chat = me.getChatMode();
 		
 		// slashless factions commands need to be handled here if the user isn't in public chat mode
-		if (chat != ChatMode.PUBLIC && p.handleCommand(talkingPlayer, msg)) {
+		if (chat != ChatMode.PUBLIC && p.handleCommand(talkingPlayer, msg))
+		{
 			if (Conf.logPlayerCommands)
-				Bukkit.getLogger().log(Level.INFO, "[PLAYER_COMMAND] " + talkingPlayer.getName() + ": " + msg);
+				p.log(talkingPlayer.getName() + " issued command: " + msg);
 			event.setCancelled(true);
 			return;
 		}
@@ -56,13 +58,16 @@ public class FactionsChatListener implements Listener
 			Bukkit.getLogger().log(Level.INFO, ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
 			
 			//Send to any players who are spying chat
-			for (FPlayer fplayer : FPlayers.i.getOnline()) {
+			for (FPlayer fplayer : FPlayers.i.getOnline()) 
+			{
 				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
 					fplayer.sendMessage("[FCspy] " + myFaction.getTag() + ": " + message);
 			}
 			event.setCancelled(true);
 			
-		} else if (chat == ChatMode.ALLIANCE) {
+		}
+		else if (chat == ChatMode.ALLIANCE) 
+		{
 			Faction myFaction = me.getFaction();
 			
 			String message = String.format(Conf.allianceChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
@@ -73,19 +78,21 @@ public class FactionsChatListener implements Listener
 			//Send to all our allies
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
-				if(myFaction.getRelationTo(fplayer) == Relation.ALLY || myFaction.getRelationTo(fplayer) == Relation.NATION)
+				if (myFaction.getRelationTo(fplayer) == Relation.ALLY || myFaction.getRelationTo(fplayer) == Relation.NATION)
 					fplayer.sendMessage(message);
 
 				//Send to any players who are spying chat
-				else if(fplayer.isSpyingChat())
+				else if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
 					fplayer.sendMessage("[ACspy]: " + message);
 			}
 			
-			Bukkit.getLogger().log(Level.INFO, ChatColor.stripColor("AllianceChat: "+message));
+			p.log(ChatColor.stripColor("AllianceChat: "+message));
 			
 			event.setCancelled(true);
 			return;
-		} else if (chat == ChatMode.NATION) {
+		} 
+		else if (chat == ChatMode.NATION)
+		{
 			Faction myFaction = me.getFaction();
 			
 			String message = String.format(Conf.nationChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
@@ -96,15 +103,15 @@ public class FactionsChatListener implements Listener
 			//Send to all our nation
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
-				if(myFaction.getRelationTo(fplayer) == Relation.NATION)
+				if (myFaction.getRelationTo(fplayer) == Relation.NATION)
 					fplayer.sendMessage(message);
 
 				//Send to any players who are spying chat
-				else if(fplayer.isSpyingChat())
+				else if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
 					fplayer.sendMessage("[NCspy]: " + message);
 			}
 			
-			Bukkit.getLogger().log(Level.INFO, ChatColor.stripColor("NationChat: "+message));
+			p.log(ChatColor.stripColor("NationChat: "+message));
 			
 			event.setCancelled(true);
 			return;
