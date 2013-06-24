@@ -316,7 +316,7 @@ public class FactionsBlockListener implements Listener
 		{
 			if (event.getBlock().getTypeId() == blockedMaterial.getTypeId())
 			{
-				if (canPlaceBlockedItemHere(floc, fac, fplayer, false))
+				if (! canPlaceBlockedItemHere(floc, fac, fplayer, false))
 				{
 					fplayer.msg("<i>You cannot place this item outside your own territory!");
 					event.setCancelled(true);
@@ -328,7 +328,7 @@ public class FactionsBlockListener implements Listener
 		{
 			if (event.getBlock().getTypeId() == blockedMaterial.getTypeId())
 			{
-				if (canPlaceBlockedItemHere(floc, fac, fplayer, true))
+				if (! canPlaceBlockedItemHere(floc, fac, fplayer, true))
 				{
 					fplayer.msg("<i>You cannot place this item outside your own territory or wilderness!");
 					event.setCancelled(true);
