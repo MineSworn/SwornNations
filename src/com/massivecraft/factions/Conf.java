@@ -244,6 +244,8 @@ public class Conf
 	public static boolean pistonProtectionThroughDenyBuild = true;
 
 	public static Set<MyMaterial> ownTerritoryOnlyMaterials = new HashSet<MyMaterial>();
+	public static Set<MyMaterial> ownTerritoryAndWildernessMaterials = new HashSet<MyMaterial>();
+	
 	public static Set<MyMaterial> territoryProtectedMaterials = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> territoryDenyUseageMaterials = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> territoryProtectedMaterialsWhenOffline = new HashSet<MyMaterial>();

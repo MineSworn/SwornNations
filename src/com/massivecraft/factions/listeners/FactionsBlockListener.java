@@ -310,17 +310,39 @@ public class FactionsBlockListener implements Listener
 		if (fplayer == null)
 			return;
 		
+		FLocation floc = new FLocation(event.getBlock());
+		Faction fac = Board.getFactionAt(floc);
 		for (MyMaterial blockedMaterial : Conf.ownTerritoryOnlyMaterials)
 		{
 			if (event.getBlock().getTypeId() == blockedMaterial.getTypeId())
 			{
-				FLocation flocation = new FLocation(event.getBlock());
-				if (Board.getFactionAt(flocation) != fplayer.getFaction())
+				if (canPlaceBlockedItemHere(floc, fac, fplayer, false))
 				{
 					fplayer.msg("<i>You cannot place this item outside your own territory!");
 					event.setCancelled(true);
 				}
 			}
 		}
+		
+		for (MyMaterial blockedMaterial : Conf.ownTerritoryAndWildernessMaterials)
+		{
+			if (event.getBlock().getTypeId() == blockedMaterial.getTypeId())
+			{
+				if (canPlaceBlockedItemHere(floc, fac, fplayer, true))
+				{
+					fplayer.msg("<i>You cannot place this item outside your own territory or wilderness!");
+					event.setCancelled(true);
+				}
+			} 
+		}
+	}
+	
+	public boolean canPlaceBlockedItemHere(FLocation floc, Faction fac, FPlayer pl, boolean both)
+	{
+		if (fac.isSafeZone() || fac.isWarZone()) return false;
+			
+		if (floc.getY() <= 45) return true;
+			
+		return (both ? (fac == pl.getFaction() || fac.isNone()) : (fac == pl.getFaction()));
 	}
 }
