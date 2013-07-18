@@ -14,13 +14,16 @@ import me.t7seven7t.swornnations.npermissions.NPermissionManager;
 import net.t7seven7t.commands.CmdHome;
 import net.t7seven7t.commands.CmdSetHome;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Location;
+
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.massivecraft.factions.cmd.CmdAutoHelp;
 import com.massivecraft.factions.cmd.FCmdRoot;
 import com.massivecraft.factions.integration.Econ;
@@ -44,12 +47,9 @@ import com.massivecraft.factions.util.MyLocationTypeAdapter;
 import com.massivecraft.factions.zcore.MPlugin;
 import com.massivecraft.factions.zcore.util.TextUtil;
 
-import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
-import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
-
 /**
  * 
- * @author t7seven7t
+ * @author dmulloy2
  * 
  * This plugin was forked from Olof Larsson and Brett Flannigan's original 
  * Factions plugin: https://github.com/MassiveCraft/Factions
@@ -176,19 +176,19 @@ public class P extends MPlugin
 	@Override
 	public void onDisable()
 	{
-		// only save data if plugin actually completely loaded successfully
+		// Only save data if plugin actually completely loaded successfully
 		if (this.loadSuccessful)
 		{
 			Board.save();
 			Conf.save();
-			//BackupHandler.chkBackupNeeded();
 		}
-		EssentialsFeatures.unhookChat();
+
 		if (AutoLeaveTask != null)
 		{
 			this.getServer().getScheduler().cancelTask(AutoLeaveTask);
 			AutoLeaveTask = null;
 		}
+		
 		super.onDisable();
 	}
 
