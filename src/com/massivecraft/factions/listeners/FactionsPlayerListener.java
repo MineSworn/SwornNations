@@ -26,7 +26,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.NumberConversions;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
@@ -40,7 +39,6 @@ import com.massivecraft.factions.integration.SpoutFeatures;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
-
 
 public class FactionsPlayerListener implements Listener
 {
@@ -253,7 +251,7 @@ public class FactionsPlayerListener implements Listener
 				{
 					FPlayer me = FPlayers.i.get(name);
 					me.msg("<b>Ouch, that is starting to hurt. You should give it a rest.");
-					player.damage(NumberConversions.floor((double)count / 10));
+					player.damage(Math.floor(count / 10.0D));
 				}
 			}
 			return;

@@ -26,7 +26,6 @@ import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.RelationUtil;
 import com.massivecraft.factions.zcore.persist.PlayerEntity;
 
-
 /**
  * Logged in players always have exactly one FPlayer instance.
  * Logged out players may or may not have an FPlayer instance. They will always have one if they are part of a faction.
@@ -438,21 +437,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	{
 		return RelationUtil.getColorOfThatToMe(this, rp);
 	}
-	
-	//----------------------------------------------//
-	// Health
-	//----------------------------------------------//
-	public void heal(int amnt)
-	{
-		Player player = this.getPlayer();
-		if (player == null)
-		{
-			return;
-		}
-		player.setHealth(player.getHealth() + amnt);
-	}
-	
-	
+
 	//----------------------------------------------//
 	// Power
 	//----------------------------------------------//

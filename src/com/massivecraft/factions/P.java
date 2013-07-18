@@ -18,12 +18,12 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
+import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.massivecraft.factions.cmd.CmdAutoHelp;
 import com.massivecraft.factions.cmd.FCmdRoot;
 import com.massivecraft.factions.integration.Econ;
@@ -31,7 +31,6 @@ import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
 import com.massivecraft.factions.integration.SpoutFeatures;
 import com.massivecraft.factions.integration.Worldguard;
-import com.massivecraft.factions.integration.capi.CapiFeatures;
 import com.massivecraft.factions.listeners.FactionsBlockListener;
 import com.massivecraft.factions.listeners.FactionsChatListener;
 import com.massivecraft.factions.listeners.FactionsEntityListener;
@@ -125,7 +124,6 @@ public class P extends MPlugin
 		EssentialsFeatures.setup();
 		SpoutFeatures.setup();
 		Econ.setup();
-		CapiFeatures.setup();
 		LWCFeatures.setup();
 
 		if(Conf.worldGuardChecking)

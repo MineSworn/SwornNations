@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.gson.Gson;
+import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
+
 import com.massivecraft.factions.zcore.util.DiscUtil;
 import com.massivecraft.factions.zcore.util.TextUtil;
 

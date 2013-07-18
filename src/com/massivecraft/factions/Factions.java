@@ -10,8 +10,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 
-import com.google.gson.reflect.TypeToken;
 import com.massivecraft.factions.util.MiscUtil;
 import com.massivecraft.factions.zcore.persist.EntityCollection;
 import com.massivecraft.factions.zcore.util.TextUtil;

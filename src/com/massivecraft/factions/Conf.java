@@ -157,7 +157,7 @@ public class Conf
 
 	public static double considerFactionsReallyOfflineAfterXMinutes = 10.0;
 	
-	public static int actionDeniedPainAmount = 0;
+	public static double actionDeniedPainAmount = 0;
 
 	// commands which will be prevented if the player is a member of a permanent faction
 	public static Set<String> permanentFactionMemberDenyCommands = new LinkedHashSet<String>();
