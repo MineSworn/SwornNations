@@ -43,6 +43,12 @@ public class CmdHome implements CommandExecutor {
 			return true;
 		}
 		
+		// Just go ahead and override
+		if (Conf.homeBalanceOverride) {
+			goHome();
+			return true;
+		}
+		
 		if (fme.getFaction().hasHome()) {
 			FLocation fHome = new FLocation(fme.getFaction().getHome());
 			FLocation home = new FLocation(fme.getHome());
@@ -57,7 +63,7 @@ public class CmdHome implements CommandExecutor {
 		
 		if (EssentialsFeatures.handleTeleport(fme.getPlayer(), fme.getHome())) return true;
 		
-		fme.getPlayer().teleport(fme.getHome());
+		goHome();
 		
 		return true;
 	}
@@ -96,4 +102,9 @@ public class CmdHome implements CommandExecutor {
 		return false;
 	}
 
+	public void goHome() {
+		if (EssentialsFeatures.handleTeleport(fme.getPlayer(), fme.getHome())) return;
+		
+		fme.getPlayer().teleport(fme.getHome());
+	}
 }

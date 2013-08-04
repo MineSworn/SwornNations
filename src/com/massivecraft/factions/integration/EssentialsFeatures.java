@@ -6,51 +6,61 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 import com.earth2me.essentials.Teleport;
 import com.earth2me.essentials.Trade;
+import com.earth2me.essentials.User;
 import com.massivecraft.factions.Conf;
 
-/*
- * This Essentials integration handler is for Teleport Handling
+/**
+ * This interface handles Essentials Teleportation
  */
-
-// Silence deprecation warnings with this old interface
-@SuppressWarnings("deprecation")
 public class EssentialsFeatures
 {
 	private static IEssentials essentials;
 
+	/**
+	 * Integrate main Essentials plugin
+	 */
 	public static void setup()
 	{
-		// Integrate main essentials plugin
-		// TODO: This is the old Essentials method not supported in 3.0... probably needs to eventually be moved to EssentialsOldVersionFeatures and new method implemented
 		if (essentials == null)
 		{
-			Plugin ess = Bukkit.getPluginManager().getPlugin("Essentials");
-			if (ess != null && ess.isEnabled())
-				essentials = (IEssentials)ess;
+			PluginManager pm = Bukkit.getPluginManager();
+			if (pm.isPluginEnabled("Essentials"))
+			{
+				Plugin essPlugin = pm.getPlugin("Essentials");
+				essentials = (IEssentials)essPlugin;
+			}
 		}
 	}
 
-	// Return false if feature is disabled or Essentials isn't available
+	/**
+	 * Handles Essentials Teleportation
+	 * @param player - {@link Player} to teleport
+	 * @param loc - {@link Location} to teleport to
+	 * @return Whether or not the teleportation was successful
+	 */
 	public static boolean handleTeleport(Player player, Location loc)
 	{
-		if ( ! Conf.homesTeleportCommandEssentialsIntegration || essentials == null) return false;
-
-		Teleport teleport = (Teleport) essentials.getUser(player).getTeleport();
-		Trade trade = new Trade(Conf.econCostHome, essentials);
 		try
 		{
-			teleport.teleport(loc, trade);
-		}
-		catch (Exception e)
+			if ( ! Conf.homesTeleportCommandEssentialsIntegration || essentials == null) return false;
+	
+			User user = essentials.getUser(player);
+			Teleport teleport = user.getTeleport();
+			Trade chargeFor = new Trade("fhome", essentials);
+
+			teleport.teleport(loc, chargeFor, TeleportCause.COMMAND);
+			return true;
+		} 
+		catch (Exception e) 
 		{
-			player.sendMessage(ChatColor.RED + "" + e.getMessage());
+			player.sendMessage(ChatColor.RED + "Could not teleport: " + e.getMessage());
 			return false;
 		}
-		
-		return true;
 	}
 }

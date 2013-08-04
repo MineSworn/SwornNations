@@ -42,12 +42,6 @@ import com.massivecraft.factions.struct.Role;
 
 public class FactionsPlayerListener implements Listener
 {
-	public P p;
-	public FactionsPlayerListener(P p)
-	{
-		this.p = p;
-	}
-
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
@@ -159,9 +153,12 @@ public class FactionsPlayerListener implements Listener
 				{
 					me.sendMessage(Conf.ownedLandMessage+ownersTo);
 				}
-			} else if (from.equals(to)) {
+			}
+			else if (from.equals(to))
+			{
 				return;
-			} else if (spoutClient && Conf.spoutTerritoryOwnersShow)
+			}
+			else if (spoutClient && Conf.spoutTerritoryOwnersShow)
 			{
 				SpoutFeatures.updateOwnerList(me);
 			}

@@ -214,15 +214,10 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	// Getters And Setters
 	// -------------------------------------------- //
 	
-	
-	
-	
 	public long getLastLoginTime()
 	{
 		return lastLoginTime;
 	}
-
-	
 
 	public void setLastLoginTime(long lastLoginTime)
 	{
@@ -347,7 +342,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		return this.getRelationColor(fplayer)+this.getNameAndTag();
 	}*/
 	
-	// TODO: REmovded for refactoring.
+	// TODO: Removded for refactoring.
 	
 	/*public String getNameAndRelevant(Faction faction)
 	{

@@ -1,11 +1,11 @@
 package com.massivecraft.factions.listeners;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.text.MessageFormat;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -21,6 +21,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
+import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -45,19 +46,11 @@ import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.util.MiscUtil;
 
-
 public class FactionsEntityListener implements Listener
 {
-	public P p;
-	public FactionsEntityListener(P p)
-	{
-		this.p = p;
-	}
-	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDeath(EntityDeathEvent event)
 	{
@@ -192,7 +185,7 @@ public class FactionsEntityListener implements Listener
 		}
 		else if
 		(
-			boomer instanceof TNTPrimed
+			boomer instanceof TNTPrimed || boomer instanceof ExplosiveMinecart
 			&&
 			(
 				(faction.isNone() && Conf.wildernessBlockTNT && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
@@ -208,7 +201,7 @@ public class FactionsEntityListener implements Listener
 			// TNT which needs prevention
 			event.setCancelled(true);
 		}
-		else if (boomer instanceof TNTPrimed && Conf.handleExploitTNTWaterlog)
+		else if ((boomer instanceof TNTPrimed || boomer instanceof ExplosiveMinecart) && Conf.handleExploitTNTWaterlog)
 		{
 			// TNT in water/lava doesn't normally destroy any surrounding blocks, which is usually desired behavior, but...
 			// this change below provides workaround for waterwalling providing perfect protection,
@@ -232,7 +225,9 @@ public class FactionsEntityListener implements Listener
 						target.breakNaturally();
 				}
 			}
-		} else if (!(boomer instanceof TNTPrimed || boomer instanceof Creeper || boomer instanceof Fireball)){
+		} 
+		else if (!(boomer instanceof TNTPrimed || boomer instanceof Creeper || boomer instanceof Fireball))
+		{
 			event.setCancelled(true);
 		}
 	}
@@ -566,7 +561,7 @@ public class FactionsEntityListener implements Listener
 		{
 			return false;
 		}
-		// quick check to see if all Enderman deny options are enabled; if so, no need to check location
+		// Quick check to see if all Enderman deny options are enabled; if so, no need to check location
 		if
 		(
 			Conf.wildernessDenyEndermanBlocks

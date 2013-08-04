@@ -1,12 +1,18 @@
 package com.massivecraft.factions;
 
-import java.util.*;
-
-import org.bukkit.*;
-import org.bukkit.entity.EntityType;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import me.t7seven7t.factions.util.MyMaterial;
 import me.t7seven7t.swornnations.npermissions.NPermission;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 
 public class Conf
 {
@@ -14,7 +20,7 @@ public class Conf
 	public static List<String> baseCommandAliases = new ArrayList<String>();
 	public static List<String> ownTerritoryOnlyCommands = new ArrayList<String>();
 	public static boolean allowNoSlashCommand = true;
-	
+
 	// Colors
 	public static ChatColor colorMember = ChatColor.GREEN;
 	public static ChatColor colorNation = ChatColor.DARK_PURPLE;
@@ -110,6 +116,8 @@ public class Conf
 	public static boolean handleExploitInteractionSpam = false;
 	public static boolean handleExploitTNTWaterlog = false;
 
+	public static boolean homeBalanceOverride = false;
+	
 	public static boolean homesEnabled = true;
 	public static boolean homesMustBeInClaimedTerritory = true;
 	public static int homesMustBeGreaterThan = 65;

@@ -61,7 +61,7 @@ import com.massivecraft.factions.zcore.util.TextUtil;
 
 public class P extends MPlugin
 {
-	// Our single plugin instance
+	// Instance
 	public static P p;
 	
 	// Listeners
@@ -85,12 +85,12 @@ public class P extends MPlugin
 	public P()
 	{
 		p = this;
-		this.playerListener = new FactionsPlayerListener(this);
+		this.playerListener = new FactionsPlayerListener();
 		this.chatListener = new FactionsChatListener(this);
-		this.entityListener = new FactionsEntityListener(this);
+		this.entityListener = new FactionsEntityListener();
 		this.exploitListener = new FactionsExploitListener();
-		this.blockListener = new FactionsBlockListener(this);
-		this.serverListener = new FactionsServerListener(this);
+		this.blockListener = new FactionsBlockListener();
+		this.serverListener = new FactionsServerListener();
 	}
 
 
@@ -105,12 +105,14 @@ public class P extends MPlugin
 		FPlayers.i.loadFromDisc();
 		Factions.i.loadFromDisc();
 		Board.load();
-		//BackupHandler.chkBackupNeeded();
 		
-		if (Conf.resetAllPerms) {
-			for (Faction f : Factions.i.get()) {
+		if (Conf.resetAllPerms)
+		{
+			for (Faction f : Factions.i.get()) 
+			{
 				f.resetPermManager();
 			}
+			
 			Conf.resetAllPerms = false;
 			Factions.i.saveToDisc();
 			Conf.save();

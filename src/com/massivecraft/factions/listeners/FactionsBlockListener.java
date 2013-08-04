@@ -12,9 +12,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
@@ -22,20 +22,12 @@ import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 
-
 public class FactionsBlockListener implements Listener
 {
-	public P p;
-	public FactionsBlockListener(P p)
-	{
-		this.p = p;
-	}
-	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
@@ -127,7 +119,6 @@ public class FactionsBlockListener implements Listener
 
 	private boolean canPistonMoveBlock(Faction pistonFaction, Location target)
 	{
-
 		Faction otherFaction = Board.getFactionAt(new FLocation(target));
 
 		if (pistonFaction == otherFaction)

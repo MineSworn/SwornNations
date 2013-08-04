@@ -55,6 +55,7 @@ public class CmdHome extends FCommand
 				{
 					fme.msg("<b>That faction doesn't have a home!");
 				}
+				
 				return;
 			}
 		}
@@ -90,8 +91,10 @@ public class CmdHome extends FCommand
 			return;
 		}
 		
-		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && myFaction.getHome().getBlockY() < Conf.homesMustBeGreaterThan) {
-			if (moveHome()) {
+		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && myFaction.getHome().getBlockY() < Conf.homesMustBeGreaterThan) 
+		{
+			if (moveHome()) 
+			{
 				fme.msg("<b>Your faction home has been moved as it was underground.");
 			}
 		}

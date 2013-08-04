@@ -44,7 +44,7 @@ public class Econ
 		}
 		econ = rsp.getProvider();
 
-		P.p.log("Economy integration through Vault plugin successful.");
+		P.p.log("Economy integration through %s successful.", econ.getName());
 
 		if ( ! Conf.econEnabled)
 			P.p.log("NOTE: Economy is disabled. You can enable it with the command: f config econEnabled true");
@@ -63,7 +63,6 @@ public class Econ
 	{
 		return econ != null;
 	}
-
 
 	public static void modifyUniverseMoney(double delta)
 	{
@@ -120,6 +119,7 @@ public class Econ
 	{
 		return transferMoney(invoker, from, to, amount, true);
 	}
+	
 	public static boolean transferMoney(EconomyParticipator invoker, EconomyParticipator from, EconomyParticipator to, double amount, boolean notify)
 	{
 		if ( ! shouldBeUsed()) return false;

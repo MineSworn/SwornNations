@@ -162,9 +162,10 @@ public abstract class FCommand extends MCommand<P>
 		
 		if (fme.getRole().value < role.value)
 		{
-			msg("<b>You <h>must be "+role+"<b> to "+this.getHelpShort()+".");
+			msg("<b>You must be <h>%s<b> to %s.", role, getHelpShort());
 			return false;
 		}
+		
 		return true;
 	}
 	

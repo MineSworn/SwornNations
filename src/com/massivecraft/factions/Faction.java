@@ -249,7 +249,9 @@ public class Faction extends Entity implements EconomyParticipator
 
 		// We need to override the default money given to players.
 		if ( ! Econ.hasAccount(aid))
+		{
 			Econ.setBalance(aid, 0);
+		}
 
 		return aid;
 	}

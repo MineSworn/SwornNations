@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.Board;
+import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
@@ -28,6 +29,18 @@ public class CmdSetHome implements CommandExecutor {
 			return true;
 		
 		fme = FPlayers.i.get((Player) sender);
+		if (! fme.hasFaction()) {
+			fme.msg("<b>You must have a faction to do this!");
+			return true;
+		}
+		
+		// Just go ahead and override
+		if (Conf.homeBalanceOverride) {
+			fme.setHome(fme.getPlayer().getLocation());
+			fme.msg("<i>Home set!");
+			return true;
+		}
+		
 		if (Board.getFactionAt(new FLocation(fme)) != fme.getFaction()) {
 			fme.msg("<b>Sorry, your faction home can only be set inside your own claimed territory.");
 			return true;
