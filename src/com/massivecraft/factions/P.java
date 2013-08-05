@@ -23,23 +23,23 @@ import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 
 import com.massivecraft.factions.cmd.CmdAutoHelp;
 import com.massivecraft.factions.cmd.FCmdRoot;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
-import com.massivecraft.factions.integration.SpoutFeatures;
-import com.massivecraft.factions.integration.Worldguard;
+import com.massivecraft.factions.integration.WorldGuard;
 import com.massivecraft.factions.listeners.FactionsBlockListener;
 import com.massivecraft.factions.listeners.FactionsChatListener;
 import com.massivecraft.factions.listeners.FactionsEntityListener;
 import com.massivecraft.factions.listeners.FactionsExploitListener;
 import com.massivecraft.factions.listeners.FactionsPlayerListener;
-import com.massivecraft.factions.listeners.FactionsServerListener;
 import com.massivecraft.factions.struct.ChatMode;
-import com.massivecraft.factions.util.AutoCleanupTask;
-import com.massivecraft.factions.util.AutoLeaveTask;
+import com.massivecraft.factions.tasks.AutoCleanupTask;
+import com.massivecraft.factions.tasks.AutoLeaveTask;
+import com.massivecraft.factions.tasks.InitiateCleanupTask;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MapFLocToStringSetTypeAdapter;
 import com.massivecraft.factions.util.MyLocationTypeAdapter;
@@ -70,12 +70,11 @@ public class P extends MPlugin
 	public final FactionsEntityListener entityListener;
 	public final FactionsExploitListener exploitListener;
 	public final FactionsBlockListener blockListener;
-	public final FactionsServerListener serverListener;
 	
 	// Persistance related
 	private boolean locked = false;
-	public boolean getLocked() {return this.locked;}
-	public void setLocked(boolean val) {this.locked = val; this.setAutoSave(val);}
+	public boolean getLocked() { return this.locked; }
+	public void setLocked(boolean val) { this.locked = val; this.setAutoSave(val); }
 	private Integer AutoLeaveTask = null;
 	
 	// Commands
@@ -90,7 +89,6 @@ public class P extends MPlugin
 		this.entityListener = new FactionsEntityListener();
 		this.exploitListener = new FactionsExploitListener();
 		this.blockListener = new FactionsBlockListener();
-		this.serverListener = new FactionsServerListener();
 	}
 
 
@@ -124,13 +122,12 @@ public class P extends MPlugin
 		this.getBaseCommands().add(cmdBase);
 
 		EssentialsFeatures.setup();
-		SpoutFeatures.setup();
 		Econ.setup();
 		LWCFeatures.setup();
 
-		if(Conf.worldGuardChecking)
+		if (Conf.worldGuardChecking)
 		{
-			Worldguard.init(this);
+			WorldGuard.init(this);
 		}
 
 		//start up task which runs the autoRemoveClaimsAfterTime routine
@@ -140,19 +137,21 @@ public class P extends MPlugin
 		// start up task which runs the autoLeaveAfterDaysOfInactivity routine
 		startAutoLeaveTask(false);
 
-		// Register Event Handlers
-		getServer().getPluginManager().registerEvents(playerListener, this);
-		getServer().getPluginManager().registerEvents(chatListener, this);
-		getServer().getPluginManager().registerEvents(entityListener, this);
-		getServer().getPluginManager().registerEvents(exploitListener, this);
-		getServer().getPluginManager().registerEvents(blockListener, this);
-		getServer().getPluginManager().registerEvents(serverListener, this);
+		// Register Listeners
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(playerListener, this);
+		pm.registerEvents(chatListener, this);
+		pm.registerEvents(entityListener, this);
+		pm.registerEvents(exploitListener, this);
+		pm.registerEvents(blockListener, this);
 
-		// since some other plugins execute commands directly through this command interface, provide it
-		this.getCommand(this.refCommand).setExecutor(this);
+		// Since some other plugins execute commands directly through this command interface, provide it
+		getCommand(refCommand).setExecutor(this);
 		
-		this.getCommand("home").setExecutor(new CmdHome());
-		this.getCommand("sethome").setExecutor(new CmdSetHome());
+		getCommand("home").setExecutor(new CmdHome());
+		getCommand("sethome").setExecutor(new CmdSetHome());
+		
+		new InitiateCleanupTask().runTaskAsynchronously(this);
 
 		postEnable();
 		this.loadSuccessful = true;
@@ -185,8 +184,8 @@ public class P extends MPlugin
 
 		if (AutoLeaveTask != null)
 		{
-			this.getServer().getScheduler().cancelTask(AutoLeaveTask);
-			AutoLeaveTask = null;
+			getServer().getScheduler().cancelTask(AutoLeaveTask);
+			this.AutoLeaveTask = null;
 		}
 		
 		super.onDisable();

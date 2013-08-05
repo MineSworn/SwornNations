@@ -16,9 +16,8 @@ import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.massivecraft.factions.tasks.SaveTask;
 import com.massivecraft.factions.zcore.persist.EM;
-import com.massivecraft.factions.zcore.persist.SaveTask;
-import com.massivecraft.factions.zcore.util.LibLoader;
 import com.massivecraft.factions.zcore.util.PermUtil;
 import com.massivecraft.factions.zcore.util.Persist;
 import com.massivecraft.factions.zcore.util.TextUtil;
@@ -28,7 +27,6 @@ public abstract class MPlugin extends JavaPlugin
 	// Some utils
 	public Persist persist;
 	public TextUtil txt;
-	public LibLoader lib;
 	public PermUtil perm;
 	
 	// Persist related
@@ -62,10 +60,6 @@ public abstract class MPlugin extends JavaPlugin
 		// Create Utility Instances
 		this.perm = new PermUtil(this);
 		this.persist = new Persist(this);
-		this.lib = new LibLoader(this);
-
-		// GSON 2.1 is now embedded in CraftBukkit, used by the auto-updater: https://github.com/Bukkit/CraftBukkit/commit/0ed1d1fdbb1e0bc09a70bc7bfdf40c1de8411665
-//		if ( ! lib.require("gson.jar", "http://search.maven.org/remotecontent?filepath=com/google/code/gson/gson/2.1/gson-2.1.jar")) return false;
 		this.gson = this.getGsonBuilder().create();
 		
 		this.txt = new TextUtil();
@@ -114,6 +108,7 @@ public abstract class MPlugin extends JavaPlugin
 		// only save data if plugin actually loaded successfully
 		if (loadSuccessful)
 			EM.saveAllToDisc();
+		
 		log(getDescription().getFullName() + " has been disabled");
 	}
 	

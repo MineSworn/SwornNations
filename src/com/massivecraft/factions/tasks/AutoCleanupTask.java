@@ -1,4 +1,4 @@
-package com.massivecraft.factions.util;
+package com.massivecraft.factions.tasks;
 
 import org.bukkit.scheduler.BukkitRunnable;
 

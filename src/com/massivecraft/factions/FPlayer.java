@@ -16,8 +16,7 @@ import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.LWCFeatures;
-import com.massivecraft.factions.integration.SpoutFeatures;
-import com.massivecraft.factions.integration.Worldguard;
+import com.massivecraft.factions.integration.WorldGuard;
 import com.massivecraft.factions.struct.ChatMode;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
@@ -53,13 +52,12 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		if (oldFaction != null) oldFaction.removeFPlayer(this);
 		faction.addFPlayer(this);
 		this.factionId = faction.getId();
-		SpoutFeatures.updateAppearances(this.getPlayer());
 	}
 	
 	// FIELD: role
 	private Role role;
 	public Role getRole() { return this.role; }
-	public void setRole(Role role) { this.role = role; SpoutFeatures.updateAppearances(this.getPlayer()); }
+	public void setRole(Role role) { this.role = role; }
 	
 	// FIELD: title
 	private String title;
@@ -198,11 +196,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.role = Role.NORMAL;
 		this.title = "";
 		this.autoClaimFor = null;
-
-		if (doSpoutUpdate)
-		{
-			SpoutFeatures.updateAppearances(this.getPlayer());
-		}
 	}
 	
 	public void resetFactionData()
@@ -569,10 +562,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 	public void sendFactionHereMessage()
 	{
-		if (SpoutFeatures.updateTerritoryDisplay(this))
-		{
-			return;
-		}
 		Faction factionHere = Board.getFactionAt(this.getLastStoodAt());
 		String msg = P.p.txt.parse("<i>")+" ~ "+factionHere.getTag(this);
 		if (factionHere.getDescription().length() > 0)
@@ -682,7 +671,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		Faction currentFaction = Board.getAbsoluteFactionAt(flocation);
 		int ownedLand = forFaction.getLandRounded();
 		
-		if (Conf.worldGuardChecking && Worldguard.checkForRegionsInChunk(location))
+		if (Conf.worldGuardChecking && WorldGuard.checkForRegionsInChunk(location))
 		{
 			// Checks for WorldGuard regions in the chunk attempting to be claimed
 			error = P.p.txt.parse("<b>This land is protected");
@@ -846,8 +835,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		
 		Board.setFactionAt(forFaction, flocation);
 		forFaction.setPlayerAsOwner(getName(), flocation);
-		
-		SpoutFeatures.updateTerritoryDisplayLoc(flocation);
 
 		if (Conf.logLandClaims)
 			P.p.log(this.getName()+" claimed land at ("+flocation.getCoordString()+") for the faction: "+forFaction.getTag());

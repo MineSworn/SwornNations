@@ -47,7 +47,6 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Relation;
-import com.massivecraft.factions.util.MiscUtil;
 
 public class FactionsEntityListener implements Listener
 {
@@ -477,7 +476,7 @@ public class FactionsEntityListener implements Listener
 		}
 		
 		// We are interested in blocking targeting for certain mobs:
-		if ( ! Conf.safeZoneNerfedCreatureTypes.contains(MiscUtil.creatureTypeFromEntity(event.getEntity())))
+		if (! Conf.safeZoneNerfedCreatureTypes.contains(event.getEntityType()))
 		{
 			return;
 		}

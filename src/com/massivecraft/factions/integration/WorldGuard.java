@@ -23,12 +23,11 @@ import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.entity.Player;
 
-/*
- *  Worldguard Region Checking
- *  Author: Spathizilla
+/**
+ * WorldGuard region checking
  */
 
-public class Worldguard
+public class WorldGuard
 {
 	private static WorldGuardPlugin wg;
 	private static boolean enabled = false;

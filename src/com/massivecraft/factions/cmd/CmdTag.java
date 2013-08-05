@@ -4,19 +4,16 @@ import java.util.ArrayList;
 
 import me.t7seven7t.swornnations.npermissions.NPermission;
 
-import org.bukkit.Bukkit;
-
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.FactionRenameEvent;
-import com.massivecraft.factions.integration.SpoutFeatures;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.MiscUtil;
 
 public class CmdTag extends FCommand
 {
-	
 	public CmdTag()
 	{
 		this.aliases.add("tag");
@@ -68,7 +65,7 @@ public class CmdTag extends FCommand
 
 		// trigger the faction rename event (cancellable)
 		FactionRenameEvent renameEvent = new FactionRenameEvent(fme, tag);
-		Bukkit.getServer().getPluginManager().callEvent(renameEvent);
+		P.p.getServer().getPluginManager().callEvent(renameEvent);
 		if(renameEvent.isCancelled()) return;
 
 		// then make 'em pay (if applicable)
@@ -86,11 +83,6 @@ public class CmdTag extends FCommand
 				continue;
 			}
 			faction.msg("<i>The faction %s<i> changed their name to %s<i>.", fme.getColorTo(faction)+oldtag, myFaction.getTag(faction));
-		}
-
-		if (Conf.spoutFactionTagsOverNames)
-		{
-			SpoutFeatures.updateAppearances(myFaction);
 		}
 	}
 	

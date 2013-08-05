@@ -51,24 +51,6 @@ public class CmdInitiate extends FCommand
 			return;
 		}
 		
-		if (you.getTitle().equals("~Initiate~"))
-		{
-			you.setTitle("");
-		}
-		else
-		{
-			String oldTitle = you.getTitle().replaceAll("~", "");
-			String[] split = oldTitle.split("_");
-			StringBuilder newTitle = new StringBuilder();
-			for (int i=1; i<split.length; i++)
-			{
-				newTitle.append(split[i] + "_");
-			}
-			newTitle.deleteCharAt(newTitle.lastIndexOf("_"));
-			
-			you.setTitle(newTitle.toString());
-		}
-		
 		you.setRole(Role.NORMAL);
 		
 		fme.msg("<i>You have removed initiate status from <i>%s<i>.", you.describeTo(fme));

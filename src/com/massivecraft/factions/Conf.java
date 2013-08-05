@@ -20,6 +20,8 @@ public class Conf
 	public static List<String> baseCommandAliases = new ArrayList<String>();
 	public static List<String> ownTerritoryOnlyCommands = new ArrayList<String>();
 	public static boolean allowNoSlashCommand = true;
+	
+	public static boolean debug = false;
 
 	// Colors
 	public static ChatColor colorMember = ChatColor.GREEN;
@@ -47,6 +49,7 @@ public class Conf
 	public static String prefixCoadmin = "~*";
 	public static String prefixMod = "*";
 	public static String prefixOfficer = "~";
+	public static String prefixInitiate = "-";
 		
 	public static int factionTagLengthMin = 3;
 	public static int factionTagLengthMax = 7;
@@ -335,6 +338,7 @@ public class Conf
 	
 	public static Set<String> bannedFactionNames = new LinkedHashSet<String>();
 	
+	public static HashSet<NPermission> initiateNationPermissions = new HashSet<NPermission>();
 	public static HashSet<NPermission> defaultNationPermissions = new HashSet<NPermission>();
 	public static HashSet<NPermission> officerNationPermissions = new HashSet<NPermission>();
 	public static HashSet<NPermission> moderatorNationPermissions = new HashSet<NPermission>();
@@ -444,7 +448,9 @@ public class Conf
 	{
 		P.p.persist.loadOrSaveDefault(i, Conf.class, "conf");
 		
-		if (Conf.resetAllPerms) {
+		if (Conf.resetAllPerms)
+		{
+			initiateNationPermissions.clear();
 			defaultNationPermissions.clear();
 			officerNationPermissions.clear();
 			moderatorNationPermissions.clear();
@@ -464,6 +470,8 @@ public class Conf
 		defaultNationPermissions.add(NPermission.CHEST);
 		defaultNationPermissions.add(NPermission.SWITCH);
 		defaultNationPermissions.add(NPermission.WARP);
+		
+		initiateNationPermissions.addAll(defaultNationPermissions);
 		
 		officerNationPermissions.addAll(defaultNationPermissions);
 		officerNationPermissions.add(NPermission.INVITE);
@@ -489,4 +497,3 @@ public class Conf
 		coadminNationPermissions.add(NPermission.SETOUTPOST);
 	}
 }
-

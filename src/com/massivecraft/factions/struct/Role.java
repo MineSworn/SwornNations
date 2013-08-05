@@ -58,6 +58,11 @@ public enum Role
 			return Conf.prefixOfficer;
 		}
 		
+		if (this == Role.INITIATE)
+		{
+			return Conf.prefixInitiate;
+		}
+		
 		return "";
 	}
 	

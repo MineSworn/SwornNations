@@ -3,16 +3,14 @@ package com.massivecraft.factions.cmd;
 import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.event.FPlayerLeaveEvent;
-import com.massivecraft.factions.event.FactionDisbandEvent;
+import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.P;
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.integration.SpoutFeatures;
+import com.massivecraft.factions.event.FPlayerLeaveEvent;
+import com.massivecraft.factions.event.FactionDisbandEvent;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
-
 
 public class CmdDisband extends FCommand
 {
@@ -20,8 +18,7 @@ public class CmdDisband extends FCommand
 	{
 		super();
 		this.aliases.add("disband");
-		
-		//this.requiredArgs.add("");
+
 		this.optionalArgs.put("faction tag", "yours");
 		
 		this.permission = Permission.DISBAND.node;
@@ -91,6 +88,7 @@ public class CmdDisband extends FCommand
 		if (Conf.logFactionDisband)
 			P.p.log("The faction "+faction.getTag()+" ("+faction.getId()+") was disbanded by "+(senderIsConsole ? "console command" : fme.getName())+".");
 
+//      TODO: Bring this back?
 //		if (Econ.shouldBeUsed() && ! senderIsConsole)
 //		{
 //			//Give all the faction's money to the disbander
@@ -106,7 +104,5 @@ public class CmdDisband extends FCommand
 //		}		
 		
 		faction.detach();
-
-		SpoutFeatures.updateAppearances();
 	}
 }

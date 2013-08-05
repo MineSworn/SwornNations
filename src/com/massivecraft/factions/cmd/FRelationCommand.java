@@ -14,7 +14,6 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.event.FactionRelationEvent;
-import com.massivecraft.factions.integration.SpoutFeatures;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
@@ -75,34 +74,35 @@ public abstract class FRelationCommand extends FCommand
 		// if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
 		if ( ! payForCommand(targetRelation.getRelationCost(), "to change a relation wish", "for changing a relation wish")) return;
 		
-		// Do nation checks first..
-		if (targetRelation.equals(Relation.NATION)) {
-				
-			if (myFaction.getRelationWish(them) != Relation.NATION && myFaction.getRelationTo(them) == Relation.NATION) {
+		// TODO: Make sure nations cannot be overriden with any other relation
+		if (targetRelation.equals(Relation.NATION)) 
+		{
+			if (myFaction.getRelationWish(them) != Relation.NATION && myFaction.getRelationTo(them) == Relation.NATION) 
+			{
 				myFaction.setRelationWish(them, targetRelation);
 				return;
 			}
 			
-			if (!canAlly(them)) {
+			if (!canAlly(them)) 
+			{
 				msg("<i>You can't enter a nation with " + them.getTag(fme) + "<i> because you are at war with their allies.");
 				return;
 			}
 			
-			if (nationWishes.containsKey(them) && nationWishes.get(them) == myFaction) {
-				
-				if (nationWishes.get(them) == myFaction) {
-					
+			if (nationWishes.containsKey(them) && nationWishes.get(them) == myFaction) 
+			{
+				if (nationWishes.get(them) == myFaction) 
+				{
 					myFaction.setRelationWish(them, targetRelation);
 					them.setRelationWish(myFaction, targetRelation);
 					them.msg("<i>Your faction has now formed a Nation with "+myFaction.getRelationTo(them, true).getColor()+myFaction.getTag());
 					myFaction.msg("<i>Your faction has now formed a Nation with "+myFaction.getRelationTo(them, true).getColor()+them.getTag());
 					nationWishes.remove(them);
 					return;
-					
-				}
-				
-			} else {
-				
+				}	
+			}
+			else
+			{
 				nationWishes.put(myFaction, them);
 				them.msg(myFaction.getRelationTo(them, true).getColor() +myFaction.getTag()+"<i> wishes to form a Nation with you.");
 				them.msg("<i>Type <c>/"+Conf.baseCommandAliases.get(0)+" "+targetRelation+" "+myFaction.getTag()+"<i> to accept.");
@@ -110,14 +110,16 @@ public abstract class FRelationCommand extends FCommand
 				return;
 				
 			}
-			
-		} else {
+		} 
+		else
+		{
 			nationWishes.remove(myFaction);
 		}
 
 		// try to set the new relation
 		Relation oldRelation = myFaction.getRelationTo(them, true);
-		if (oldRelation.equals(Relation.NATION) && !myFaction.playerHasPermission(fme, NPermission.NATION)) {
+		if (oldRelation.equals(Relation.NATION) && !myFaction.playerHasPermission(fme, NPermission.NATION))
+		{
 			msg("<b>You don't have permission to break a Nation with %s.", them.getTag());
 			return;
 		}
@@ -125,7 +127,8 @@ public abstract class FRelationCommand extends FCommand
 		if (targetRelation == Relation.ENEMY)
 			breakAllies(them);
 		
-		if (targetRelation == Relation.ALLY && !canAlly(them)) {
+		if (targetRelation == Relation.ALLY && !canAlly(them)) 
+		{
 			msg("<i>You can't ally " + them.getTag(fme) + "<i> because you are at war with their allies.");
 			return;
 		}
@@ -172,9 +175,6 @@ public abstract class FRelationCommand extends FCommand
 		if (targetRelation == Relation.ALLY && fme.getRole() == Role.ADMIN) {
 			fme.msg("<i>Want a better relationship than ally? Use &e/f nation <i>to form an alliance only broken if both parties agree");
 		}
-
-		SpoutFeatures.updateAppearances(myFaction, them);
-		SpoutFeatures.updateTerritoryDisplayLoc(null);
 	}
 	
 	private boolean breakAllies(Faction them) {

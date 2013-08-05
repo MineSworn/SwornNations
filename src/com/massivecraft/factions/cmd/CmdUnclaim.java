@@ -2,16 +2,13 @@ package com.massivecraft.factions.cmd;
 
 import me.t7seven7t.swornnations.npermissions.NPermission;
 
-import org.bukkit.Bukkit;
-
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.event.LandUnclaimEvent;
-import com.massivecraft.factions.integration.Econ;
-import com.massivecraft.factions.integration.SpoutFeatures;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.P;
+import com.massivecraft.factions.event.LandUnclaimEvent;
+import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 
@@ -46,7 +43,6 @@ public class CmdUnclaim extends FCommand
 			if (Permission.MANAGE_SAFE_ZONE.has(sender))
 			{
 				Board.removeAt(flocation);
-				SpoutFeatures.updateTerritoryDisplayLoc(flocation);
 				msg("<i>Safe zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
@@ -63,7 +59,6 @@ public class CmdUnclaim extends FCommand
 			if (Permission.MANAGE_WAR_ZONE.has(sender))
 			{
 				Board.removeAt(flocation);
-				SpoutFeatures.updateTerritoryDisplayLoc(flocation);
 				msg("<i>War zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
@@ -79,8 +74,6 @@ public class CmdUnclaim extends FCommand
 		if (fme.isAdminBypassing())
 		{
 			Board.removeAt(flocation);
-			SpoutFeatures.updateTerritoryDisplayLoc(flocation);
-
 			otherFaction.msg("%s<i> unclaimed some of your land.", fme.describeTo(otherFaction, true));
 			msg("<i>You unclaimed this land.");
 
@@ -108,7 +101,7 @@ public class CmdUnclaim extends FCommand
 		}
 
 		LandUnclaimEvent unclaimEvent = new LandUnclaimEvent(flocation, otherFaction, fme);
-		Bukkit.getServer().getPluginManager().callEvent(unclaimEvent);
+		P.p.getServer().getPluginManager().callEvent(unclaimEvent);
 		if(unclaimEvent.isCancelled()) return;
 
 		if (Econ.shouldBeUsed())
@@ -121,12 +114,11 @@ public class CmdUnclaim extends FCommand
 			}
 			else
 			{
-				if ( ! Econ.modifyMoney(fme      , refund, "to unclaim this land", "for unclaiming this land")) return;
+				if ( ! Econ.modifyMoney(fme, refund, "to unclaim this land", "for unclaiming this land")) return;
 			}
 		}
 
 		Board.removeAt(flocation);
-		SpoutFeatures.updateTerritoryDisplayLoc(flocation);
 		myFaction.msg("%s<i> unclaimed some land.", fme.describeTo(myFaction, true));
 
 		if (Conf.logLandUnclaims)

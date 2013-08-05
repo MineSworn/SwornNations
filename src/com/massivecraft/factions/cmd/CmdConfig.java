@@ -3,8 +3,8 @@ package com.massivecraft.factions.cmd;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Set;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.P;
-import com.massivecraft.factions.integration.SpoutFeatures;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdConfig extends FCommand
@@ -274,11 +273,9 @@ public class CmdConfig extends FCommand
 				P.p.log(success + " Command was run by "+fme.getName()+".");
 			}
 		}
+		
 		// save change to disk
 		Conf.save();
-
-		// in case some Spout related setting was changed
-		SpoutFeatures.updateAppearances();
 	}
 	
 }

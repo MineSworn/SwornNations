@@ -1,5 +1,7 @@
 package com.massivecraft.factions.integration;
 
+import java.util.logging.Level;
+
 import net.ess3.api.IEssentials;
 
 import org.bukkit.Bukkit;
@@ -14,6 +16,7 @@ import com.earth2me.essentials.Teleport;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.massivecraft.factions.Conf;
+import com.massivecraft.factions.P;
 
 /**
  * This interface handles Essentials Teleportation
@@ -34,12 +37,19 @@ public class EssentialsFeatures
 			{
 				Plugin essPlugin = pm.getPlugin("Essentials");
 				essentials = (IEssentials)essPlugin;
+				
+				P.p.log("Essentials integration successful! Using it for Teleportation!");
+			}
+			else
+			{
+				P.p.log("Essentials could not be found. Using backup Teleportation.");
 			}
 		}
 	}
 
 	/**
 	 * Handles Essentials Teleportation
+	 * 
 	 * @param player - {@link Player} to teleport
 	 * @param loc - {@link Location} to teleport to
 	 * @return Whether or not the teleportation was successful
@@ -59,7 +69,17 @@ public class EssentialsFeatures
 		} 
 		catch (Exception e) 
 		{
-			player.sendMessage(ChatColor.RED + "Could not teleport: " + e.getMessage());
+			player.sendMessage(ChatColor.RED + "Could not teleport using Essentials: " + e.getMessage());
+			P.p.log(Level.WARNING, "Could not teleport player %s using Essentials: %s", player.getName(), e);
+			if (Conf.debug)
+			{
+				e.printStackTrace();
+			}
+			else
+			{
+				P.p.log(Level.WARNING, "To see full stack trace, use \"f config debug true\"");
+			}
+			
 			return false;
 		}
 	}

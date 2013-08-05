@@ -6,7 +6,7 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.util.SpiralTask;
+import com.massivecraft.factions.tasks.SpiralTask;
 
 
 public class CmdClaim extends FCommand

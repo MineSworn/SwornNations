@@ -1,14 +1,12 @@
 package com.massivecraft.factions.cmd;
 
+import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.integration.SpoutFeatures;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdPeaceful extends FCommand
 {
-	
 	public CmdPeaceful()
 	{
 		super();
@@ -57,8 +55,5 @@ public class CmdPeaceful extends FCommand
 				fplayer.msg((fme == null ? "A server admin" : fme.describeTo(fplayer, true))+"<i> has "+change+" the faction \"" + faction.getTag(fplayer) + "<i>\".");
 			}
 		}
-
-		SpoutFeatures.updateAppearances(faction);
 	}
-	
 }
