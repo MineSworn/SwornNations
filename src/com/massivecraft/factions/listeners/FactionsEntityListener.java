@@ -1,16 +1,13 @@
 package com.massivecraft.factions.listeners;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
@@ -127,110 +124,88 @@ public class FactionsEntityListener implements Listener
 			event.setCancelled(true);
 		}
 	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onEntityExplode(EntityExplodeEvent event)
-	{
-		if (event.isCancelled()) return;
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityExplode(EntityExplodeEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
 		
 		Location loc = event.getLocation();
 		Entity boomer = event.getEntity();
+		
 		Faction faction = Board.getFactionAt(new FLocation(loc));
-
-		if (faction.noExplosionsInTerritory())
-		{
-			// faction is peaceful and has explosions set to disabled
+		
+		if (faction.noExplosionsInTerritory()) {
 			event.setCancelled(true);
 			return;
 		}
-
+		
 		boolean online = faction.hasPlayersOnline();
-
-		if
-		(
-			boomer instanceof Creeper
-			&&
-			(
-				(faction.isNone() && Conf.wildernessBlockCreepers && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
-				||
-				(faction.isNormal() && (online ? Conf.territoryBlockCreepers : Conf.territoryBlockCreepersWhenOffline))
-				||
-				(faction.isWarZone() && Conf.warZoneBlockCreepers)
-				||
-				faction.isSafeZone()
-			)
-		)
-		{
-			// creeper which needs prevention
-			event.setCancelled(true);
-		}
-		else if
-		(
-			(boomer instanceof Fireball || boomer instanceof WitherSkull || boomer instanceof Wither)
-			&&
-			(
-				(faction.isNone() && Conf.wildernessBlockFireballs && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
-				||
-				(faction.isNormal() && (online ? Conf.territoryBlockFireballs : Conf.territoryBlockFireballsWhenOffline))
-				||
-				(faction.isWarZone() && Conf.warZoneBlockFireballs)
-				||
-				faction.isSafeZone()
-			)
-		)
-		{
-			// ghast fireball which needs prevention
-			event.setCancelled(true);
-		}
-		else if
-		(
-			boomer instanceof TNTPrimed || boomer instanceof ExplosiveMinecart
-			&&
-			(
-				(faction.isNone() && Conf.wildernessBlockTNT && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
-				||
-				(faction.isNormal() && ( online ? Conf.territoryBlockTNT : Conf.territoryBlockTNTWhenOffline ))
-				||
-				(faction.isWarZone() && Conf.warZoneBlockTNT)
-				||
-				(faction.isSafeZone() && Conf.safeZoneBlockTNT)
-			)
-		)
-		{
-			// TNT which needs prevention
-			event.setCancelled(true);
-		}
-		else if ((boomer instanceof TNTPrimed || boomer instanceof ExplosiveMinecart) && Conf.handleExploitTNTWaterlog)
-		{
-			// TNT in water/lava doesn't normally destroy any surrounding blocks, which is usually desired behavior, but...
-			// this change below provides workaround for waterwalling providing perfect protection,
-			// and makes cheap (non-obsidian) TNT cannons require minor maintenance between shots
-			Block center = loc.getBlock();
-			if (center.isLiquid())
-			{
-				// a single surrounding block in all 6 directions is broken if the material is weak enough
-				List<Block> targets = new ArrayList<Block>();
-				targets.add(center.getRelative(0, 0, 1));
-				targets.add(center.getRelative(0, 0, -1));
-				targets.add(center.getRelative(0, 1, 0));
-				targets.add(center.getRelative(0, -1, 0));
-				targets.add(center.getRelative(1, 0, 0));
-				targets.add(center.getRelative(-1, 0, 0));
-				for (Block target : targets)
-				{
-					int id = target.getTypeId();
-					// ignore air, bedrock, water, lava, obsidian, enchanting table... too bad we can't get a working material durability # yet
-					if (id != 0 && (id < 7 || id > 11) && id != 49 && id != 116)
-						target.breakNaturally();
-				}
+		
+		if (boomer instanceof Creeper) {
+			if (faction.isNone() && Conf.wildernessBlockCreepers && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName())) {
+				event.setCancelled(true);
+				return;
 			}
-		} 
-		else if (!(boomer instanceof TNTPrimed || boomer instanceof Creeper || boomer instanceof Fireball))
-		{
-			event.setCancelled(true);
+			
+			if (faction.isNormal() && (online ? Conf.territoryBlockCreepers : Conf.territoryBlockCreepersWhenOffline)) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isWarZone() && Conf.warZoneBlockCreepers) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isSafeZone()) {
+				event.setCancelled(true);
+				return;
+			}
+		} else if (boomer instanceof Fireball || boomer instanceof WitherSkull || boomer instanceof Wither) {
+			if (faction.isNone() && Conf.wildernessBlockFireballs && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName())) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isNormal() && (online ? Conf.territoryBlockFireballs : Conf.territoryBlockFireballsWhenOffline)) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isWarZone() && Conf.warZoneBlockFireballs) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isSafeZone()) {
+				event.setCancelled(true);
+				return;
+			}
+		} else if (boomer instanceof TNTPrimed || boomer instanceof ExplosiveMinecart) {
+			if (faction.isNone() && Conf.wildernessBlockTNT && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName())) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isNormal() && (online ? Conf.territoryBlockTNT : Conf.territoryBlockTNTWhenOffline)) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isWarZone() && Conf.warZoneBlockTNT) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (faction.isSafeZone()) {
+				event.setCancelled(true);
+				return;
+			}
 		}
 	}
-
+	
 	// mainly for flaming arrows; don't want allies or people in safe zones to be ignited even after damage event is cancelled
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityCombustByEntity(EntityCombustByEntityEvent event)
