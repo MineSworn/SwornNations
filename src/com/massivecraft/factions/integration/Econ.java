@@ -44,7 +44,7 @@ public class Econ
 		}
 		econ = rsp.getProvider();
 
-		P.p.log("Economy integration through %s successful.", econ.getName());
+		P.p.log("Economy integration through %s!", econ.getName());
 
 		if ( ! Conf.econEnabled)
 			P.p.log("NOTE: Economy is disabled. You can enable it with the command: f config econEnabled true");

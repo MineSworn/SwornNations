@@ -38,7 +38,7 @@ public class EssentialsFeatures
 				Plugin essPlugin = pm.getPlugin("Essentials");
 				essentials = (IEssentials)essPlugin;
 				
-				P.p.log("Essentials integration successful! Using it for Teleportation!");
+				P.p.log("Essentials integration successful!");
 			}
 			else
 			{

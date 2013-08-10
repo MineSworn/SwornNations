@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.massivecraft.factions.Board;
@@ -41,26 +42,42 @@ import com.massivecraft.factions.struct.Role;
 
 public class FactionsPlayerListener implements Listener
 {
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		// Make sure that all online players do have a fplayer.
-		final FPlayer me = FPlayers.i.get(event.getPlayer());
+		final Player player = event.getPlayer();
+		final FPlayer me = FPlayers.i.get(player);
 		
 		// Update the lastLoginTime for this fplayer
 		me.setLastLoginTime(System.currentTimeMillis());
 
-		me.setLastStoodAt(new FLocation(event.getPlayer().getLocation()));
+		handlePlayerMove(player, player.getLocation(), null, false);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
-		FPlayer me = FPlayers.i.get(event.getPlayer());
+		onPlayerDisconnect(event.getPlayer());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerKick(PlayerKickEvent event)
+	{
+		if ( ! event.isCancelled())
+		{
+			onPlayerDisconnect(event.getPlayer());
+		}
+	}
+	
+	public void onPlayerDisconnect(Player player)
+	{
+		FPlayer me = FPlayers.i.get(player);
 
 		// Make sure player's power is up to date when they log off.
 		me.getPower();
-		// and update their last login time to point to when the logged off, for auto-remove routine
+		
+		// Update their last login time to point to when the logged off, for auto-remove routine
 		me.setLastLoginTime(System.currentTimeMillis());
 
 		Faction myFaction = me.getFaction();
@@ -73,136 +90,143 @@ public class FactionsPlayerListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
-		if (event.isCancelled()) return;
-		
-		if (	event.getFrom().getBlockX() >> 4 == event.getTo().getBlockX() >> 4 && 
-				event.getFrom().getBlockZ() >> 4 == event.getTo().getBlockZ() >> 4 &&
-				event.getFrom().getWorld() == event.getTo().getWorld())
-			return;
-		
-		Player player = event.getPlayer();
+		if ( ! event.isCancelled())
+		{
+			handlePlayerMove(event.getPlayer(), event.getTo(), event.getFrom(), true);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerTeleport(PlayerTeleportEvent event)
+	{
+		if ( ! event.isCancelled())
+		{
+			handlePlayerMove(event.getPlayer(), event.getTo(), event.getFrom(), false);
+		}
+	}
+	
+	public void handlePlayerMove(Player player, Location locationTo, Location locationFrom, boolean moveEvent)
+	{
+		if (moveEvent)
+		{
+			if (locationFrom.getBlockX() >> 4 == locationTo.getBlockX() >> 4 && 
+					locationFrom.getBlockZ() >> 4 == locationTo.getBlockZ() >> 4 &&
+					locationFrom.getWorld() == locationTo.getWorld())
+				return;
+		}
+
 		FPlayer me = FPlayers.i.get(player);
 		
 		// Did we change coord?
 		FLocation from = me.getLastStoodAt();
-		FLocation to = new FLocation(event.getTo());
+		FLocation to = new FLocation(locationTo);
 		
+		// No, return.
 		if (from.yequals(to))
-		{
 			return;
-		}
 		
-		// Yes we did change coord (:
-		
+		// Yes, continue
 		me.setLastStoodAt(to);
-
-		// Did we change "host"(faction)?
+		
+		// Did we change "host" faction?
 		Faction factionFrom = Board.getFactionAt(from);
 		Faction factionTo = Board.getFactionAt(to);
 		boolean changedFaction = (factionFrom != factionTo);
-
+		
+		// Yes
 		if (changedFaction)
-			changedFaction = false;
-
-		if (me.isMapAutoUpdating())
 		{
-			me.sendMessage(Board.getMap(me.getFaction(), to, player.getLocation().getYaw()));
-		}
-		else
-		{
-			Faction myFaction = me.getFaction();
-			String ownersTo = myFaction.getOwnerListString(to);
-
-			if (changedFaction)
+			me.sendFactionHereMessage();
+			
+			// Map update
+			if (me.isMapAutoUpdating())
 			{
-				me.sendFactionHereMessage();
-				if (from.equals(to))
-					return;
-				if
-				(
-					Conf.ownedAreasEnabled
-					&&
-					Conf.ownedMessageOnBorder
-					&&
-					myFaction == factionTo
-					&&
-					!ownersTo.isEmpty()
-				)
+				me.sendMessage(Board.getMap(me.getFaction(), to, player.getLocation().getYaw()));
+			}
+
+			if ( ! moveEvent)
+			{
+				if (me.getAutoClaimFor() != null) 
 				{
-					me.sendMessage(Conf.ownedLandMessage+ownersTo);
+					me.setAutoClaimFor(null);
+				} 
+				else if (me.isAutoSafeClaimEnabled()) 
+				{
+					me.setIsAutoSafeClaimEnabled(false);
+				} 
+				else if (me.isAutoWarClaimEnabled()) 
+				{
+					me.setIsAutoWarClaimEnabled(false);
 				}
 			}
-			else if (from.equals(to))
+			else
 			{
-				return;
-			}
-			else if
-			(
-				Conf.ownedAreasEnabled
-				&&
-				Conf.ownedMessageInsideTerritory
-				&&
-				factionFrom == factionTo
-				&&
-				myFaction == factionTo
-			)
-			{
-				// TODO: Make sure this works properly
-				String ownersFrom = myFaction.getOwnerListString(from);
-				if (Conf.ownedMessageByChunk || ! ownersFrom.equals(ownersTo))
+				if (me.getAutoClaimFor() != null) 
 				{
-					if ( ! ownersTo.isEmpty())
+					me.attemptClaim(me.getAutoClaimFor(), locationTo, true);
+				} 
+				else if (me.isAutoSafeClaimEnabled()) 
+				{
+					if ( ! Permission.MANAGE_SAFE_ZONE.has(player)) 
 					{
-						me.sendMessage(Conf.ownedLandMessage + ownersTo);
-					}
-					else
+						me.setIsAutoSafeClaimEnabled(false);
+					} 
+					else 
 					{
-						if ( ! Conf.publicLandMessage.isEmpty())
+						if ( ! Board.getFactionAt(to).isSafeZone()) 
 						{
-							me.sendMessage(Conf.publicLandMessage);
+							Board.setFactionAt(Factions.i.getSafeZone(), to);
+							me.msg("<i>This land is now a safe zone.");
+						}
+					}
+				} 
+				else if (me.isAutoWarClaimEnabled()) 
+				{
+					if ( ! Permission.MANAGE_WAR_ZONE.has(player)) 
+					{
+						me.setIsAutoWarClaimEnabled(false);
+					}
+					else 
+					{
+						if ( ! Board.getFactionAt(to).isWarZone())
+						{
+							Board.setFactionAt(Factions.i.getWarZone(), to);
+							me.msg("<i>This land is now a war zone.");
 						}
 					}
 				}
 			}
 		}
 		
-		if (me.getAutoClaimFor() != null)
+		Faction myFaction = Board.getFactionAt(new FLocation(player.getLocation()));
+		if (myFaction == factionTo)
 		{
-			me.attemptClaim(me.getAutoClaimFor(), event.getTo(), true);
-		}
-		else if (me.isAutoSafeClaimEnabled())
-		{
-			if ( ! Permission.MANAGE_SAFE_ZONE.has(player))
+			if (Conf.ownedAreasEnabled)
 			{
-				me.setIsAutoSafeClaimEnabled(false);
-			}
-			else
-			{
-				if (!Board.getFactionAt(to).isSafeZone())
+				if (Conf.ownedMessageOnBorder)
 				{
-					Board.setFactionAt(Factions.i.getSafeZone(), to);
-					me.msg("<i>This land is now a safe zone.");
-				}
-			}
-		}
-		else if (me.isAutoWarClaimEnabled())
-		{
-			if ( ! Permission.MANAGE_WAR_ZONE.has(player))
-			{
-				me.setIsAutoWarClaimEnabled(false);
-			}
-			else
-			{
-				if (!Board.getFactionAt(to).isWarZone())
-				{
-					Board.setFactionAt(Factions.i.getWarZone(), to);
-					me.msg("<i>This land is now a war zone.");
+					String ownersTo = myFaction.getOwnerListString(to);
+					String ownersFrom = myFaction.getOwnerListString(from);
+					if (Conf.ownedMessageByChunk || ! ownersFrom.equals(ownersTo)) 
+					{
+						if ( ! ownersTo.isEmpty()) 
+						{
+							me.sendMessage(Conf.ownedLandMessage + ownersTo);
+						}
+						else 
+						{
+							if ( ! Conf.publicLandMessage.isEmpty()) 
+							{
+								me.sendMessage(Conf.publicLandMessage);
+							}
+						}
+					}
 				}
 			}
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -244,20 +268,28 @@ public class FactionsPlayerListener implements Listener
 			return;
 		}
 		
-		if (block.getType() == Material.BED_BLOCK) {
+		if (block.getType() == Material.BED_BLOCK)
+		{
 			FPlayer fme = FPlayers.i.get(event.getPlayer());
 			
 			if (Board.getFactionAt(new FLocation(block)) != fme.getFaction())
 				return;
 			
-			if (fme.getFaction().hasHome()) {
-				FLocation fHome = new FLocation(fme.getFaction().getHome());
-				FLocation loc = new FLocation(fme.getPlayer().getLocation());
-				if (fHome.getDistanceTo(loc) > 20.0 || Board.getAbsoluteFactionAt(loc) != fme.getFaction()) {
+			if ( ! Conf.homeBalanceOverride)
+			{
+				if (fme.getFaction().hasHome()) 
+				{
+					FLocation fHome = new FLocation(fme.getFaction().getHome());
+					FLocation loc = new FLocation(fme.getPlayer().getLocation());
+					if (fHome.getDistanceTo(loc) > 20.0 || Board.getAbsoluteFactionAt(loc) != fme.getFaction())
+					{
+						return;
+					}
+				} 
+				else 
+				{
 					return;
 				}
-			} else {
-				return;
 			}
 			
 			fme.setHome(fme.getPlayer().getLocation());
@@ -460,7 +492,7 @@ public class FactionsPlayerListener implements Listener
 		return true;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerRespawn(PlayerRespawnEvent event)
 	{
 		FPlayer me = FPlayers.i.get(event.getPlayer());
@@ -489,7 +521,7 @@ public class FactionsPlayerListener implements Listener
 
 	// For some reason onPlayerInteract() sometimes misses bucket events depending on distance (something like 2-3 blocks away isn't detected),
 	// but these separate bucket events below always fire without fail
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -503,7 +535,7 @@ public class FactionsPlayerListener implements Listener
 			return;
 		}
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerBucketFill(PlayerBucketFillEvent event)
 	{
 		if (event.isCancelled()) return;
@@ -655,30 +687,8 @@ public class FactionsPlayerListener implements Listener
 		}
 		return false;
 	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerKick(PlayerKickEvent event)
-	{
-		if (event.isCancelled()) return;
-
-		FPlayer badGuy = FPlayers.i.get(event.getPlayer());
-		if (badGuy == null)
-		{
-			return;
-		}
-
-		// if player was banned (not just kicked), get rid of their stored info
-		if (Conf.removePlayerDataWhenBanned && event.getReason().equals("Banned by admin."))
-		{
-			if (badGuy.getRole() == Role.ADMIN)
-				badGuy.getFaction().promoteNewLeader();
-
-			badGuy.leave(false);
-			badGuy.detach();
-		}
-	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInitiateInteract(PlayerInteractEvent event)
 	{
 		if (event.isCancelled())
