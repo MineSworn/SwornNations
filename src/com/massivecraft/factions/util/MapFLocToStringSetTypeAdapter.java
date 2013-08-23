@@ -28,7 +28,8 @@ public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLoca
 	@Override
 	public Map<FLocation, Set<String>> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 	{
-		try {
+		try
+		{
 			JsonObject obj = json.getAsJsonObject();
 			if (obj == null)
 			{
@@ -78,7 +79,8 @@ public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLoca
 	{
 		JsonObject obj = new JsonObject();
 
-		try {
+		try
+		{
 			if (src != null)
 			{
 				FLocation loc;
@@ -107,7 +109,7 @@ public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLoca
 						nameArray.add(nameElement);
 					}
 
-					if ( ! obj.has(locWorld))
+					if (!obj.has(locWorld))
 					{
 						obj.add(locWorld, new JsonObject());
 					}

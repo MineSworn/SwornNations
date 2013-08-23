@@ -15,12 +15,14 @@ public class FPlayerJoinEvent extends Event implements Cancellable
 	Faction faction;
 	PlayerJoinReason reason;
 	boolean cancelled = false;
+
 	public enum PlayerJoinReason
 	{
 		CREATE, LEADER, COMMAND
 	}
+
 	public FPlayerJoinEvent(FPlayer fp, Faction f, PlayerJoinReason r)
-	{ 
+	{
 		fplayer = fp;
 		faction = f;
 		reason = r;
@@ -30,30 +32,36 @@ public class FPlayerJoinEvent extends Event implements Cancellable
 	{
 		return fplayer;
 	}
+
 	public Faction getFaction()
 	{
 		return faction;
 	}
+
 	public PlayerJoinReason getReason()
 	{
-		return reason;	
+		return reason;
 	}
-	public HandlerList getHandlers() 
+
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() 
+	public static HandlerList getHandlerList()
 	{
 		return handlers;
 	}
+
 	@Override
-	public boolean isCancelled() 
+	public boolean isCancelled()
 	{
 		return cancelled;
 	}
+
 	@Override
-	public void setCancelled(boolean c) 
+	public void setCancelled(boolean c)
 	{
 		cancelled = c;
 	}

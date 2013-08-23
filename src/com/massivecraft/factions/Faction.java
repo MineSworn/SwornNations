@@ -1,8 +1,14 @@
 package com.massivecraft.factions;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.t7seven7t.swornnations.npermissions.NPermission;
 import me.t7seven7t.swornnations.npermissions.NPermissionManager;
@@ -19,19 +25,21 @@ import com.massivecraft.factions.integration.LWCFeatures;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
-import com.massivecraft.factions.util.*;
+import com.massivecraft.factions.util.LazyLocation;
+import com.massivecraft.factions.util.MiscUtil;
+import com.massivecraft.factions.util.RelationUtil;
 import com.massivecraft.factions.zcore.persist.Entity;
 
 public class Faction extends Entity implements EconomyParticipator
 {
 	// FIELD: relationWish
 	private Map<String, Relation> relationWish;
-	
+
 	// FIELD: claimOwnership
 	private Map<FLocation, Set<String>> claimOwnership = new ConcurrentHashMap<FLocation, Set<String>>();
 
 	private NPermissionManager permManager;
-	
+
 	// FIELD: fplayers
 	// speedy lookup of players in faction
 	private transient Set<FPlayer> fplayers = new HashSet<FPlayer>();
@@ -39,36 +47,40 @@ public class Faction extends Entity implements EconomyParticipator
 	// FIELD: invites
 	// Where string is a lowercase player name
 	// Players must be confirmed before they can join a faction
-	private Set<String> unconfirmedInvites; 
-	public void invite(FPlayer fplayer) 
-	{ 
-		unconfirmedInvites.add(fplayer.getName().toLowerCase()); 
+	private Set<String> unconfirmedInvites;
+
+	public void invite(FPlayer fplayer)
+	{
+		unconfirmedInvites.add(fplayer.getName().toLowerCase());
 	}
+
 	public void deinvite(FPlayer fplayer)
-	{ 
+	{
 		String name = fplayer.getName().toLowerCase();
 		if (unconfirmedInvites.contains(name))
 		{
 			unconfirmedInvites.remove(name);
 		}
-		
+
 		if (confirmedInvites.contains(name))
 		{
 			confirmedInvites.remove(name);
-		} 
+		}
 	}
+
 	public boolean isInvited(FPlayer fplayer)
 	{
 		if (unconfirmedInvites.contains(fplayer.getName().toLowerCase()))
 			return true;
-		
+
 		if (confirmedInvites.contains(fplayer.getName().toLowerCase()))
 			return true;
-		
+
 		return false;
 	}
-	
+
 	private Set<String> confirmedInvites;
+
 	public void confirm(FPlayer fplayer)
 	{
 		String name = fplayer.getName().toLowerCase();
@@ -78,7 +90,7 @@ public class Faction extends Entity implements EconomyParticipator
 			unconfirmedInvites.remove(name);
 		}
 	}
-	
+
 	public void deny(FPlayer fplayer)
 	{
 		String name = fplayer.getName().toLowerCase();
@@ -86,13 +98,13 @@ public class Faction extends Entity implements EconomyParticipator
 		{
 			unconfirmedInvites.remove(name);
 		}
-		
+
 		if (confirmedInvites.contains(name))
 		{
 			confirmedInvites.remove(name);
 		}
 	}
-	
+
 	public void join(FPlayer fplayer)
 	{
 		String name = fplayer.getName().toLowerCase();
@@ -100,54 +112,107 @@ public class Faction extends Entity implements EconomyParticipator
 		{
 			confirmedInvites.remove(name);
 		}
-		
+
 		if (unconfirmedInvites.contains(name))
 		{
 			unconfirmedInvites.remove(name);
 		}
-		
+
 		fplayer.resetFactionData();
 		fplayer.setFaction(this);
 	}
-	
+
 	public boolean isConfirmed(FPlayer fplayer)
 	{
 		return confirmedInvites.contains(fplayer.getName().toLowerCase());
 	}
-	
-	
+
 	// FIELD: open
 	private boolean open;
-	public boolean getOpen() { return open; }
-	public void setOpen(boolean isOpen) { open = isOpen; }
-	
+
+	public boolean getOpen()
+	{
+		return open;
+	}
+
+	public void setOpen(boolean isOpen)
+	{
+		open = isOpen;
+	}
+
 	// FIELD: peaceful
-	// "peaceful" status can only be set by server admins/moderators/ops, and prevents PvP and land capture to/from the faction
+	// "peaceful" status can only be set by server admins/moderators/ops, and
+	// prevents PvP and land capture to/from the faction
 	private boolean peaceful;
-	public boolean isPeaceful() { return this.peaceful; }
-	public void setPeaceful(boolean isPeaceful) { this.peaceful = isPeaceful; }
-	
+
+	public boolean isPeaceful()
+	{
+		return this.peaceful;
+	}
+
+	public void setPeaceful(boolean isPeaceful)
+	{
+		this.peaceful = isPeaceful;
+	}
+
 	private boolean permawar;
-	public boolean isPermanentWar() { return this.permawar; }
-	public void setPermanentWar(boolean isPermanentWar) { this.permawar = isPermanentWar; }
-	
+
+	public boolean isPermanentWar()
+	{
+		return this.permawar;
+	}
+
+	public void setPermanentWar(boolean isPermanentWar)
+	{
+		this.permawar = isPermanentWar;
+	}
+
 	// FIELD: peacefulExplosionsEnabled
 	private boolean peacefulExplosionsEnabled;
-	public void setPeacefulExplosionsEnabled(boolean val) { peacefulExplosionsEnabled = val; }
-	public boolean getPeacefulExplosionsEnabled(){ return this.peacefulExplosionsEnabled; }
-	
-	public boolean noExplosionsInTerritory() { return this.peaceful && ! peacefulExplosionsEnabled; }
+
+	public void setPeacefulExplosionsEnabled(boolean val)
+	{
+		peacefulExplosionsEnabled = val;
+	}
+
+	public boolean getPeacefulExplosionsEnabled()
+	{
+		return this.peacefulExplosionsEnabled;
+	}
+
+	public boolean noExplosionsInTerritory()
+	{
+		return this.peaceful && !peacefulExplosionsEnabled;
+	}
 
 	// FIELD: permanent
-	// "permanent" status can only be set by server admins/moderators/ops, and allows the faction to remain even with 0 members
+	// "permanent" status can only be set by server admins/moderators/ops, and
+	// allows the faction to remain even with 0 members
 	private boolean permanent;
-	public boolean isPermanent() { return permanent || !this.isNormal(); }
-	public void setPermanent(boolean isPermanent) { permanent = isPermanent; }
-	
+
+	public boolean isPermanent()
+	{
+		return permanent || !this.isNormal();
+	}
+
+	public void setPermanent(boolean isPermanent)
+	{
+		permanent = isPermanent;
+	}
+
 	// FIELD: tag
 	private String tag;
-	public String getTag() { return this.tag; }
-	public String getTag(String prefix) { return prefix+this.tag; }
+
+	public String getTag()
+	{
+		return this.tag;
+	}
+
+	public String getTag(String prefix)
+	{
+		return prefix + this.tag;
+	}
+
 	public String getTag(Faction otherFaction)
 	{
 		if (otherFaction == null)
@@ -156,13 +221,16 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 		return this.getTag(this.getColorTo(otherFaction).toString());
 	}
-	public String getTag(FPlayer otherFplayer) {
+
+	public String getTag(FPlayer otherFplayer)
+	{
 		if (otherFplayer == null)
 		{
 			return getTag();
 		}
 		return this.getTag(this.getColorTo(otherFplayer).toString());
 	}
+
 	public void setTag(String str)
 	{
 		if (Conf.factionTagForceUpperCase)
@@ -171,40 +239,73 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 		this.tag = str;
 	}
-	public String getComparisonTag() { return MiscUtil.getComparisonString(this.tag); }
-	
+
+	public String getComparisonTag()
+	{
+		return MiscUtil.getComparisonString(this.tag);
+	}
+
 	// FIELD: description
 	private String description;
-	public String getDescription() { return this.description; }
-	public void setDescription(String value) { this.description = value; }
-	
+
+	public String getDescription()
+	{
+		return this.description;
+	}
+
+	public void setDescription(String value)
+	{
+		this.description = value;
+	}
+
 	// FIELD: home
 	private LazyLocation home;
-	public void setHome(Location home) { this.home = new LazyLocation(home); }
-	public boolean hasHome() { return this.getHome() != null; }
+
+	public void setHome(Location home)
+	{
+		this.home = new LazyLocation(home);
+	}
+
+	public boolean hasHome()
+	{
+		return this.getHome() != null;
+	}
+
 	public Location getHome()
 	{
 		confirmValidHome();
 		return (this.home != null) ? this.home.getLocation() : null;
 	}
+
 	public void confirmValidHome()
 	{
-		if (!Conf.homesMustBeInClaimedTerritory || this.home == null || (this.home.getLocation() != null && Board.getFactionAt(new FLocation(this.home.getLocation())) == this))
+		if (!Conf.homesMustBeInClaimedTerritory || this.home == null
+				|| (this.home.getLocation() != null && Board.getFactionAt(new FLocation(this.home.getLocation())) == this))
 			return;
 
 		msg("<b>Your faction home has been un-set since it is no longer in your territory.");
 		this.home = null;
 	}
-	
+
 	// FIELD: outpost
 	private LazyLocation outpost;
-	public void setOutpost(Location outpost) { this.outpost = new LazyLocation(outpost); }
-	public boolean hasOutpost() { return this.getOutpost() != null; }
+
+	public void setOutpost(Location outpost)
+	{
+		this.outpost = new LazyLocation(outpost);
+	}
+
+	public boolean hasOutpost()
+	{
+		return this.getOutpost() != null;
+	}
+
 	public Location getOutpost()
 	{
 		confirmValidOutpost();
 		return (this.outpost != null) ? this.outpost.getLocation() : null;
 	}
+
 	public void confirmValidOutpost()
 	{
 		if (this.outpost == null || (this.outpost.getLocation() != null && Board.getFactionAt(new FLocation(this.outpost.getLocation())) == this))
@@ -213,66 +314,93 @@ public class Faction extends Entity implements EconomyParticipator
 		msg("<b>Your faction outpost has been un-set since it is no longer in your territory.");
 		this.outpost = null;
 	}
-	
+
 	private LazyLocation warp;
 	private long warpSaveTime;
-	public void setWarp(Location warp) {
+
+	public void setWarp(Location warp)
+	{
 		this.warp = new LazyLocation(warp);
 		warpSaveTime = System.currentTimeMillis();
 	}
-	
-	public boolean hasWarp() {
+
+	public boolean hasWarp()
+	{
 		return this.getWarp() != null;
 	}
-	
-	public Location getWarp() {
+
+	public Location getWarp()
+	{
 		confirmValidWarp();
 		return (this.warp != null) ? this.warp.getLocation() : null;
 	}
-	
-	public void confirmValidWarp() {		
-		if ((System.currentTimeMillis() - this.warpSaveTime) > (long)(Conf.warpsDecayTime * 60 * 1000)) {
+
+	public void confirmValidWarp()
+	{
+		if ((System.currentTimeMillis() - this.warpSaveTime) > Conf.warpsDecayTime * 60 * 1000)
+		{
 			msg("<b>Your faction warp has been un-set.");
 			this.warp = null;
 		}
 	}
-	
+
 	// FIELD: lastPlayerLoggedOffTime
 	private transient long lastPlayerLoggedOffTime;
-	
+
 	// FIELD: account (fake field)
 	// Bank functions
 	public double money;
+
+	@Override
 	public String getAccountId()
 	{
-		String aid = "faction-"+this.getId();
+		String aid = "faction-" + this.getId();
 
 		// We need to override the default money given to players.
-		if ( ! Econ.hasAccount(aid))
+		if (!Econ.hasAccount(aid))
 		{
 			Econ.setBalance(aid, 0);
 		}
 
 		return aid;
 	}
-	
+
 	// FIELD: permanentPower
 	private Integer permanentPower;
-	public Integer getPermanentPower() { return this.permanentPower; }
-	public void setPermanentPower(Integer permanentPower) { this.permanentPower = permanentPower; }
-	public boolean hasPermanentPower() { return this.permanentPower != null; }
+
+	public Integer getPermanentPower()
+	{
+		return this.permanentPower;
+	}
+
+	public void setPermanentPower(Integer permanentPower)
+	{
+		this.permanentPower = permanentPower;
+	}
+
+	public boolean hasPermanentPower()
+	{
+		return this.permanentPower != null;
+	}
 
 	// FIELD: powerBoost
 	// special increase/decrease to default and max power for this faction
 	private double powerBoost;
-	public double getPowerBoost() { return this.powerBoost; }
-	public void setPowerBoost(double powerBoost) { this.powerBoost = powerBoost; }
 
+	public double getPowerBoost()
+	{
+		return this.powerBoost;
+	}
+
+	public void setPowerBoost(double powerBoost)
+	{
+		this.powerBoost = powerBoost;
+	}
 
 	// -------------------------------------------- //
 	// Construct
 	// -------------------------------------------- //
-	
+
 	public Faction()
 	{
 		this.relationWish = new HashMap<String, Relation>();
@@ -288,85 +416,88 @@ public class Faction extends Entity implements EconomyParticipator
 		this.permanent = false;
 		this.money = 0.0;
 		this.powerBoost = 0.0;
-		
+
 		if (permManager == null)
 			resetPermManager();
 	}
-	
+
 	// -------------------------------------------- //
 	// Extra Getters And Setters
 	// -------------------------------------------- //
 
-	public boolean noPvPInTerritory() { return isSafeZone() || (peaceful && Conf.peacefulTerritoryDisablePVP); }
+	public boolean noPvPInTerritory()
+	{
+		return isSafeZone() || (peaceful && Conf.peacefulTerritoryDisablePVP);
+	}
 
-	public boolean noMonstersInTerritory() { return isSafeZone() || (peaceful && Conf.peacefulTerritoryDisableMonsters); }
-
-	
+	public boolean noMonstersInTerritory()
+	{
+		return isSafeZone() || (peaceful && Conf.peacefulTerritoryDisableMonsters);
+	}
 
 	// -------------------------------
 	// Understand the types
 	// -------------------------------
-	
+
 	public boolean isNormal()
 	{
-		return ! (this.isNone() || this.isSafeZone() || this.isWarZone());
+		return !(this.isNone() || this.isSafeZone() || this.isWarZone());
 	}
-	
+
 	public boolean isNone()
 	{
 		return this.getId().equals("0");
 	}
-	
+
 	public boolean isSafeZone()
 	{
 		return this.getId().equals("-1");
 	}
-	
+
 	public boolean isWarZone()
 	{
 		return this.getId().equals("-2");
 	}
-	
+
 	public boolean isPlayerFreeType()
 	{
 		return this.isSafeZone() || this.isWarZone();
 	}
-	
-	
+
 	// -------------------------------
 	// Relation and relation colors
 	// -------------------------------
-	
+
 	@Override
 	public String describeTo(RelationParticipator that, boolean ucfirst)
 	{
 		return RelationUtil.describeThatToMe(this, that, ucfirst);
 	}
-	
+
 	@Override
 	public String describeTo(RelationParticipator that)
 	{
 		return RelationUtil.describeThatToMe(this, that);
 	}
-	
+
 	@Override
 	public Relation getRelationTo(RelationParticipator rp)
 	{
 		return RelationUtil.getRelationTo(this, rp);
 	}
-	
+
 	@Override
 	public Relation getRelationTo(RelationParticipator rp, boolean ignorePeaceful)
 	{
 		return RelationUtil.getRelationTo(this, rp, ignorePeaceful);
 	}
-	
+
 	@Override
 	public ChatColor getColorTo(RelationParticipator rp)
 	{
 		return RelationUtil.getColorOfThatToMe(this, rp);
 	}
-	
+
 	public Relation getRelationWish(Faction otherFaction)
 	{
 		if (this.relationWish.containsKey(otherFaction.getId()))
@@ -375,7 +506,7 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 		return Relation.NEUTRAL;
 	}
-	
+
 	public void setRelationWish(Faction otherFaction, Relation relation)
 	{
 		if (this.relationWish.containsKey(otherFaction.getId()) && relation.equals(Relation.NEUTRAL))
@@ -387,17 +518,17 @@ public class Faction extends Entity implements EconomyParticipator
 			this.relationWish.put(otherFaction.getId(), relation);
 		}
 	}
-	
-	//----------------------------------------------//
+
+	// ----------------------------------------------//
 	// Power
-	//----------------------------------------------//
+	// ----------------------------------------------//
 	public double getPower()
 	{
 		if (this.hasPermanentPower())
 		{
 			return this.getPermanentPower();
 		}
-		
+
 		double ret = 0;
 		for (FPlayer fplayer : fplayers)
 		{
@@ -409,14 +540,14 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 		return ret + this.powerBoost;
 	}
-	
+
 	public double getPowerMax()
 	{
 		if (this.hasPermanentPower())
 		{
 			return this.getPermanentPower();
 		}
-		
+
 		double ret = 0;
 		for (FPlayer fplayer : fplayers)
 		{
@@ -428,31 +559,32 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 		return ret + this.powerBoost;
 	}
-	
+
 	public int getPowerRounded()
 	{
 		return (int) Math.round(this.getPower());
 	}
-	
+
 	public int getPowerMaxRounded()
 	{
 		return (int) Math.round(this.getPowerMax());
 	}
-	
-	public int getLandRounded() {
+
+	public int getLandRounded()
+	{
 		return Board.getFactionCoordCount(this);
 	}
-	
+
 	public int getLandRoundedInWorld(String worldName)
 	{
 		return Board.getFactionCoordCountInWorld(this, worldName);
 	}
-	
+
 	public boolean hasLandInflation()
 	{
 		return this.getLandRounded() > this.getPowerRounded();
 	}
-	
+
 	// -------------------------------
 	// FPlayers
 	// -------------------------------
@@ -461,7 +593,8 @@ public class Faction extends Entity implements EconomyParticipator
 	public void refreshFPlayers()
 	{
 		fplayers.clear();
-		if (this.isPlayerFreeType()) return;
+		if (this.isPlayerFreeType())
+			return;
 
 		for (FPlayer fplayer : FPlayers.i.get())
 		{
@@ -471,26 +604,31 @@ public class Faction extends Entity implements EconomyParticipator
 			}
 		}
 	}
+
 	protected boolean addFPlayer(FPlayer fplayer)
 	{
-		if (this.isPlayerFreeType()) return false;
+		if (this.isPlayerFreeType())
+			return false;
 
 		return fplayers.add(fplayer);
 	}
+
 	protected boolean removeFPlayer(FPlayer fplayer)
 	{
-		if (this.isPlayerFreeType()) return false;
+		if (this.isPlayerFreeType())
+			return false;
 
 		return fplayers.remove(fplayer);
 	}
 
 	public Set<FPlayer> getFPlayers()
 	{
-		// return a shallow copy of the FPlayer list, to prevent tampering and concurrency issues
+		// return a shallow copy of the FPlayer list, to prevent tampering and
+		// concurrency issues
 		Set<FPlayer> ret = new HashSet<FPlayer>(fplayers);
 		return ret;
 	}
-	
+
 	public Set<FPlayer> getFPlayersWhereOnline(boolean online)
 	{
 		Set<FPlayer> ret = new HashSet<FPlayer>();
@@ -505,11 +643,12 @@ public class Faction extends Entity implements EconomyParticipator
 
 		return ret;
 	}
-	
+
 	public FPlayer getFPlayerAdmin()
 	{
-		if ( ! this.isNormal()) return null;
-		
+		if (!this.isNormal())
+			return null;
+
 		for (FPlayer fplayer : fplayers)
 		{
 			if (fplayer.getRole() == Role.ADMIN)
@@ -519,12 +658,13 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 		return null;
 	}
-	
+
 	public ArrayList<FPlayer> getFPlayersWhereRole(Role role)
 	{
 		ArrayList<FPlayer> ret = new ArrayList<FPlayer>();
-		if ( ! this.isNormal()) return ret;
-		
+		if (!this.isNormal())
+			return ret;
+
 		for (FPlayer fplayer : fplayers)
 		{
 			if (fplayer.getRole() == role)
@@ -532,16 +672,17 @@ public class Faction extends Entity implements EconomyParticipator
 				ret.add(fplayer);
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	public ArrayList<Player> getOnlinePlayers()
 	{
 		ArrayList<Player> ret = new ArrayList<Player>();
-		if (this.isPlayerFreeType()) return ret;
+		if (this.isPlayerFreeType())
+			return ret;
 
-		for (Player player: P.p.getServer().getOnlinePlayers())
+		for (Player player : P.p.getServer().getOnlinePlayers())
 		{
 			FPlayer fplayer = FPlayers.i.get(player);
 			if (fplayer.getFaction() == this)
@@ -552,14 +693,16 @@ public class Faction extends Entity implements EconomyParticipator
 
 		return ret;
 	}
-	
-	// slightly faster check than getOnlinePlayers() if you just want to see if there are any players online
+
+	// slightly faster check than getOnlinePlayers() if you just want to see if
+	// there are any players online
 	public boolean hasPlayersOnline()
 	{
 		// only real factions can have players online, not safe zone / war zone
-		if (this.isPlayerFreeType()) return false;
-		
-		for (Player player: P.p.getServer().getOnlinePlayers())
+		if (this.isPlayerFreeType())
+			return false;
+
+		for (Player player : P.p.getServer().getOnlinePlayers())
 		{
 			FPlayer fplayer = FPlayers.i.get(player);
 			if (fplayer.getFaction() == this)
@@ -567,15 +710,17 @@ public class Faction extends Entity implements EconomyParticipator
 				return true;
 			}
 		}
-		
-		// even if all players are technically logged off, maybe someone was on recently enough to not consider them officially offline yet
-		if (Conf.considerFactionsReallyOfflineAfterXMinutes > 0 && System.currentTimeMillis() < lastPlayerLoggedOffTime + (Conf.considerFactionsReallyOfflineAfterXMinutes * 60000))
+
+		// even if all players are technically logged off, maybe someone was on
+		// recently enough to not consider them officially offline yet
+		if (Conf.considerFactionsReallyOfflineAfterXMinutes > 0
+				&& System.currentTimeMillis() < lastPlayerLoggedOffTime + (Conf.considerFactionsReallyOfflineAfterXMinutes * 60000))
 		{
 			return true;
 		}
 		return false;
 	}
-	
+
 	public void memberLoggedOff()
 	{
 		if (this.isNormal())
@@ -584,21 +729,25 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 	}
 
-	// used when current leader is about to be removed from the faction; promotes new leader, or disbands faction if no other members left
+	// used when current leader is about to be removed from the faction;
+	// promotes new leader, or disbands faction if no other members left
 	public void promoteNewLeader()
 	{
-		if (! this.isNormal()) return;
-		if (this.isPermanent() && Conf.permanentFactionsDisableLeaderPromotion) return;
+		if (!this.isNormal())
+			return;
+		if (this.isPermanent() && Conf.permanentFactionsDisableLeaderPromotion)
+			return;
 
 		FPlayer oldLeader = this.getFPlayerAdmin();
 
-		// get list of moderators, or list of normal members if there are no moderators
+		// get list of moderators, or list of normal members if there are no
+		// moderators
 		ArrayList<FPlayer> replacements = this.getFPlayersWhereRole(Role.MODERATOR);
 		if (replacements == null || replacements.isEmpty())
 			replacements = this.getFPlayersWhereRole(Role.NORMAL);
 
 		if (replacements == null || replacements.isEmpty())
-		{	// faction admin is the only member; one-man faction
+		{ // faction admin is the only member; one-man faction
 			if (this.isPermanent())
 			{
 				if (oldLeader != null)
@@ -608,7 +757,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 			// no members left and faction isn't permanent, so disband it
 			if (Conf.logFactionDisband)
-				P.p.log("The faction "+this.getTag()+" ("+this.getId()+") has been disbanded since it has no members left.");
+				P.p.log("The faction " + this.getTag() + " (" + this.getId() + ") has been disbanded since it has no members left.");
 
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
@@ -618,29 +767,30 @@ public class Faction extends Entity implements EconomyParticipator
 			this.detach();
 		}
 		else
-		{	// promote new faction admin
+		{ // promote new faction admin
 			if (oldLeader != null)
 				oldLeader.setRole(Role.NORMAL);
 			replacements.get(0).setRole(Role.ADMIN);
-			this.msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.", oldLeader == null ? "" : oldLeader.getName(), replacements.get(0).getName());
-			P.p.log("Faction "+this.getTag()+" ("+this.getId()+") admin was removed. Replacement admin: "+replacements.get(0).getName());
+			this.msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.",
+					oldLeader == null ? "" : oldLeader.getName(), replacements.get(0).getName());
+			P.p.log("Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: " + replacements.get(0).getName());
 		}
 	}
 
-
-	//----------------------------------------------//
+	// ----------------------------------------------//
 	// Messages
-	//----------------------------------------------//
+	// ----------------------------------------------//
+	@Override
 	public void msg(String message, Object... args)
 	{
 		message = P.p.txt.parse(message, args);
-		
+
 		for (FPlayer fplayer : this.getFPlayersWhereOnline(true))
 		{
 			fplayer.sendMessage(message);
 		}
 	}
-	
+
 	public void sendMessage(String message)
 	{
 		for (FPlayer fplayer : this.getFPlayersWhereOnline(true))
@@ -648,7 +798,7 @@ public class Faction extends Entity implements EconomyParticipator
 			fplayer.sendMessage(message);
 		}
 	}
-	
+
 	public void sendMessage(List<String> messages)
 	{
 		for (FPlayer fplayer : this.getFPlayersWhereOnline(true))
@@ -656,10 +806,10 @@ public class Faction extends Entity implements EconomyParticipator
 			fplayer.sendMessage(messages);
 		}
 	}
-	
-	//----------------------------------------------//
+
+	// ----------------------------------------------//
 	// Ownership of specific claims
-	//----------------------------------------------//
+	// ----------------------------------------------//
 
 	public void clearAllClaimOwnership()
 	{
@@ -668,11 +818,11 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public void clearClaimOwnership(FLocation loc)
 	{
-		if(Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
+		if (Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
 		{
 			LWCFeatures.clearAllChests(loc);
 			Bukkit.getServer().broadcastMessage("boardclearat / clearclaim");
-		}	
+		}
 		claimOwnership.remove(loc);
 	}
 
@@ -690,7 +840,8 @@ public class Faction extends Entity implements EconomyParticipator
 		{
 			ownerData = entry.getValue();
 
-			if (ownerData == null) continue;
+			if (ownerData == null)
+				continue;
 
 			Iterator<String> iter = ownerData.iterator();
 			while (iter.hasNext())
@@ -703,7 +854,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 			if (ownerData.isEmpty())
 			{
-				if(Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
+				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
 				{
 					LWCFeatures.clearAllChests(entry.getKey());
 				}
@@ -711,11 +862,13 @@ public class Faction extends Entity implements EconomyParticipator
 			}
 		}
 	}
-	
-	public int getCountOfClaimsWithOwner(FPlayer player) {
+
+	public int getCountOfClaimsWithOwner(FPlayer player)
+	{
 		int count = 0;
 		String playerName = player.getName().toLowerCase();
-		for (Set<String> ownerData : claimOwnership.values()) {
+		for (Set<String> ownerData : claimOwnership.values())
+		{
 			if (ownerData.contains(playerName))
 				count++;
 		}
@@ -733,7 +886,7 @@ public class Faction extends Entity implements EconomyParticipator
 		{
 			return false;
 		}
-		
+
 		Set<String> ownerData = claimOwnership.get(loc);
 		return ownerData != null && !ownerData.isEmpty();
 	}
@@ -753,7 +906,7 @@ public class Faction extends Entity implements EconomyParticipator
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -795,7 +948,8 @@ public class Faction extends Entity implements EconomyParticipator
 		String ownerList = "";
 
 		Iterator<String> iter = ownerData.iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext())
+		{
 			if (!ownerList.isEmpty())
 			{
 				ownerList += ", ";
@@ -807,18 +961,11 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean playerHasOwnershipRights(FPlayer fplayer, FLocation loc)
 	{
-		// in own faction, with sufficient role or permission to bypass ownership?
-		if
-		(
-			fplayer.getFaction() == this
-			&&
-			(
-				(fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN)
-						&& fplayer.getFaction().playerHasPermission(fplayer, NPermission.OWNER))
-				||
-				Permission.OWNERSHIP_BYPASS.has(fplayer.getPlayer())
-			)
-		)
+		// in own faction, with sufficient role or permission to bypass
+		// ownership?
+		if (fplayer.getFaction() == this
+				&& ((fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN) && fplayer.getFaction().playerHasPermission(
+						fplayer, NPermission.OWNER)) || Permission.OWNERSHIP_BYPASS.has(fplayer.getPlayer())))
 		{
 			return true;
 		}
@@ -830,15 +977,18 @@ public class Faction extends Entity implements EconomyParticipator
 		// need to check the ownership list, then
 		Set<String> ownerData = claimOwnership.get(loc);
 
-		// if no owner list, owner list is empty, or player is in owner list, they're allowed
+		// if no owner list, owner list is empty, or player is in owner list,
+		// they're allowed
 		if (ownerData == null || ownerData.isEmpty() || ownerData.contains(fplayer.getName().toLowerCase()))
 			return true;
 
 		return false;
 	}
-	
-	public boolean playerHasPermission(FPlayer player, NPermission perm) {
-		if (player.getFaction() == this) {
+
+	public boolean playerHasPermission(FPlayer player, NPermission perm)
+	{
+		if (player.getFaction() == this)
+		{
 			if (this.isNone())
 				return true;
 			if (permManager.isDeniedPerm(player, perm))
@@ -850,42 +1000,49 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 		return false;
 	}
-	
-	public boolean roleHasPermission(Role role, NPermission perm) {
+
+	public boolean roleHasPermission(Role role, NPermission perm)
+	{
 		if (permManager.hasPerm(role, perm))
 			return true;
 		return false;
 	}
-	
-	public void addPermission(FPlayer player, NPermission perm) {
-		if (player.getFaction() == this) {
+
+	public void addPermission(FPlayer player, NPermission perm)
+	{
+		if (player.getFaction() == this)
+		{
 			permManager.addPerm(player, perm);
 		}
 	}
-	
-	public void addPermission(Role role, NPermission perm) {
+
+	public void addPermission(Role role, NPermission perm)
+	{
 		permManager.addPerm(role, perm);
 	}
-	
-	public void removePermission(FPlayer player, NPermission perm) {
-		if (player.getFaction() == this) {
+
+	public void removePermission(FPlayer player, NPermission perm)
+	{
+		if (player.getFaction() == this)
+		{
 			permManager.removePerm(player, perm);
 		}
 	}
-	
-	public void removePermission(Role role, NPermission perm) {
+
+	public void removePermission(Role role, NPermission perm)
+	{
 		permManager.removePerm(role, perm);
 	}
-	
-	public void resetPermManager() {
+
+	public void resetPermManager()
+	{
 		permManager = new NPermissionManager();
 	}
-	
-	//----------------------------------------------//
-	// Persistance and entity management
-	//----------------------------------------------//
 
-	
+	// ----------------------------------------------//
+	// Persistance and entity management
+	// ----------------------------------------------//
+
 	@Override
 	public void postDetach()
 	{
@@ -893,10 +1050,10 @@ public class Faction extends Entity implements EconomyParticipator
 		{
 			Econ.setBalance(getAccountId(), 0);
 		}
-		
+
 		// Clean the board
 		Board.clean();
-		
+
 		// Clean the fplayers
 		FPlayers.i.clean();
 	}

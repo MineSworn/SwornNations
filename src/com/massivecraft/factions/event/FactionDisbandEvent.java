@@ -25,12 +25,13 @@ public class FactionDisbandEvent extends Event implements Cancellable
 		this.id = factionId;
 	}
 
-	public HandlerList getHandlers() 
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() 
+	public static HandlerList getHandlerList()
 	{
 		return handlers;
 	}
@@ -51,13 +52,13 @@ public class FactionDisbandEvent extends Event implements Cancellable
 	}
 
 	@Override
-	public boolean isCancelled() 
+	public boolean isCancelled()
 	{
 		return cancelled;
 	}
 
 	@Override
-	public void setCancelled(boolean c) 
+	public void setCancelled(boolean c)
 	{
 		cancelled = c;
 	}

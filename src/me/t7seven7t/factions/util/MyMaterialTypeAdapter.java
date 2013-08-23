@@ -7,11 +7,14 @@ import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonToken;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
 
-public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial> {
+public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
+{
 
 	@Override
-	public MyMaterial read(JsonReader reader) throws IOException {
-		if (reader.peek() == JsonToken.NULL) {
+	public MyMaterial read(JsonReader reader) throws IOException
+	{
+		if (reader.peek() == JsonToken.NULL)
+		{
 			reader.nextNull();
 			return null;
 		}
@@ -22,8 +25,10 @@ public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial> {
 	}
 
 	@Override
-	public void write(JsonWriter writer, MyMaterial value) throws IOException {
-		if (value == null) {
+	public void write(JsonWriter writer, MyMaterial value) throws IOException
+	{
+		if (value == null)
+		{
 			writer.nullValue();
 			return;
 		}

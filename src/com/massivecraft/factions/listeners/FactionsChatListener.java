@@ -21,23 +21,27 @@ import com.massivecraft.factions.struct.Relation;
 public class FactionsChatListener implements Listener
 {
 	private final P p;
+
 	public FactionsChatListener(final P p)
 	{
 		this.p = p;
 	}
-	
-	// This is for handling slashless command usage and faction/alliance chat, set at lowest priority so Factions gets to them first
+
+	// This is for handling slashless command usage and faction/alliance chat,
+	// set at lowest priority so Factions gets to them first
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerEarlyChat(AsyncPlayerChatEvent event) 
+	public void onPlayerEarlyChat(AsyncPlayerChatEvent event)
 	{
-		if (event.isCancelled()) return;
-		
+		if (event.isCancelled())
+			return;
+
 		Player talkingPlayer = event.getPlayer();
 		String msg = event.getMessage();
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		ChatMode chat = me.getChatMode();
-		
-		// Slashless factions commands need to be handled here if the user isn't in public chat mode
+
+		// Slashless factions commands need to be handled here if the user isn't
+		// in public chat mode
 		if (chat != ChatMode.PUBLIC && p.handleCommand(talkingPlayer, msg))
 		{
 			if (Conf.logPlayerCommands)
@@ -45,35 +49,35 @@ public class FactionsChatListener implements Listener
 			event.setCancelled(true);
 			return;
 		}
-		
+
 		// Is it a faction chat message?
 		if (chat == ChatMode.FACTION)
 		{
 			Faction myFaction = me.getFaction();
-			
+
 			String message = String.format(Conf.factionChatFormat, me.describeTo(myFaction), msg);
-			
+
 			// Send message to our own faction
 			myFaction.sendMessage(message);
-			
+
 			// Send to any players who are spying chat
-			for (FPlayer fplayer : FPlayers.i.getOnline()) 
+			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
 				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
 					fplayer.sendMessage("[FCspy] " + myFaction.getTag() + ": " + message);
 			}
-			
+
 			p.log(ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
-			
+
 			event.setCancelled(true);
 			return;
 		}
-		else if (chat == ChatMode.ALLIANCE) 
+		else if (chat == ChatMode.ALLIANCE)
 		{
 			Faction myFaction = me.getFaction();
-			
+
 			String message = String.format(Conf.allianceChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
-			
+
 			// Send message to our own faction
 			myFaction.sendMessage(message);
 
@@ -83,22 +87,22 @@ public class FactionsChatListener implements Listener
 				if (myFaction.getRelationTo(fplayer) == Relation.ALLY || myFaction.getRelationTo(fplayer) == Relation.NATION)
 					fplayer.sendMessage(message);
 
-				//Send to any players who are spying chat
+				// Send to any players who are spying chat
 				else if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
 					fplayer.sendMessage("[ACspy]: " + message);
 			}
-			
+
 			p.log(ChatColor.stripColor("AllianceChat: " + message));
-			
+
 			event.setCancelled(true);
 			return;
-		} 
+		}
 		else if (chat == ChatMode.NATION)
 		{
 			Faction myFaction = me.getFaction();
-			
+
 			String message = String.format(Conf.nationChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
-			
+
 			// Send message to our own faction
 			myFaction.sendMessage(message);
 
@@ -112,30 +116,33 @@ public class FactionsChatListener implements Listener
 				else if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
 					fplayer.sendMessage("[NCspy]: " + message);
 			}
-			
+
 			p.log(ChatColor.stripColor("NationChat: " + message));
-			
+
 			event.setCancelled(true);
 			return;
 		}
 	}
-	
-	// This is for handling insertion of the player's faction tag, set at highest priority to give other plugins a chance to modify chat first
+
+	// This is for handling insertion of the player's faction tag, set at
+	// highest priority to give other plugins a chance to modify chat first
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
-		if (event.isCancelled()) return;
+		if (event.isCancelled())
+			return;
 
 		// Are we to insert the Faction tag into the format?
 		// If we are not to insert it - we are done.
-		if ( ! Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin) return;
+		if (!Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin)
+			return;
 
 		Player talkingPlayer = event.getPlayer();
 		String msg = event.getMessage();
 		String eventFormat = event.getFormat();
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		int InsertIndex = 0;
-		
+
 		if (!Conf.chatTagReplaceString.isEmpty() && eventFormat.contains(Conf.chatTagReplaceString))
 		{
 			// we're using the "replace" method of inserting the faction tags
@@ -166,19 +173,20 @@ public class FactionsChatListener implements Listener
 			if (InsertIndex > eventFormat.length())
 				return;
 		}
-		
+
 		String formatStart = eventFormat.substring(0, InsertIndex) + ((Conf.chatTagPadBefore && !me.getChatTag().isEmpty()) ? " " : "");
 		String formatEnd = ((Conf.chatTagPadAfter && !me.getChatTag().isEmpty()) ? " " : "") + eventFormat.substring(InsertIndex);
-		
+
 		String nonColoredMsgFormat = formatStart + me.getChatTag().trim() + formatEnd;
-		
+
 		// Relation Colored?
 		if (Conf.chatTagRelationColored)
 		{
-			// We must choke the standard message and send out individual messages to all players
+			// We must choke the standard message and send out individual
+			// messages to all players
 			// Why? Because the relations will differ.
 			event.setCancelled(true);
-			
+
 			for (Player listeningPlayer : event.getRecipients())
 			{
 				FPlayer you = FPlayers.i.get(listeningPlayer);
@@ -192,11 +200,12 @@ public class FactionsChatListener implements Listener
 					Conf.chatTagInsertIndex = 0;
 					P.p.log(Level.SEVERE, "Critical error in chat message formatting!");
 					P.p.log(Level.SEVERE, "NOTE: This has been automatically fixed right now by setting chatTagInsertIndex to 0.");
-					P.p.log(Level.SEVERE, "For a more proper fix, please read this regarding chat configuration: http://massivecraft.com/plugins/factions/config#Chat_configuration");
+					P.p.log(Level.SEVERE,
+							"For a more proper fix, please read this regarding chat configuration: http://massivecraft.com/plugins/factions/config#Chat_configuration");
 					return;
 				}
 			}
-			
+
 			// Write to the log... We will write the non colored message.
 			String nonColoredMsg = ChatColor.stripColor(String.format(nonColoredMsgFormat, talkingPlayer.getDisplayName(), msg));
 			p.getServer().getLogger().log(Level.INFO, nonColoredMsg);

@@ -7,29 +7,30 @@ import com.massivecraft.factions.struct.Role;
 
 public class CmdCoadmin extends FCommand
 {
-	
+
 	public CmdCoadmin()
 	{
 		super();
 		this.aliases.add("coadmin");
-		
+
 		this.requiredArgs.add("player name");
-		//this.optionalArgs.put("", "");
-		
+		// this.optionalArgs.put("", "");
+
 		this.permission = Permission.COADMIN.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
 	}
-	
+
 	@Override
 	public void perform()
 	{
 		FPlayer you = this.argAsBestFPlayerMatch(0);
-		if (you == null) return;
+		if (you == null)
+			return;
 
 		boolean permAny = Permission.COADMIN_ANY.has(sender, false);
 		Faction targetFaction = you.getFaction();
@@ -39,7 +40,7 @@ public class CmdCoadmin extends FCommand
 			msg("%s<b> is not a member in your faction.", you.describeTo(fme, true));
 			return;
 		}
-		
+
 		if (fme != null && fme.getRole() != Role.ADMIN && !permAny)
 		{
 			msg("<b>You are not the faction admin.");

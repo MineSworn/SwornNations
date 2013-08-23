@@ -10,7 +10,7 @@ import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdUnclaimall extends FCommand
-{	
+{
 	public CmdUnclaimall()
 	{
 		this.aliases.add("unclaimall");
@@ -18,26 +18,28 @@ public class CmdUnclaimall extends FCommand
 
 		this.permission = Permission.UNCLAIM_ALL.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
 		senderMustBeModerator = true;
 		senderMustBeAdmin = false;
 	}
-	
+
 	@Override
 	public void perform()
 	{
 		if (Econ.shouldBeUsed())
 		{
 			double refund = Econ.calculateTotalLandRefund(myFaction.getLandRounded());
-			if(Conf.bankEnabled && Conf.bankFactionPaysLandCosts)
+			if (Conf.bankEnabled && Conf.bankFactionPaysLandCosts)
 			{
-				if ( ! Econ.modifyMoney(myFaction, refund, "to unclaim all faction land", "for unclaiming all faction land")) return;
+				if (!Econ.modifyMoney(myFaction, refund, "to unclaim all faction land", "for unclaiming all faction land"))
+					return;
 			}
 			else
 			{
-				if ( ! Econ.modifyMoney(fme      , refund, "to unclaim all faction land", "for unclaiming all faction land")) return;
+				if (!Econ.modifyMoney(fme, refund, "to unclaim all faction land", "for unclaiming all faction land"))
+					return;
 			}
 		}
 
@@ -49,7 +51,7 @@ public class CmdUnclaimall extends FCommand
 		myFaction.msg("%s<i> unclaimed ALL of your faction's land.", fme.describeTo(myFaction, true));
 
 		if (Conf.logLandUnclaims)
-			P.p.log(fme.getName()+" unclaimed everything for the faction: "+myFaction.getTag());
+			P.p.log(fme.getName() + " unclaimed everything for the faction: " + myFaction.getTag());
 	}
-	
+
 }

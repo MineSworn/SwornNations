@@ -1,51 +1,57 @@
 package com.massivecraft.factions.zcore.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
+
+import com.massivecraft.factions.P;
 
 public class DiscUtil
 {
 	// -------------------------------------------- //
 	// CONSTANTS
 	// -------------------------------------------- //
-	
+
 	private final static String UTF8 = "UTF-8";
-	
+
 	// -------------------------------------------- //
-	// BYTE 
+	// BYTE
 	// -------------------------------------------- //
-	
+
 	public static byte[] readBytes(File file) throws IOException
 	{
 		return Files.readAllBytes(file.toPath());
 	}
-	
+
 	public static void writeBytes(File file, byte[] bytes) throws IOException
 	{
 		Files.write(file.toPath(), bytes);
 	}
-	
+
 	// -------------------------------------------- //
 	// STRING
 	// -------------------------------------------- //
-	
+
 	public static void write(File file, String content) throws IOException
 	{
 		writeBytes(file, utf8(content));
 	}
-	
+
 	public static String read(File file) throws IOException
 	{
 		return utf8(readBytes(file));
 	}
-	
+
 	// -------------------------------------------- //
 	// CATCH
 	// -------------------------------------------- //
-	
+
 	public static boolean writeCatch(File file, String content)
 	{
 		try
@@ -58,7 +64,7 @@ public class DiscUtil
 			return false;
 		}
 	}
-	
+
 	public static String readCatch(File file)
 	{
 		try
@@ -70,11 +76,11 @@ public class DiscUtil
 			return null;
 		}
 	}
-	
+
 	// -------------------------------------------- //
 	// DOWNLOAD
 	// -------------------------------------------- //
-	
+
 	@SuppressWarnings("resource")
 	public static boolean downloadUrl(String urlstring, File file)
 	{
@@ -83,8 +89,8 @@ public class DiscUtil
 			URL url = new URL(urlstring);
 			ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 			FileOutputStream fos = new FileOutputStream(file);
-		    fos.getChannel().transferFrom(rbc, 0, 1 << 24);
-		    return true;
+			fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+			return true;
 		}
 		catch (Exception e)
 		{
@@ -92,37 +98,38 @@ public class DiscUtil
 			return false;
 		}
 	}
-	
+
 	public static boolean downloadUrl(String urlstring, String filename)
 	{
 		return downloadUrl(urlstring, new File(filename));
 	}
-	
+
 	// -------------------------------------------- //
 	// FILE DELETION
 	// -------------------------------------------- //
-	
-    public static boolean deleteRecursive(File path) throws FileNotFoundException
-    {
-        if ( ! path.exists()) throw new FileNotFoundException(path.getAbsolutePath());
-        boolean ret = true;
-        if (path.isDirectory())
-        {
-            for (File f : path.listFiles())
-            {
-                ret = ret && deleteRecursive(f);
-            }
-        }
-        return ret && path.delete();
-    }
-    
+
+	public static boolean deleteRecursive(File path) throws FileNotFoundException
+	{
+		if (!path.exists())
+			throw new FileNotFoundException(path.getAbsolutePath());
+		boolean ret = true;
+		if (path.isDirectory())
+		{
+			for (File f : path.listFiles())
+			{
+				ret = ret && deleteRecursive(f);
+			}
+		}
+		return ret && path.delete();
+	}
+
 	// -------------------------------------------- //
 	// UTF8 ENCODE AND DECODE
 	// -------------------------------------------- //
-    
+
 	public static byte[] utf8(String string)
 	{
-	    try
+		try
 		{
 			return string.getBytes(UTF8);
 		}
@@ -132,10 +139,10 @@ public class DiscUtil
 			return null;
 		}
 	}
-    
+
 	public static String utf8(byte[] bytes)
 	{
-	    try
+		try
 		{
 			return new String(bytes, UTF8);
 		}
@@ -146,4 +153,29 @@ public class DiscUtil
 		}
 	}
 
+	// -------------------------------------------- //
+	// DISK SPACE
+	// -------------------------------------------- //
+	
+	private static long lastWarn;
+	public static boolean checkDiskSpace()
+	{
+		long freeSpace = P.p.getDataFolder().getFreeSpace();
+		
+		if (freeSpace == 0)
+		{
+			long now = System.currentTimeMillis();
+			if (now - lastWarn > 18000L)
+			{
+				lastWarn = now;
+
+				P.p.getServer().broadcastMessage(P.p.txt.parse("<b>[SEVERE] Factions has detected that disk space is low."));
+				P.p.getServer().broadcastMessage(P.p.txt.parse("<b>[SEVERE] Please make some space on your Disk!"));
+				P.p.getServer().broadcastMessage(P.p.txt.parse("<b>[SEVERE] This message will be displayed every 5 minutes."));
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

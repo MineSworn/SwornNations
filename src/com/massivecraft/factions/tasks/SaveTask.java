@@ -8,14 +8,17 @@ import com.massivecraft.factions.zcore.persist.EM;
 public class SaveTask extends BukkitRunnable
 {
 	private MPlugin p;
+
 	public SaveTask(MPlugin p)
 	{
 		this.p = p;
 	}
-	
+
+	@Override
 	public void run()
 	{
-		if ( ! p.getAutoSave()) return;
+		if (!p.getAutoSave())
+			return;
 		p.preAutoSave();
 		EM.saveAllToDisc();
 		p.postAutoSave();

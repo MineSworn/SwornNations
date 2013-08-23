@@ -9,32 +9,32 @@ import com.massivecraft.factions.struct.Permission;
 
 public class CmdReload extends FCommand
 {
-	
+
 	public CmdReload()
 	{
 		super();
 		this.aliases.add("reload");
-		
-		//this.requiredArgs.add("");
+
+		// this.requiredArgs.add("");
 		this.optionalArgs.put("file", "all");
-		
+
 		this.permission = Permission.RELOAD.node;
 		this.disableOnLock = false;
-		
+
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
 	}
-	
+
 	@Override
 	public void perform()
 	{
 		long timeInitStart = System.currentTimeMillis();
 		String file = this.argAsString(0, "all").toLowerCase();
-		
+
 		String fileName;
-		
+
 		if (file.startsWith("c"))
 		{
 			Conf.load();
@@ -69,10 +69,10 @@ public class CmdReload extends FCommand
 			msg("<b>Invalid file specified. <i>Valid files: all, conf, board, factions, players");
 			return;
 		}
-		
-		long timeReload = (System.currentTimeMillis()-timeInitStart);
-		
+
+		long timeReload = (System.currentTimeMillis() - timeInitStart);
+
 		msg("<i>Reloaded <h>%s <i>from disk, took <h>%dms<i>.", fileName, timeReload);
 	}
-	
+
 }

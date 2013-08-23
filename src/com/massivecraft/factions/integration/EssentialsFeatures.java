@@ -36,8 +36,8 @@ public class EssentialsFeatures
 			if (pm.isPluginEnabled("Essentials"))
 			{
 				Plugin essPlugin = pm.getPlugin("Essentials");
-				essentials = (IEssentials)essPlugin;
-				
+				essentials = (IEssentials) essPlugin;
+
 				P.p.log("Essentials integration successful!");
 			}
 			else
@@ -50,24 +50,27 @@ public class EssentialsFeatures
 	/**
 	 * Handles Essentials Teleportation
 	 * 
-	 * @param player - {@link Player} to teleport
-	 * @param loc - {@link Location} to teleport to
+	 * @param player
+	 *            - {@link Player} to teleport
+	 * @param loc
+	 *            - {@link Location} to teleport to
 	 * @return Whether or not the teleportation was successful
 	 */
 	public static boolean handleTeleport(Player player, Location loc)
 	{
 		try
 		{
-			if ( ! Conf.homesTeleportCommandEssentialsIntegration || essentials == null) return false;
-	
+			if (!Conf.homesTeleportCommandEssentialsIntegration || essentials == null)
+				return false;
+
 			User user = essentials.getUser(player);
 			Teleport teleport = user.getTeleport();
 			Trade chargeFor = new Trade("fhome", essentials);
 
 			teleport.teleport(loc, chargeFor, TeleportCause.COMMAND);
 			return true;
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
 			player.sendMessage(ChatColor.RED + "Could not teleport using Essentials: " + e.getMessage());
 			P.p.log(Level.WARNING, "Could not teleport player %s using Essentials: %s", player.getName(), e);
@@ -79,7 +82,7 @@ public class EssentialsFeatures
 			{
 				P.p.log(Level.WARNING, "To see full stack trace, use \"f config debug true\"");
 			}
-			
+
 			return false;
 		}
 	}

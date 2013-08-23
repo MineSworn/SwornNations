@@ -11,24 +11,25 @@ public class CmdPeaceful extends FCommand
 	{
 		super();
 		this.aliases.add("peaceful");
-		
+
 		this.requiredArgs.add("faction tag");
-		//this.optionalArgs.put("", "");
-		
+		// this.optionalArgs.put("", "");
+
 		this.permission = Permission.SET_PEACEFUL.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
 	}
-	
+
 	@Override
 	public void perform()
 	{
 		Faction faction = this.argAsFaction(0);
-		if (faction == null) return;
+		if (faction == null)
+			return;
 
 		String change;
 		if (faction.isPeaceful())
@@ -42,17 +43,18 @@ public class CmdPeaceful extends FCommand
 			faction.setPeaceful(true);
 			faction.setPermanentWar(false);
 		}
-		
+
 		// Inform all players
 		for (FPlayer fplayer : FPlayers.i.getOnline())
 		{
 			if (fplayer.getFaction() == faction)
 			{
-				fplayer.msg((fme == null ? "A server admin" : fme.describeTo(fplayer, true))+"<i> has "+change+" your faction.");
+				fplayer.msg((fme == null ? "A server admin" : fme.describeTo(fplayer, true)) + "<i> has " + change + " your faction.");
 			}
 			else
 			{
-				fplayer.msg((fme == null ? "A server admin" : fme.describeTo(fplayer, true))+"<i> has "+change+" the faction \"" + faction.getTag(fplayer) + "<i>\".");
+				fplayer.msg((fme == null ? "A server admin" : fme.describeTo(fplayer, true)) + "<i> has " + change + " the faction \""
+						+ faction.getTag(fplayer) + "<i>\".");
 			}
 		}
 	}

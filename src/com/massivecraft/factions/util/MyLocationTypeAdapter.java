@@ -21,7 +21,7 @@ public class MyLocationTypeAdapter implements JsonDeserializer<LazyLocation>, Js
 	private static final String Z = "z";
 	private static final String YAW = "yaw";
 	private static final String PITCH = "pitch";
-	
+
 	@Override
 	public LazyLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 	{
@@ -48,7 +48,8 @@ public class MyLocationTypeAdapter implements JsonDeserializer<LazyLocation>, Js
 	}
 
 	@Override
-	public JsonElement serialize(LazyLocation src, Type typeOfSrc, JsonSerializationContext context) {
+	public JsonElement serialize(LazyLocation src, Type typeOfSrc, JsonSerializationContext context)
+	{
 		JsonObject obj = new JsonObject();
 
 		try

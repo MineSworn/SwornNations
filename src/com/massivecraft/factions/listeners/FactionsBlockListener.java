@@ -31,25 +31,29 @@ public class FactionsBlockListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		if (event.isCancelled()) return;
-		if ( ! event.canBuild()) return;
-		
-		// special case for flint&steel, which should only be prevented by DenyUsage list
+		if (event.isCancelled())
+			return;
+		if (!event.canBuild())
+			return;
+
+		// special case for flint&steel, which should only be prevented by
+		// DenyUsage list
 		if (event.getBlockPlaced().getType() == Material.FIRE)
 		{
 			return;
 		}
 
-		if ( ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "build", false, event.getBlock().getType()))
+		if (!playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "build", false, event.getBlock().getType()))
 			event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
-		if (event.isCancelled()) return;
+		if (event.isCancelled())
+			return;
 
-		if ( ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
+		if (!playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -58,9 +62,11 @@ public class FactionsBlockListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockDamage(BlockDamageEvent event)
 	{
-		if (event.isCancelled()) return;
+		if (event.isCancelled())
+			return;
 
-		if (event.getInstaBreak() && ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
+		if (event.getInstaBreak()
+				&& !playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -69,15 +75,19 @@ public class FactionsBlockListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPistonExtend(BlockPistonExtendEvent event)
 	{
-		if (event.isCancelled()) return;
-		if ( ! Conf.pistonProtectionThroughDenyBuild) return;
+		if (event.isCancelled())
+			return;
+		if (!Conf.pistonProtectionThroughDenyBuild)
+			return;
 
 		Faction pistonFaction = Board.getFactionAt(new FLocation(event.getBlock()));
 
-		// target end-of-the-line empty (air) block which is being pushed into, including if piston itself would extend into air
+		// target end-of-the-line empty (air) block which is being pushed into,
+		// including if piston itself would extend into air
 		Block targetBlock = event.getBlock().getRelative(event.getDirection(), event.getLength() + 1);
 
-		// if potentially pushing into air in another territory, we need to check it out
+		// if potentially pushing into air in another territory, we need to
+		// check it out
 		if (targetBlock.isEmpty() && !canPistonMoveBlock(pistonFaction, targetBlock.getLocation()))
 		{
 			event.setCancelled(true);
@@ -85,9 +95,11 @@ public class FactionsBlockListener implements Listener
 		}
 
 		/*
-		 * note that I originally was testing the territory of each affected block, but since I found that pistons can only push
-		 * up to 12 blocks and the width of any territory is 16 blocks, it should be safe (and much more lightweight) to test
-		 * only the final target block as done above
+		 * note that I originally was testing the territory of each affected
+		 * block, but since I found that pistons can only push up to 12 blocks
+		 * and the width of any territory is 16 blocks, it should be safe (and
+		 * much more lightweight) to test only the final target block as done
+		 * above
 		 */
 	}
 
@@ -133,14 +145,14 @@ public class FactionsBlockListener implements Listener
 		}
 		else if (otherFaction.isSafeZone())
 		{
-			if ( ! Conf.safeZoneDenyBuild)
+			if (!Conf.safeZoneDenyBuild)
 				return true;
 
 			return false;
 		}
 		else if (otherFaction.isWarZone())
 		{
-			if ( ! Conf.warZoneDenyBuild)
+			if (!Conf.warZoneDenyBuild)
 				return true;
 
 			return false;
@@ -157,10 +169,12 @@ public class FactionsBlockListener implements Listener
 	public static boolean playerCanBuildDestroyBlock(Player player, Location location, String action, boolean justCheck, Material mat)
 	{
 		String name = player.getName();
-		if (Conf.playersWhoBypassAllProtection.contains(name)) return true;
+		if (Conf.playersWhoBypassAllProtection.contains(name))
+			return true;
 
 		FPlayer me = FPlayers.i.get(name);
-		if (me.isAdminBypassing()) return true;
+		if (me.isAdminBypassing())
+			return true;
 
 		FLocation loc = new FLocation(location);
 		Faction otherFaction = Board.getFactionAt(loc);
@@ -168,14 +182,16 @@ public class FactionsBlockListener implements Listener
 
 		if (otherFaction.isNone())
 		{
-			if (!Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName())) {
+			if (!Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName()))
+			{
 				if (mat != Material.TNT || (mat == Material.TNT && absoluteFaction.isNone()))
-					return true; // This is not faction territory. Use whatever you like here.
+					return true; // This is not faction territory. Use whatever
+									// you like here.
 			}
 
 			if (!justCheck)
-				me.msg("<b>You can't "+action+" in the wilderness.");
-			
+				me.msg("<b>You can't " + action + " in the wilderness.");
+
 			return false;
 		}
 		else if (otherFaction.isSafeZone())
@@ -184,7 +200,7 @@ public class FactionsBlockListener implements Listener
 				return true;
 
 			if (!justCheck)
-				me.msg("<b>You can't "+action+" in a safe zone.");
+				me.msg("<b>You can't " + action + " in a safe zone.");
 
 			return false;
 		}
@@ -194,7 +210,7 @@ public class FactionsBlockListener implements Listener
 				return true;
 
 			if (!justCheck)
-				me.msg("<b>You can't "+action+" in a war zone.");
+				me.msg("<b>You can't " + action + " in a war zone.");
 
 			return false;
 		}
@@ -211,41 +227,43 @@ public class FactionsBlockListener implements Listener
 			player.damage(Conf.actionDeniedPainAmount);
 
 			if (!deny)
-				me.msg("<b>It is painful to try to "+action+" in the territory of "+otherFaction.getTag(myFaction));
+				me.msg("<b>It is painful to try to " + action + " in the territory of " + otherFaction.getTag(myFaction));
 		}
 
 		// cancel building/destroying in other territory?
 		if (deny)
 		{
 			if (!justCheck)
-				me.msg("<b>You can't "+action+" in the territory of "+otherFaction.getTag(myFaction));
+				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
 
 			return false;
- 		}
-		
-		if (action.equalsIgnoreCase("destroy")) 
+		}
+
+		if (action.equalsIgnoreCase("destroy"))
 		{
-			if (!otherFaction.playerHasPermission(me, NPermission.BREAK)) 
-			{
-				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
-				return false;
-			}
-		} 
-		else if (action.equalsIgnoreCase("build"))
-		{			
-			if (!otherFaction.playerHasPermission(me, NPermission.BUILD)) 
+			if (!otherFaction.playerHasPermission(me, NPermission.BREAK))
 			{
 				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
 				return false;
 			}
 		}
-		
-		if (mat.equals(Material.TNT) && me.getFaction().getRelationTo(absoluteFaction).confDenyBuild(otherFaction.hasPlayersOnline())) {
-			me.msg("<b>You can't place tnt under, in, or over the territory of "+otherFaction.getTag(me.getFaction()));
+		else if (action.equalsIgnoreCase("build"))
+		{
+			if (!otherFaction.playerHasPermission(me, NPermission.BUILD))
+			{
+				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
+				return false;
+			}
+		}
+
+		if (mat.equals(Material.TNT) && me.getFaction().getRelationTo(absoluteFaction).confDenyBuild(otherFaction.hasPlayersOnline()))
+		{
+			me.msg("<b>You can't place tnt under, in, or over the territory of " + otherFaction.getTag(me.getFaction()));
 			return false;
 		}
-		
-		// Also cancel and/or cause pain if player doesn't have ownership rights for this claim
+
+		// Also cancel and/or cause pain if player doesn't have ownership rights
+		// for this claim
 		if (Conf.ownedAreasEnabled && (Conf.ownedAreaDenyBuild || Conf.ownedAreaPainBuild) && !otherFaction.playerHasOwnershipRights(me, loc))
 		{
 			if (!pain && Conf.ownedAreaPainBuild && !justCheck)
@@ -253,12 +271,12 @@ public class FactionsBlockListener implements Listener
 				player.damage(Conf.actionDeniedPainAmount);
 
 				if (!Conf.ownedAreaDenyBuild)
-					me.msg("<b>It is painful to try to "+action+" in this territory, it is owned by: "+otherFaction.getOwnerListString(loc));
+					me.msg("<b>It is painful to try to " + action + " in this territory, it is owned by: " + otherFaction.getOwnerListString(loc));
 			}
 			if (Conf.ownedAreaDenyBuild)
 			{
 				if (!justCheck)
-					me.msg("<b>You can't "+action+" in this territory, it is owned by: "+otherFaction.getOwnerListString(loc));
+					me.msg("<b>You can't " + action + " in this territory, it is owned by: " + otherFaction.getOwnerListString(loc));
 
 				return false;
 			}
@@ -266,17 +284,17 @@ public class FactionsBlockListener implements Listener
 
 		return true;
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInitiatePlace(BlockPlaceEvent event)
 	{
 		if (event.isCancelled())
 			return;
-		
+
 		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
 		if (fplayer == null)
 			return;
-		
+
 		if (fplayer.hasFaction())
 		{
 			Material mat = event.getBlock().getType();
@@ -290,50 +308,52 @@ public class FactionsBlockListener implements Listener
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockedItemPlace(BlockPlaceEvent event)
 	{
 		if (event.isCancelled())
 			return;
-		
+
 		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
 		if (fplayer == null)
 			return;
-		
+
 		FLocation floc = new FLocation(event.getBlock());
 		Faction fac = Board.getFactionAt(floc);
 		for (MyMaterial blockedMaterial : Conf.ownTerritoryOnlyMaterials)
 		{
 			if (event.getBlock().getTypeId() == blockedMaterial.getTypeId())
 			{
-				if (! canPlaceBlockedItemHere(floc, fac, fplayer, false))
+				if (!canPlaceBlockedItemHere(floc, fac, fplayer, false))
 				{
 					fplayer.msg("<i>You cannot place this item outside your own territory!");
 					event.setCancelled(true);
 				}
 			}
 		}
-		
+
 		for (MyMaterial blockedMaterial : Conf.ownTerritoryAndWildernessMaterials)
 		{
 			if (event.getBlock().getTypeId() == blockedMaterial.getTypeId())
 			{
-				if (! canPlaceBlockedItemHere(floc, fac, fplayer, true))
+				if (!canPlaceBlockedItemHere(floc, fac, fplayer, true))
 				{
 					fplayer.msg("<i>You cannot place this item outside your own territory or wilderness!");
 					event.setCancelled(true);
 				}
-			} 
+			}
 		}
 	}
-	
+
 	public boolean canPlaceBlockedItemHere(FLocation floc, Faction fac, FPlayer pl, boolean both)
 	{
-		if (fac.isSafeZone() || fac.isWarZone()) return false;
-			
-		if (floc.getY() <= 45) return true;
-			
+		if (fac.isSafeZone() || fac.isWarZone())
+			return false;
+
+		if (floc.getY() <= 45)
+			return true;
+
 		return (both ? (fac == pl.getFaction() || fac.isNone()) : (fac == pl.getFaction()));
 	}
 }

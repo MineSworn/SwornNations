@@ -10,12 +10,14 @@ import com.massivecraft.factions.struct.Relation;
 /**
  * @author t7seven7t
  */
-public class CmdRelationNation extends FRelationCommand {
+public class CmdRelationNation extends FRelationCommand
+{
 
-	public CmdRelationNation() {
+	public CmdRelationNation()
+	{
 		aliases.add("nation");
 		targetRelation = Relation.NATION;
 		senderMustHaveNPermission = NPermission.NATION;
 	}
-	
+
 }

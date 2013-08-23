@@ -13,36 +13,63 @@ import com.massivecraft.factions.zcore.util.DiscUtil;
 import com.massivecraft.factions.zcore.util.TextUtil;
 
 public abstract class EntityCollection<E extends Entity>
-{	
+{
 	// -------------------------------------------- //
 	// FIELDS
 	// -------------------------------------------- //
-	
-	// These must be instantiated in order to allow for different configuration (orders, comparators etc)
+
+	// These must be instantiated in order to allow for different configuration
+	// (orders, comparators etc)
 	private Collection<E> entities;
 	protected Map<String, E> id2entity;
-	
-	// If the entities are creative they will create a new instance if a non existent id was requested
+
+	// If the entities are creative they will create a new instance if a non
+	// existent id was requested
 	private boolean creative;
-	public boolean isCreative() { return creative; }
-	public void setCreative(boolean creative) { this.creative = creative; }
+
+	public boolean isCreative()
+	{
+		return creative;
+	}
+
+	public void setCreative(boolean creative)
+	{
+		this.creative = creative;
+	}
 
 	// This is the auto increment for the primary key "id"
 	private int nextId;
-	
+
 	// This ugly crap is necessary due to java type erasure
 	private Class<E> entityClass;
+
 	public abstract Type getMapType(); // This is special stuff for GSON.
-	
+
 	// Info on how to persist
 	private Gson gson;
-	public Gson getGson() { return gson; }
-	public void setGson(Gson gson) { this.gson = gson; }
+
+	public Gson getGson()
+	{
+		return gson;
+	}
+
+	public void setGson(Gson gson)
+	{
+		this.gson = gson;
+	}
 
 	private File file;
-	public File getFile() { return file; }
-	public void setFile(File file) { this.file = file; }
-	
+
+	public File getFile()
+	{
+		return file;
+	}
+
+	public void setFile(File file)
+	{
+		this.file = file;
+	}
+
 	// -------------------------------------------- //
 	// CONSTRUCTORS
 	// -------------------------------------------- //
@@ -56,15 +83,15 @@ public abstract class EntityCollection<E extends Entity>
 		this.gson = gson;
 		this.creative = creative;
 		this.nextId = 1;
-		
+
 		EM.setEntitiesCollectionForEntityClass(this.entityClass, this);
 	}
-	
+
 	public EntityCollection(Class<E> entityClass, Collection<E> entities, Map<String, E> id2entity, File file, Gson gson)
 	{
 		this(entityClass, entities, id2entity, file, gson, false);
 	}
-	
+
 	// -------------------------------------------- //
 	// GET
 	// -------------------------------------------- //
@@ -73,78 +100,86 @@ public abstract class EntityCollection<E extends Entity>
 	{
 		return entities;
 	}
-	
+
 	public Map<String, E> getMap()
 	{
 		return this.id2entity;
 	}
-	
+
 	public E get(String id)
 	{
-		if (this.creative) return this.getCreative(id);
+		if (this.creative)
+			return this.getCreative(id);
 		return id2entity.get(id);
 	}
-	
+
 	public E getCreative(String id)
 	{
 		E e = id2entity.get(id);
-		if (e != null) return e;
+		if (e != null)
+			return e;
 		return this.create(id);
 	}
-	
+
 	public boolean exists(String id)
 	{
-		if (id == null) return false;
+		if (id == null)
+			return false;
 		return id2entity.get(id) != null;
 	}
-	
+
 	public E getBestIdMatch(String pattern)
 	{
 		String id = TextUtil.getBestStartWithCI(this.id2entity.keySet(), pattern);
-		if (id == null) return null;
+		if (id == null)
+			return null;
 		return this.id2entity.get(id);
 	}
-	
+
 	// -------------------------------------------- //
 	// CREATE
 	// -------------------------------------------- //
-	
+
 	public synchronized E create()
 	{
 		return this.create(this.getNextId());
 	}
-	
+
 	public synchronized E create(String id)
 	{
-		if ( ! this.isIdFree(id)) return null;
-		
+		if (!this.isIdFree(id))
+			return null;
+
 		E e = null;
 		try
 		{
 			e = this.entityClass.newInstance();
-		} catch (Exception ignored) {
+		}
+		catch (Exception ignored)
+		{
 			ignored.printStackTrace();
 		}
-		
+
 		e.setId(id);
 		this.entities.add(e);
 		this.id2entity.put(e.getId(), e);
 		this.updateNextIdForId(id);
 		return e;
 	}
-	
+
 	// -------------------------------------------- //
 	// ATTACH AND DETACH
 	// -------------------------------------------- //
-	
+
 	public void attach(E entity)
 	{
-		if (entity.getId() != null) return;
+		if (entity.getId() != null)
+			return;
 		entity.setId(this.getNextId());
 		this.entities.add(entity);
 		this.id2entity.put(entity.getId(), entity);
 	}
-	
+
 	public void detach(E entity)
 	{
 		entity.preDetach();
@@ -152,28 +187,29 @@ public abstract class EntityCollection<E extends Entity>
 		this.id2entity.remove(entity.getId());
 		entity.postDetach();
 	}
-	
+
 	public void detach(String id)
 	{
 		E entity = this.id2entity.get(id);
-		if (entity == null) return;
+		if (entity == null)
+			return;
 		this.detach(entity);
 	}
-	
+
 	public boolean attached(E entity)
 	{
 		return this.entities.contains(entity);
 	}
-	
+
 	public boolean detached(E entity)
 	{
-		return ! this.attached(entity);
+		return !this.attached(entity);
 	}
-	
+
 	// -------------------------------------------- //
 	// DISC
 	// -------------------------------------------- //
-	
+
 	public boolean saveToDisc()
 	{
 		Map<String, E> entitiesThatShouldBeSaved = new HashMap<String, E>();
@@ -184,19 +220,20 @@ public abstract class EntityCollection<E extends Entity>
 				entitiesThatShouldBeSaved.put(entity.getId(), entity);
 			}
 		}
-		
+
 		return this.saveCore(entitiesThatShouldBeSaved);
 	}
-	
+
 	private boolean saveCore(Map<String, E> entities)
 	{
 		return DiscUtil.writeCatch(this.file, this.gson.toJson(entities));
 	}
-	
+
 	public boolean loadFromDisc()
 	{
 		Map<String, E> id2entity = this.loadCore();
-		if (id2entity == null) return false;
+		if (id2entity == null)
+			return false;
 		this.entities.clear();
 		this.entities.addAll(id2entity.values());
 		this.id2entity.clear();
@@ -204,50 +241,51 @@ public abstract class EntityCollection<E extends Entity>
 		this.fillIds();
 		return true;
 	}
-	
+
 	private Map<String, E> loadCore()
 	{
-		if ( ! this.file.exists())
+		if (!this.file.exists())
 		{
 			return new HashMap<String, E>();
 		}
-		
+
 		String content = DiscUtil.readCatch(this.file);
 		if (content == null)
 		{
 			return null;
 		}
-		
+
 		Type type = this.getMapType();
 		return this.gson.fromJson(content, type);
 	}
-	
+
 	// -------------------------------------------- //
 	// ID MANAGEMENT
 	// -------------------------------------------- //
-	
+
 	public String getNextId()
 	{
-		while ( ! isIdFree(this.nextId) )
+		while (!isIdFree(this.nextId))
 		{
 			this.nextId += 1;
 		}
 		return Integer.toString(this.nextId);
 	}
-	
+
 	public boolean isIdFree(String id)
 	{
-		return ! this.id2entity.containsKey(id);
+		return !this.id2entity.containsKey(id);
 	}
+
 	public boolean isIdFree(int id)
 	{
 		return this.isIdFree(Integer.toString(id));
 	}
-	
+
 	protected synchronized void fillIds()
 	{
 		this.nextId = 1;
-		for(Entry<String, E> entry : this.id2entity.entrySet())
+		for (Entry<String, E> entry : this.id2entity.entrySet())
 		{
 			String id = entry.getKey();
 			E entity = entry.getValue();
@@ -255,7 +293,7 @@ public abstract class EntityCollection<E extends Entity>
 			this.updateNextIdForId(id);
 		}
 	}
-	
+
 	protected synchronized void updateNextIdForId(int id)
 	{
 		if (this.nextId < id)
@@ -263,7 +301,7 @@ public abstract class EntityCollection<E extends Entity>
 			this.nextId = id + 1;
 		}
 	}
-	
+
 	protected void updateNextIdForId(String id)
 	{
 		try
@@ -271,6 +309,8 @@ public abstract class EntityCollection<E extends Entity>
 			int idAsInt = Integer.parseInt(id);
 			this.updateNextIdForId(idAsInt);
 		}
-		catch (Exception ignored) { }
+		catch (Exception ignored)
+		{
+		}
 	}
 }

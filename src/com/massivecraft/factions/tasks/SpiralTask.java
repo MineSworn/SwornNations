@@ -9,7 +9,6 @@ import org.bukkit.World;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.P;
 
-
 /*
  * reference diagram, task should move in this pattern out from chunk 0 in the center.
  *  8 [>][>][>][>][>] etc.
@@ -41,7 +40,8 @@ public abstract class SpiralTask implements Runnable
 
 	public SpiralTask(FLocation fLocation, int radius)
 	{
-		// limit is determined based on spiral leg length for given radius; see insideRadius()
+		// limit is determined based on spiral leg length for given radius; see
+		// insideRadius()
 		this.limit = (radius - 1) * 2;
 
 		this.world = Bukkit.getWorld(fLocation.getWorldName());
@@ -52,8 +52,8 @@ public abstract class SpiralTask implements Runnable
 			return;
 		}
 
-		this.x = (int)fLocation.getX();
-		this.z = (int)fLocation.getZ();
+		this.x = (int) fLocation.getX();
+		this.z = (int) fLocation.getZ();
 
 		this.readyToGo = true;
 
@@ -61,78 +61,87 @@ public abstract class SpiralTask implements Runnable
 		this.setTaskID(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(P.p, this, 2, 2));
 	}
 
-/*
- * This is where the necessary work is done; you'll need to override this method with whatever you want
- * done at each chunk in the spiral pattern.
- * Return false if the entire task needs to be aborted, otherwise return true to continue.
- */
+	/*
+	 * This is where the necessary work is done; you'll need to override this
+	 * method with whatever you want done at each chunk in the spiral pattern.
+	 * Return false if the entire task needs to be aborted, otherwise return
+	 * true to continue.
+	 */
 	public abstract boolean work();
 
-/*
- * Returns an FLocation pointing at the current chunk X and Z values.
- */
+	/*
+	 * Returns an FLocation pointing at the current chunk X and Z values.
+	 */
 	public final FLocation currentFLocation()
 	{
 		return new FLocation(world.getName(), x, z);
 	}
-/*
- * Returns a Location pointing at the current chunk X and Z values.
- * note that the Location is at the corner of the chunk, not the center.
- */
+
+	/*
+	 * Returns a Location pointing at the current chunk X and Z values. note
+	 * that the Location is at the corner of the chunk, not the center.
+	 */
 	public final Location currentLocation()
 	{
 		return new Location(world, FLocation.chunkToBlock(x), 65.0, FLocation.chunkToBlock(z));
 	}
-/*
- * Returns current chunk X and Z values.
- */
+
+	/*
+	 * Returns current chunk X and Z values.
+	 */
 	public final int getX()
 	{
 		return x;
 	}
+
 	public final int getZ()
 	{
 		return z;
 	}
 
-
-
-/*
- * Below are the guts of the class, which you normally wouldn't need to mess with.
- */
+	/*
+	 * Below are the guts of the class, which you normally wouldn't need to mess
+	 * with.
+	 */
 
 	public final void setTaskID(int ID)
-	{	
+	{
 		if (ID == -1)
 			this.stop();
 		taskID = ID;
 	}
 
+	@Override
 	public final void run()
 	{
-		if (!this.valid() || !readyToGo) return;
+		if (!this.valid() || !readyToGo)
+			return;
 
-		// this is set so it only does one iteration at a time, no matter how frequently the timer fires
+		// this is set so it only does one iteration at a time, no matter how
+		// frequently the timer fires
 		readyToGo = false;
 
 		// make sure we're still inside the specified radius
-		if ( ! this.insideRadius()) return;
+		if (!this.insideRadius())
+			return;
 
-		// track this to keep one iteration from dragging on too long and possibly choking the system
+		// track this to keep one iteration from dragging on too long and
+		// possibly choking the system
 		long loopStartTime = now();
 
-		// keep going until the task has been running for 20ms or more, then stop to take a breather
+		// keep going until the task has been running for 20ms or more, then
+		// stop to take a breather
 		while (now() < loopStartTime + 20)
 		{
 			// run the primary task on the current X/Z coordinates
-			if ( ! this.work())
+			if (!this.work())
 			{
 				this.finish();
 				return;
 			}
 
 			// move on to next chunk in spiral
-			if ( ! this.moveToNext())
+			if (!this.moveToNext())
 				return;
 		}
 
@@ -140,10 +149,12 @@ public abstract class SpiralTask implements Runnable
 		readyToGo = true;
 	}
 
-	// step through chunks in spiral pattern from center; returns false if we're done, otherwise returns true
+	// step through chunks in spiral pattern from center; returns false if we're
+	// done, otherwise returns true
 	public final boolean moveToNext()
 	{
-		if ( ! this.valid()) return false;
+		if (!this.valid())
+			return false;
 
 		// make sure we don't need to turn down the next leg of the spiral
 		if (current < length)
@@ -151,13 +162,15 @@ public abstract class SpiralTask implements Runnable
 			current++;
 
 			// if we're outside the radius, we're done
-			if ( ! this.insideRadius()) return false;
+			if (!this.insideRadius())
+				return false;
 		}
 		else
-		{	// one leg/side of the spiral down...
+		{ // one leg/side of the spiral down...
 			current = 0;
 			isZLeg ^= true;
-			// every second leg (between X and Z legs, negative or positive), length increases
+			// every second leg (between X and Z legs, negative or positive),
+			// length increases
 			if (isZLeg)
 			{
 				isNeg ^= true;
@@ -185,14 +198,15 @@ public abstract class SpiralTask implements Runnable
 	// for successful completion
 	public void finish()
 	{
-//		P.p.log("SpiralTask successfully completed!");
+		// P.p.log("SpiralTask successfully completed!");
 		this.stop();
 	}
 
 	// we're done, whether finished or cancelled
 	public final void stop()
 	{
-		if (!this.valid()) return;
+		if (!this.valid())
+			return;
 
 		readyToGo = false;
 		Bukkit.getServer().getScheduler().cancelTask(taskID);

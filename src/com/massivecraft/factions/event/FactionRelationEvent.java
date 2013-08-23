@@ -3,9 +3,8 @@ package com.massivecraft.factions.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.Faction;
-
+import com.massivecraft.factions.struct.Relation;
 
 public class FactionRelationEvent extends Event
 {
@@ -24,22 +23,23 @@ public class FactionRelationEvent extends Event
 		frel = rel;
 	}
 
-	public HandlerList getHandlers() 
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() 
+	public static HandlerList getHandlerList()
 	{
 		return handlers;
 	}
 
-	public Relation getOldRelation() 
+	public Relation getOldRelation()
 	{
 		return foldrel;
 	}
 
-	public Relation getRelation() 
+	public Relation getRelation()
 	{
 		return frel;
 	}

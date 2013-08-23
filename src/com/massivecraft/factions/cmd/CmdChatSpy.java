@@ -24,9 +24,9 @@ public class CmdChatSpy extends FCommand
 	@Override
 	public void perform()
 	{
-		fme.setSpyingChat(this.argAsBool(0, ! fme.isSpyingChat()));
+		fme.setSpyingChat(this.argAsBool(0, !fme.isSpyingChat()));
 
-		if ( fme.isSpyingChat())
+		if (fme.isSpyingChat())
 		{
 			fme.msg("<i>You have enabled chat spying mode.");
 			P.p.log(fme.getName() + " has ENABLED chat spying mode.");

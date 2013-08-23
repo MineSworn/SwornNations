@@ -7,28 +7,32 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 
-public class CmdOfficer extends FCommand {
+public class CmdOfficer extends FCommand
+{
 
-	public CmdOfficer() {
+	public CmdOfficer()
+	{
 		super();
 		this.aliases.add("officer");
 		this.requiredArgs.add("player name");
-		
+
 		this.permission = Permission.OFFICER.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
 		senderMustHaveNPermission = NPermission.OFFICER;
 	}
-	
+
 	@Override
-	public void perform() {
+	public void perform()
+	{
 		FPlayer you = this.argAsBestFPlayerMatch(0);
-		if (you == null) return;
-		
+		if (you == null)
+			return;
+
 		boolean permAny = Permission.OFFICER_ANY.has(sender, false);
 		Faction targetFaction = you.getFaction();
 
@@ -49,7 +53,7 @@ public class CmdOfficer extends FCommand {
 			msg("<b>The target player is a faction admin. Demote them first.");
 			return;
 		}
-		
+
 		if (you.getRole() == Role.COADMIN)
 		{
 			msg("<b>The target player is a faction co-admin. Demote them first.");

@@ -18,26 +18,26 @@ public class CmdUnclaim extends FCommand
 	{
 		this.aliases.add("unclaim");
 		this.aliases.add("declaim");
-		
-		//this.requiredArgs.add("");
-		//this.optionalArgs.put("", "");
-		
+
+		// this.requiredArgs.add("");
+		// this.optionalArgs.put("", "");
+
 		this.permission = Permission.UNCLAIM.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
 		senderMustHaveNPermission = NPermission.UNCLAIM;
 	}
-	
+
 	@Override
 	public void perform()
 	{
 		FLocation flocation = new FLocation(fme);
 		Faction otherFaction = Board.getAbsoluteFactionAt(flocation);
-		
+
 		if (otherFaction.isSafeZone())
 		{
 			if (Permission.MANAGE_SAFE_ZONE.has(sender))
@@ -46,7 +46,7 @@ public class CmdUnclaim extends FCommand
 				msg("<i>Safe zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					P.p.log(fme.getName()+" unclaimed land at ("+flocation.getCoordString()+") from the faction: "+otherFaction.getTag());
+					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 			}
 			else
 			{
@@ -62,7 +62,7 @@ public class CmdUnclaim extends FCommand
 				msg("<i>War zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					P.p.log(fme.getName()+" unclaimed land at ("+flocation.getCoordString()+") from the faction: "+otherFaction.getTag());
+					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 			}
 			else
 			{
@@ -70,7 +70,7 @@ public class CmdUnclaim extends FCommand
 			}
 			return;
 		}
-		
+
 		if (fme.isAdminBypassing())
 		{
 			Board.removeAt(flocation);
@@ -78,23 +78,22 @@ public class CmdUnclaim extends FCommand
 			msg("<i>You unclaimed this land.");
 
 			if (Conf.logLandUnclaims)
-				P.p.log(fme.getName()+" unclaimed land at ("+flocation.getCoordString()+") from the faction: "+otherFaction.getTag());
+				P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 
 			return;
 		}
-		
-		if ( ! assertHasFaction())
+
+		if (!assertHasFaction())
 		{
 			return;
 		}
-		
-		if ( ! assertMinRole(Role.MODERATOR))
+
+		if (!assertMinRole(Role.MODERATOR))
 		{
 			return;
 		}
-		
-		
-		if ( myFaction != otherFaction)
+
+		if (myFaction != otherFaction)
 		{
 			msg("<b>You don't own this land.");
 			return;
@@ -102,19 +101,22 @@ public class CmdUnclaim extends FCommand
 
 		LandUnclaimEvent unclaimEvent = new LandUnclaimEvent(flocation, otherFaction, fme);
 		P.p.getServer().getPluginManager().callEvent(unclaimEvent);
-		if(unclaimEvent.isCancelled()) return;
+		if (unclaimEvent.isCancelled())
+			return;
 
 		if (Econ.shouldBeUsed())
 		{
 			double refund = Econ.calculateClaimRefund(myFaction.getLandRounded());
-			
-			if(Conf.bankEnabled && Conf.bankFactionPaysLandCosts)
+
+			if (Conf.bankEnabled && Conf.bankFactionPaysLandCosts)
 			{
-				if ( ! Econ.modifyMoney(myFaction, refund, "to unclaim this land", "for unclaiming this land")) return;
+				if (!Econ.modifyMoney(myFaction, refund, "to unclaim this land", "for unclaiming this land"))
+					return;
 			}
 			else
 			{
-				if ( ! Econ.modifyMoney(fme, refund, "to unclaim this land", "for unclaiming this land")) return;
+				if (!Econ.modifyMoney(fme, refund, "to unclaim this land", "for unclaiming this land"))
+					return;
 			}
 		}
 
@@ -122,7 +124,7 @@ public class CmdUnclaim extends FCommand
 		myFaction.msg("%s<i> unclaimed some land.", fme.describeTo(myFaction, true));
 
 		if (Conf.logLandUnclaims)
-			P.p.log(fme.getName()+" unclaimed land at ("+flocation.getCoordString()+") from the faction: "+otherFaction.getTag());
+			P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 	}
-	
+
 }

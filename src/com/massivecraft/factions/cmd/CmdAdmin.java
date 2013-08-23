@@ -2,37 +2,38 @@ package com.massivecraft.factions.cmd;
 
 import org.bukkit.Bukkit;
 
-import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 
 public class CmdAdmin extends FCommand
-{	
+{
 	public CmdAdmin()
 	{
 		super();
 		this.aliases.add("admin");
-		
+
 		this.requiredArgs.add("player name");
-		//this.optionalArgs.put("", "");
-		
+		// this.optionalArgs.put("", "");
+
 		this.permission = Permission.ADMIN.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
 	}
-	
+
 	@Override
 	public void perform()
 	{
 		FPlayer fyou = this.argAsBestFPlayerMatch(0);
-		if (fyou == null) return;
+		if (fyou == null)
+			return;
 
 		boolean permAny = Permission.ADMIN_ANY.has(sender, false);
 		Faction targetFaction = fyou.getFaction();
@@ -55,12 +56,14 @@ public class CmdAdmin extends FCommand
 			return;
 		}
 
-		// only perform a FPlayerJoinEvent when newLeader isn't actually in the faction
+		// only perform a FPlayerJoinEvent when newLeader isn't actually in the
+		// faction
 		if (fyou.getFaction() != targetFaction)
 		{
 			FPlayerJoinEvent event = new FPlayerJoinEvent(fyou, targetFaction, FPlayerJoinEvent.PlayerJoinReason.LEADER);
 			Bukkit.getServer().getPluginManager().callEvent(event);
-			if (event.isCancelled()) return;
+			if (event.isCancelled())
+				return;
 		}
 
 		FPlayer admin = targetFaction.getFPlayerAdmin();
@@ -83,7 +86,8 @@ public class CmdAdmin extends FCommand
 		// Inform all players
 		for (FPlayer fplayer : FPlayers.i.getOnline())
 		{
-			fplayer.msg("%s<i> gave %s<i> the leadership of %s<i>.", senderIsConsole ? "A server admin" : fme.describeTo(fplayer, true), fyou.describeTo(fplayer), targetFaction.describeTo(fplayer));
+			fplayer.msg("%s<i> gave %s<i> the leadership of %s<i>.", senderIsConsole ? "A server admin" : fme.describeTo(fplayer, true),
+					fyou.describeTo(fplayer), targetFaction.describeTo(fplayer));
 		}
 	}
 }

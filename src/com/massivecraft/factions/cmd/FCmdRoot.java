@@ -67,29 +67,33 @@ public class FCmdRoot extends FCommand
 	public CmdInitiate cmdInitiate = new CmdInitiate();
 	public CmdOutpost cmdOutpost = new CmdOutpost();
 	public CmdSetoutpost cmdSetoutpost = new CmdSetoutpost();
-	
+
 	public FCmdRoot()
 	{
 		super();
 		this.aliases.addAll(Conf.baseCommandAliases);
-		this.aliases.removeAll(Collections.singletonList(null));  // remove any nulls from extra commas
+		this.aliases.removeAll(Collections.singletonList(null)); // remove any
+																	// nulls
+																	// from
+																	// extra
+																	// commas
 		this.allowNoSlashAccess = Conf.allowNoSlashCommand;
-		
-		//this.requiredArgs.add("");
-		//this.optionalArgs.put("","")
-		
+
+		// this.requiredArgs.add("");
+		// this.optionalArgs.put("","")
+
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
-		
+
 		this.disableOnLock = false;
-		
+
 		this.setHelpShort("The faction base command");
 		this.helpLong.add(p.txt.parseTags("<i>This command contains all faction stuff."));
-		
-		//this.subCommands.add(p.cmdHelp);
-		
+
+		// this.subCommands.add(p.cmdHelp);
+
 		this.addSubCommand(this.cmdAdmin);
 		this.addSubCommand(this.cmdAutoClaim);
 		this.addSubCommand(this.cmdBoom);
@@ -152,7 +156,7 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdOutpost);
 		this.addSubCommand(this.cmdSetoutpost);
 	}
-	
+
 	@Override
 	public void perform()
 	{

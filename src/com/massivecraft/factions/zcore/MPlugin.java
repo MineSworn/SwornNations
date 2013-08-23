@@ -28,60 +28,77 @@ public abstract class MPlugin extends JavaPlugin
 	public Persist persist;
 	public TextUtil txt;
 	public PermUtil perm;
-	
+
 	// Persist related
-	public Gson gson;	
+	public Gson gson;
 	private Integer saveTask = null;
 	private boolean autoSave = true;
 	protected boolean loadSuccessful = false;
-	public boolean getAutoSave() {return this.autoSave;}
-	public void setAutoSave(boolean val) {this.autoSave = val;}
+
+	public boolean getAutoSave()
+	{
+		return this.autoSave;
+	}
+
+	public void setAutoSave(boolean val)
+	{
+		this.autoSave = val;
+	}
+
 	public String refCommand = "";
-	
+
 	// Listeners
-	private MPluginSecretPlayerListener mPluginSecretPlayerListener; 
+	private MPluginSecretPlayerListener mPluginSecretPlayerListener;
 	private MPluginSecretServerListener mPluginSecretServerListener;
-	
+
 	// Our stored base commands
 	private List<MCommand<?>> baseCommands = new ArrayList<MCommand<?>>();
-	public List<MCommand<?>> getBaseCommands() { return this.baseCommands; }
+
+	public List<MCommand<?>> getBaseCommands()
+	{
+		return this.baseCommands;
+	}
 
 	// -------------------------------------------- //
 	// ENABLE
 	// -------------------------------------------- //
 	private long timeEnableStart;
+
 	public boolean preEnable()
 	{
 		timeEnableStart = System.currentTimeMillis();
-		
+
 		// Ensure basefolder exists!
 		this.getDataFolder().mkdirs();
-		
+
 		// Create Utility Instances
 		this.perm = new PermUtil(this);
 		this.persist = new Persist(this);
 		this.gson = this.getGsonBuilder().create();
-		
+
 		this.txt = new TextUtil();
 		initTXT();
 
-		// attempt to get first command defined in plugin.yml as reference command, if any commands are defined in there
-		// reference command will be used to prevent "unknown command" console messages
+		// attempt to get first command defined in plugin.yml as reference
+		// command, if any commands are defined in there
+		// reference command will be used to prevent "unknown command" console
+		// messages
 		try
 		{
 			Map<String, Map<String, Object>> refCmd = this.getDescription().getCommands();
 			if (refCmd != null && !refCmd.isEmpty())
-				this.refCommand = (String)(refCmd.keySet().toArray()[0]);
+				this.refCommand = (String) (refCmd.keySet().toArray()[0]);
 		}
-		catch (ClassCastException ex) {}
+		catch (ClassCastException ex)
+		{
+		}
 
 		// Create and register listeners
 		this.mPluginSecretPlayerListener = new MPluginSecretPlayerListener(this);
 		this.mPluginSecretServerListener = new MPluginSecretServerListener(this);
 		getServer().getPluginManager().registerEvents(this.mPluginSecretPlayerListener, this);
 		getServer().getPluginManager().registerEvents(this.mPluginSecretServerListener, this);
-		
-		
+
 		// Register recurring tasks
 		long saveTicks = 20 * 60 * 30; // Approximately every 30 min
 		if (saveTask == null)
@@ -92,12 +109,13 @@ public abstract class MPlugin extends JavaPlugin
 		loadSuccessful = true;
 		return true;
 	}
-	
+
 	public void postEnable()
 	{
-		log(getDescription().getFullName() + " has been enabled " +(System.currentTimeMillis()-timeEnableStart)+"ms)");
+		log(getDescription().getFullName() + " has been enabled " + (System.currentTimeMillis() - timeEnableStart) + "ms)");
 	}
-	
+
+	@Override
 	public void onDisable()
 	{
 		if (saveTask != null)
@@ -108,10 +126,10 @@ public abstract class MPlugin extends JavaPlugin
 		// only save data if plugin actually loaded successfully
 		if (loadSuccessful)
 			EM.saveAllToDisc();
-		
+
 		log(getDescription().getFullName() + " has been disabled");
 	}
-	
+
 	public void suicide()
 	{
 		log("Now I suicide!");
@@ -120,27 +138,24 @@ public abstract class MPlugin extends JavaPlugin
 
 	// -------------------------------------------- //
 	// Some inits...
-	// You are supposed to override these in the plugin if you aren't satisfied with the defaults
+	// You are supposed to override these in the plugin if you aren't satisfied
+	// with the defaults
 	// The goal is that you always will be satisfied though.
 	// -------------------------------------------- //
 
 	public GsonBuilder getGsonBuilder()
 	{
-		return new GsonBuilder()
-		.setPrettyPrinting()
-		.disableHtmlEscaping()
-		.serializeNulls()
-		.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE);
+		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls().excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE);
 	}
-	
+
 	// -------------------------------------------- //
 	// LANG AND TAGS
 	// -------------------------------------------- //
-	
+
 	// These are not supposed to be used directly.
 	// They are loaded and used through the TextUtil instance for the plugin.
 	public Map<String, String> rawTags = new LinkedHashMap<String, String>();
-	
+
 	public void addRawTags()
 	{
 		this.rawTags.put("l", "<green>"); // logo
@@ -153,23 +168,26 @@ public abstract class MPlugin extends JavaPlugin
 		this.rawTags.put("c", "<aqua>"); // command
 		this.rawTags.put("p", "<teal>"); // parameter
 	}
-	
+
 	public void initTXT()
 	{
 		this.addRawTags();
-		
-		Type type = new TypeToken<Map<String, String>>(){}.getType();
-		
+
+		Type type = new TypeToken<Map<String, String>>()
+		{
+		}.getType();
+
 		Map<String, String> tagsFromFile = this.persist.load(type, "tags");
-		if (tagsFromFile != null) this.rawTags.putAll(tagsFromFile);
+		if (tagsFromFile != null)
+			this.rawTags.putAll(tagsFromFile);
 		this.persist.save(this.rawTags, "tags");
-		
+
 		for (Entry<String, String> rawTag : this.rawTags.entrySet())
 		{
 			this.txt.tags.put(rawTag.getKey(), TextUtil.parseColor(rawTag.getValue()));
 		}
 	}
-	
+
 	// -------------------------------------------- //
 	// COMMAND HANDLING
 	// -------------------------------------------- //
@@ -188,21 +206,25 @@ public abstract class MPlugin extends JavaPlugin
 			noSlash = false;
 			commandString = commandString.substring(1);
 		}
-		
+
 		for (MCommand<?> command : this.getBaseCommands())
 		{
-			if (noSlash && ! command.allowNoSlashAccess) continue;
-			
+			if (noSlash && !command.allowNoSlashAccess)
+				continue;
+
 			for (String alias : command.aliases)
 			{
-				// disallow double-space after alias, so specific commands can be prevented (preventing "f home" won't prevent "f  home")
-				if (commandString.startsWith(alias+"  ")) return false;
+				// disallow double-space after alias, so specific commands can
+				// be prevented (preventing "f home" won't prevent "f  home")
+				if (commandString.startsWith(alias + "  "))
+					return false;
 
-				if (commandString.startsWith(alias+" ") || commandString.equalsIgnoreCase(alias))
+				if (commandString.startsWith(alias + " ") || commandString.equalsIgnoreCase(alias))
 				{
 					List<String> args = new ArrayList<String>(Arrays.asList(commandString.split("\\s+")));
 					args.remove(0);
-					if (testOnly) return true;
+					if (testOnly)
+						return true;
 					command.execute(sender, args);
 					return true;
 				}
@@ -210,25 +232,25 @@ public abstract class MPlugin extends JavaPlugin
 		}
 		return false;
 	}
-	
+
 	public boolean handleCommand(CommandSender sender, String commandString)
 	{
 		return this.handleCommand(sender, commandString, false);
 	}
-	
+
 	// -------------------------------------------- //
 	// HOOKS
 	// -------------------------------------------- //
 	public void preAutoSave()
 	{
-		
+
 	}
-	
+
 	public void postAutoSave()
 	{
-		
+
 	}
-	
+
 	// -------------------------------------------- //
 	// LOGGING
 	// -------------------------------------------- //

@@ -11,7 +11,7 @@ import com.massivecraft.factions.Factions;
 public class InitiateCleanupTask extends BukkitRunnable
 {
 	@Override
-	public void run() 
+	public void run()
 	{
 		Iterator<Faction> factions = Factions.i.get().iterator();
 		while (factions.hasNext())

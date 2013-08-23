@@ -16,10 +16,12 @@ public class RelationUtil
 		String ret = "";
 
 		Faction thatFaction = getFaction(that);
-		if (thatFaction == null) return "ERROR"; // ERROR
+		if (thatFaction == null)
+			return "ERROR"; // ERROR
 
 		Faction myFaction = getFaction(me);
-//		if (myFaction == null) return that.describeTo(null); // no relation, but can show basic name or tag
+		// if (myFaction == null) return that.describeTo(null); // no relation,
+		// but can show basic name or tag
 
 		if (that instanceof Faction)
 		{
@@ -70,10 +72,12 @@ public class RelationUtil
 	public static Relation getRelationTo(RelationParticipator me, RelationParticipator that, boolean ignorePeaceful)
 	{
 		Faction fthat = getFaction(that);
-		if (fthat == null) return Relation.NEUTRAL; // ERROR
+		if (fthat == null)
+			return Relation.NEUTRAL; // ERROR
 
 		Faction fme = getFaction(me);
-		if (fme == null) return Relation.NEUTRAL; // ERROR
+		if (fme == null)
+			return Relation.NEUTRAL; // ERROR
 
 		if (!fthat.isNormal() || !fme.isNormal())
 		{
@@ -89,17 +93,21 @@ public class RelationUtil
 		{
 			return Relation.NEUTRAL;
 		}
-		
-		if (fme.isPermanentWar() && fthat.isPermanentWar()) {
+
+		if (fme.isPermanentWar() && fthat.isPermanentWar())
+		{
 			return Relation.ENEMY;
-		} else if (fme.isPermanentWar() || fthat.isPermanentWar()) {
+		}
+		else if (fme.isPermanentWar() || fthat.isPermanentWar())
+		{
 			return Relation.NEUTRAL;
 		}
-		
-		if (fthat.getRelationWish(fme) == Relation.NATION || fme.getRelationWish(fme) == Relation.NATION) {
-			
+
+		if (fthat.getRelationWish(fme) == Relation.NATION || fme.getRelationWish(fme) == Relation.NATION)
+		{
+
 			return Relation.NATION;
-			
+
 		}
 
 		if (fme.getRelationWish(fthat).value >= fthat.getRelationWish(fme).value)
@@ -135,22 +143,23 @@ public class RelationUtil
 			{
 				return Conf.colorPeaceful;
 			}
-			
-//			if (thatFaction.isPermanentWar() && thatFaction != getFaction(me)) {
-//				return Conf.colorWar;
-//			}
-			
+
+			// if (thatFaction.isPermanentWar() && thatFaction !=
+			// getFaction(me)) {
+			// return Conf.colorWar;
+			// }
+
 			if (thatFaction.isSafeZone() && thatFaction != getFaction(me))
 			{
 				return Conf.colorPeaceful;
 			}
-			
+
 			if (thatFaction.isWarZone() && thatFaction != getFaction(me))
 			{
 				return Conf.colorWar;
 			}
 		}
-		
+
 		return getRelationTo(that, me).getColor();
 	}
 }

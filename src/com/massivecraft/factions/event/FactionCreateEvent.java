@@ -12,23 +12,23 @@ import com.massivecraft.factions.Factions;
 public class FactionCreateEvent extends Event implements Cancellable
 {
 	private static final HandlerList handlers = new HandlerList();
- 
+
 	private String factionTag;
 	private Player sender;
 	private boolean cancelled;
-	
-	public FactionCreateEvent(Player sender, String tag) 
+
+	public FactionCreateEvent(Player sender, String tag)
 	{
 		this.factionTag = tag;
 		this.sender = sender;
 		this.cancelled = false;
 	}
- 
+
 	public FPlayer getFPlayer()
 	{
 		return FPlayers.i.get(sender);
 	}
-	
+
 	public String getFactionId()
 	{
 		return Factions.i.getNextId();
@@ -39,24 +39,25 @@ public class FactionCreateEvent extends Event implements Cancellable
 		return factionTag;
 	}
 
-	public HandlerList getHandlers() 
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}
- 
-	public static HandlerList getHandlerList() 
+
+	public static HandlerList getHandlerList()
 	{
 		return handlers;
 	}
 
 	@Override
-	public boolean isCancelled() 
+	public boolean isCancelled()
 	{
 		return cancelled;
 	}
 
 	@Override
-	public void setCancelled(boolean c) 
+	public void setCancelled(boolean c)
 	{
 		this.cancelled = c;
 	}

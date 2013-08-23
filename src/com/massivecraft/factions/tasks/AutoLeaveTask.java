@@ -9,6 +9,7 @@ import com.massivecraft.factions.P;
 public class AutoLeaveTask extends BukkitRunnable
 {
 	double rate;
+
 	public AutoLeaveTask()
 	{
 		this.rate = Conf.autoLeaveRoutineRunsEveryXMinutes;

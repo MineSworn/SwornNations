@@ -1,14 +1,14 @@
 package com.massivecraft.factions.event;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FPlayer;
-import org.bukkit.entity.Player;
+import com.massivecraft.factions.Faction;
 
 public class LandUnclaimAllEvent extends Event
-{	
+{
 	private static final HandlerList handlers = new HandlerList();
 
 	private Faction faction;
@@ -20,12 +20,13 @@ public class LandUnclaimAllEvent extends Event
 		fplayer = p;
 	}
 
-	public HandlerList getHandlers() 
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() 
+	public static HandlerList getHandlerList()
 	{
 		return handlers;
 	}

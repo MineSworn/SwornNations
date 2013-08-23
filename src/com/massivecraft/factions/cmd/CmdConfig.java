@@ -22,14 +22,14 @@ public class CmdConfig extends FCommand
 	{
 		super();
 		this.aliases.add("config");
-		
+
 		this.requiredArgs.add("setting");
 		this.requiredArgs.add("value");
 		this.errorOnToManyArgs = false;
-		
+
 		this.permission = Permission.CONFIG.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
@@ -39,12 +39,14 @@ public class CmdConfig extends FCommand
 	@Override
 	public void perform()
 	{
-		// store a lookup map of lowercase field names paired with proper capitalization field names
-		// that way, if the person using this command messes up the capitalization, we can fix that
+		// store a lookup map of lowercase field names paired with proper
+		// capitalization field names
+		// that way, if the person using this command messes up the
+		// capitalization, we can fix that
 		if (properFieldNames.isEmpty())
 		{
 			Field[] fields = Conf.class.getDeclaredFields();
-			for(int i = 0; i < fields.length; i++)
+			for (int i = 0; i < fields.length; i++)
 			{
 				properFieldNames.put(fields[i].getName().toLowerCase(), fields[i].getName());
 			}
@@ -66,7 +68,7 @@ public class CmdConfig extends FCommand
 		String success = "";
 
 		String value = args.get(1);
-		for(int i = 2; i < args.size(); i++)
+		for (int i = 2; i < args.size(); i++)
 		{
 			value += ' ' + args.get(i);
 		}
@@ -80,29 +82,29 @@ public class CmdConfig extends FCommand
 			{
 				boolean targetValue = this.strAsBool(value);
 				target.setBoolean(null, targetValue);
-				
+
 				if (targetValue)
 				{
-					success = "\""+fieldName+"\" option set to true (enabled).";
+					success = "\"" + fieldName + "\" option set to true (enabled).";
 				}
 				else
 				{
-					success = "\""+fieldName+"\" option set to false (disabled).";
+					success = "\"" + fieldName + "\" option set to false (disabled).";
 				}
 			}
 
-			// int 
+			// int
 			else if (target.getType() == int.class)
 			{
 				try
 				{
 					int intVal = Integer.parseInt(value);
 					target.setInt(null, intVal);
-					success = "\""+fieldName+"\" option set to "+intVal+".";
+					success = "\"" + fieldName + "\" option set to " + intVal + ".";
 				}
-				catch(NumberFormatException ex)
+				catch (NumberFormatException ex)
 				{
-					sendMessage("Cannot set \""+fieldName+"\": integer (whole number) value required.");
+					sendMessage("Cannot set \"" + fieldName + "\": integer (whole number) value required.");
 					return;
 				}
 			}
@@ -114,11 +116,11 @@ public class CmdConfig extends FCommand
 				{
 					double doubleVal = Double.parseDouble(value);
 					target.setDouble(null, doubleVal);
-					success = "\""+fieldName+"\" option set to "+doubleVal+".";
+					success = "\"" + fieldName + "\" option set to " + doubleVal + ".";
 				}
-				catch(NumberFormatException ex)
+				catch (NumberFormatException ex)
 				{
-					sendMessage("Cannot set \""+fieldName+"\": double (numeric) value required.");
+					sendMessage("Cannot set \"" + fieldName + "\": double (numeric) value required.");
 					return;
 				}
 			}
@@ -130,11 +132,11 @@ public class CmdConfig extends FCommand
 				{
 					float floatVal = Float.parseFloat(value);
 					target.setFloat(null, floatVal);
-					success = "\""+fieldName+"\" option set to "+floatVal+".";
+					success = "\"" + fieldName + "\" option set to " + floatVal + ".";
 				}
-				catch(NumberFormatException ex)
+				catch (NumberFormatException ex)
 				{
-					sendMessage("Cannot set \""+fieldName+"\": float (numeric) value required.");
+					sendMessage("Cannot set \"" + fieldName + "\": float (numeric) value required.");
 					return;
 				}
 			}
@@ -143,7 +145,7 @@ public class CmdConfig extends FCommand
 			else if (target.getType() == String.class)
 			{
 				target.set(null, value);
-				success = "\""+fieldName+"\" option set to \""+value+"\".";
+				success = "\"" + fieldName + "\" option set to \"" + value + "\".";
 			}
 
 			// ChatColor
@@ -156,27 +158,28 @@ public class CmdConfig extends FCommand
 				}
 				catch (IllegalArgumentException ex)
 				{
-					
+
 				}
 				if (newColor == null)
 				{
-					sendMessage("Cannot set \""+fieldName+"\": \""+value.toUpperCase()+"\" is not a valid color.");
+					sendMessage("Cannot set \"" + fieldName + "\": \"" + value.toUpperCase() + "\" is not a valid color.");
 					return;
 				}
 				target.set(null, newColor);
-				success = "\""+fieldName+"\" color option set to \""+value.toUpperCase()+"\".";
+				success = "\"" + fieldName + "\" color option set to \"" + value.toUpperCase() + "\".";
 			}
 
 			// Set<?> or other parameterized collection
 			else if (target.getGenericType() instanceof ParameterizedType)
 			{
-				ParameterizedType targSet = (ParameterizedType)target.getGenericType();
+				ParameterizedType targSet = (ParameterizedType) target.getGenericType();
 				Type innerType = targSet.getActualTypeArguments()[0];
 
-				// not a Set, somehow, and that should be the only collection we're using in Conf.java
+				// not a Set, somehow, and that should be the only collection
+				// we're using in Conf.java
 				if (targSet.getRawType() != Set.class)
 				{
-					sendMessage("\""+fieldName+"\" is not a data collection type which can be modified with this command.");
+					sendMessage("\"" + fieldName + "\" is not a data collection type which can be modified with this command.");
 					return;
 				}
 
@@ -190,30 +193,30 @@ public class CmdConfig extends FCommand
 					}
 					catch (IllegalArgumentException ex)
 					{
-						
+
 					}
 					if (newMat == null)
 					{
-						sendMessage("Cannot change \""+fieldName+"\" set: \""+value.toUpperCase()+"\" is not a valid material.");
+						sendMessage("Cannot change \"" + fieldName + "\" set: \"" + value.toUpperCase() + "\" is not a valid material.");
 						return;
 					}
 
 					@SuppressWarnings("unchecked")
-					Set<Material> matSet = (Set<Material>)target.get(null);
+					Set<Material> matSet = (Set<Material>) target.get(null);
 
 					// Material already present, so remove it
 					if (matSet.contains(newMat))
 					{
 						matSet.remove(newMat);
 						target.set(null, matSet);
-						success = "\""+fieldName+"\" set: Material \""+value.toUpperCase()+"\" removed.";
+						success = "\"" + fieldName + "\" set: Material \"" + value.toUpperCase() + "\" removed.";
 					}
 					// Material not present yet, add it
 					else
 					{
 						matSet.add(newMat);
 						target.set(null, matSet);
-						success = "\""+fieldName+"\" set: Material \""+value.toUpperCase()+"\" added.";
+						success = "\"" + fieldName + "\" set: Material \"" + value.toUpperCase() + "\" added.";
 					}
 				}
 
@@ -221,28 +224,28 @@ public class CmdConfig extends FCommand
 				else if (innerType == String.class)
 				{
 					@SuppressWarnings("unchecked")
-					Set<String> stringSet = (Set<String>)target.get(null);
+					Set<String> stringSet = (Set<String>) target.get(null);
 
 					// String already present, so remove it
 					if (stringSet.contains(value))
 					{
 						stringSet.remove(value);
 						target.set(null, stringSet);
-						success = "\""+fieldName+"\" set: \""+value+"\" removed.";
+						success = "\"" + fieldName + "\" set: \"" + value + "\" removed.";
 					}
 					// String not present yet, add it
-					else 
+					else
 					{
 						stringSet.add(value);
 						target.set(null, stringSet);
-						success = "\""+fieldName+"\" set: \""+value+"\" added.";
+						success = "\"" + fieldName + "\" set: \"" + value + "\" added.";
 					}
 				}
 
 				// Set of unknown type
 				else
 				{
-					sendMessage("\""+fieldName+"\" is not a data type set which can be modified with this command.");
+					sendMessage("\"" + fieldName + "\" is not a data type set which can be modified with this command.");
 					return;
 				}
 			}
@@ -250,18 +253,18 @@ public class CmdConfig extends FCommand
 			// unknown type
 			else
 			{
-				sendMessage("\""+fieldName+"\" is not a data type which can be modified with this command.");
+				sendMessage("\"" + fieldName + "\" is not a data type which can be modified with this command.");
 				return;
 			}
 		}
 		catch (NoSuchFieldException ex)
 		{
-			sendMessage("Configuration setting \""+fieldName+"\" couldn't be matched, though it should be... please report this error.");
+			sendMessage("Configuration setting \"" + fieldName + "\" couldn't be matched, though it should be... please report this error.");
 			return;
 		}
 		catch (IllegalAccessException ex)
 		{
-			sendMessage("Error setting configuration setting \""+fieldName+"\" to \""+value+"\".");
+			sendMessage("Error setting configuration setting \"" + fieldName + "\" to \"" + value + "\".");
 			return;
 		}
 
@@ -270,12 +273,12 @@ public class CmdConfig extends FCommand
 			sendMessage(success);
 			if (sender instanceof Player)
 			{
-				P.p.log(success + " Command was run by "+fme.getName()+".");
+				P.p.log(success + " Command was run by " + fme.getName() + ".");
 			}
 		}
-		
+
 		// save change to disk
 		Conf.save();
 	}
-	
+
 }

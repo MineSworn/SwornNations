@@ -17,7 +17,7 @@ public class FactionRenameEvent extends Event implements Cancellable
 	private Faction faction;
 	private String tag;
 
-	public FactionRenameEvent(FPlayer sender, String newTag) 
+	public FactionRenameEvent(FPlayer sender, String newTag)
 	{
 		fplayer = sender;
 		faction = sender.getFaction();
@@ -27,47 +27,48 @@ public class FactionRenameEvent extends Event implements Cancellable
 
 	public Faction getFaction()
 	{
-		return(faction);
+		return (faction);
 	}
 
 	public FPlayer getFPlayer()
 	{
-		return(fplayer);
+		return (fplayer);
 	}
 
 	public Player getPlayer()
 	{
-		return(fplayer.getPlayer());
+		return (fplayer.getPlayer());
 	}
 
 	public String getOldFactionTag()
 	{
-		return(faction.getTag());
+		return (faction.getTag());
 	}
 
 	public String getFactionTag()
 	{
-		return(tag);
+		return (tag);
 	}
 
-	public HandlerList getHandlers() 
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() 
+	public static HandlerList getHandlerList()
 	{
 		return handlers;
 	}
 
 	@Override
-	public boolean isCancelled() 
+	public boolean isCancelled()
 	{
 		return cancelled;
 	}
 
 	@Override
-	public void setCancelled(boolean c) 
+	public void setCancelled(boolean c)
 	{
 		this.cancelled = c;
 	}

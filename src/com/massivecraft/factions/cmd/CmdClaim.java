@@ -3,27 +3,26 @@ package com.massivecraft.factions.cmd;
 import me.t7seven7t.swornnations.npermissions.NPermission;
 
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.tasks.SpiralTask;
 
-
 public class CmdClaim extends FCommand
 {
-	
+
 	public CmdClaim()
 	{
 		super();
 		this.aliases.add("claim");
-		
-		//this.requiredArgs.add("");
+
+		// this.requiredArgs.add("");
 		this.optionalArgs.put("faction", "your");
 		this.optionalArgs.put("radius", "1");
-		
+
 		this.permission = Permission.CLAIM.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
@@ -31,11 +30,12 @@ public class CmdClaim extends FCommand
 		senderMustHaveNPermission = NPermission.CLAIM;
 		commandNotNeedFaction = true;
 	}
-	
+
 	@Override
 	public void perform()
 	{
-		if (!fme.hasFaction() && args.size() == 0) {
+		if (!fme.hasFaction() && args.size() == 0)
+		{
 			msg("<b>You cannot claim land for no faction.");
 			return;
 		}
@@ -68,7 +68,7 @@ public class CmdClaim extends FCommand
 					boolean success = fme.attemptClaim(forFaction, this.currentLocation(), true);
 					if (success)
 						failCount = 0;
-					else if ( ! success && failCount++ >= limit)
+					else if (!success && failCount++ >= limit)
 					{
 						this.stop();
 						return false;
@@ -79,5 +79,5 @@ public class CmdClaim extends FCommand
 			};
 		}
 	}
-	
+
 }

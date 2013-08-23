@@ -4,64 +4,60 @@ import org.bukkit.ChatColor;
 
 import com.massivecraft.factions.Conf;
 
-
 public enum Relation
 {
-	MEMBER(4, "member"),
-	NATION(3, "nation"),
-	ALLY(2, "ally"),
-	NEUTRAL(1, "neutral"),
-	ENEMY(0, "enemy");
-	
+	MEMBER(4, "member"), NATION(3, "nation"), ALLY(2, "ally"), NEUTRAL(1, "neutral"), ENEMY(0, "enemy");
+
 	public final int value;
 	public final String nicename;
-	
+
 	private Relation(final int value, final String nicename)
 	{
 		this.value = value;
 		this.nicename = nicename;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return this.nicename;
 	}
-		
+
 	public boolean isMember()
 	{
 		return this == MEMBER;
 	}
-	
-	public boolean isNation() {
+
+	public boolean isNation()
+	{
 		return this == NATION;
 	}
-	
+
 	public boolean isAlly()
 	{
 		return this == ALLY;
 	}
-	
+
 	public boolean isNeutral()
 	{
 		return this == NEUTRAL;
 	}
-	
+
 	public boolean isEnemy()
 	{
 		return this == ENEMY;
 	}
-	
+
 	public boolean isAtLeast(Relation relation)
 	{
 		return this.value >= relation.value;
 	}
-	
+
 	public boolean isAtMost(Relation relation)
 	{
 		return this.value <= relation.value;
 	}
-	
+
 	public ChatColor getColor()
 	{
 		if (this == MEMBER)
@@ -76,7 +72,8 @@ public enum Relation
 			return Conf.colorEnemy;
 	}
 
-	// return appropriate Conf setting for DenyBuild based on this relation and their online status
+	// return appropriate Conf setting for DenyBuild based on this relation and
+	// their online status
 	public boolean confDenyBuild(boolean online)
 	{
 		if (isMember())
@@ -106,7 +103,8 @@ public enum Relation
 		}
 	}
 
-	// return appropriate Conf setting for PainBuild based on this relation and their online status
+	// return appropriate Conf setting for PainBuild based on this relation and
+	// their online status
 	public boolean confPainBuild(boolean online)
 	{
 		if (isMember())
@@ -123,7 +121,7 @@ public enum Relation
 		}
 		else
 		{
-			if (isEnemy()) 
+			if (isEnemy())
 				return Conf.territoryEnemyPainBuildWhenOffline;
 			else if (isAlly() || isNation())
 				return Conf.territoryAllyPainBuildWhenOffline;
@@ -146,7 +144,7 @@ public enum Relation
 		else
 			return Conf.territoryDenyUseage;
 	}
-	
+
 	public double getRelationCost()
 	{
 		if (isEnemy())

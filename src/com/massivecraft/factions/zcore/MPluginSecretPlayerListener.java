@@ -15,15 +15,17 @@ import com.massivecraft.factions.zcore.persist.PlayerEntityCollection;
 public class MPluginSecretPlayerListener implements Listener
 {
 	private MPlugin p;
+
 	public MPluginSecretPlayerListener(MPlugin p)
 	{
 		this.p = p;
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
 	{
-		if (event.isCancelled()) return;
+		if (event.isCancelled())
+			return;
 
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
@@ -32,12 +34,13 @@ public class MPluginSecretPlayerListener implements Listener
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
-		if (event.isCancelled()) return;
-		
+		if (event.isCancelled())
+			return;
+
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (p.logPlayerCommands())
@@ -45,7 +48,7 @@ public class MPluginSecretPlayerListener implements Listener
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerPreLogin(PlayerLoginEvent event)
 	{

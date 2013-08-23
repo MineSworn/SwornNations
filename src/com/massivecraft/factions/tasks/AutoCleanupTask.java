@@ -7,7 +7,7 @@ import com.massivecraft.factions.Board;
 public class AutoCleanupTask extends BukkitRunnable
 {
 	@Override
-	public void run() 
+	public void run()
 	{
 		Board.autoCleanupClaimsRoutine();
 	}

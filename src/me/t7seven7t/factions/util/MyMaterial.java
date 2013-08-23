@@ -1,44 +1,53 @@
 package me.t7seven7t.factions.util;
 
-public class MyMaterial {
+public class MyMaterial
+{
 
 	private int typeId;
 	private byte data;
-	
-	public MyMaterial(int typeId, byte data) {
+
+	public MyMaterial(int typeId, byte data)
+	{
 		this.typeId = typeId;
 		this.data = data;
 	}
-	
-	public MyMaterial(int typeId, int data) {
+
+	public MyMaterial(int typeId, int data)
+	{
 		this.typeId = typeId;
 		this.data = (byte) data;
 	}
-	
-	public MyMaterial(org.bukkit.Material mat) {
+
+	public MyMaterial(org.bukkit.Material mat)
+	{
 		this.typeId = mat.getId();
 		this.data = 0;
 	}
-	
-	public MyMaterial(int typeId) {
+
+	public MyMaterial(int typeId)
+	{
 		this.typeId = typeId;
 		this.data = 0;
 	}
-	
-	public String getMaterial() {
+
+	public String getMaterial()
+	{
 		return typeId + ":" + data;
 	}
 
-	public int getTypeId() {
+	public int getTypeId()
+	{
 		return typeId;
 	}
 
-	public byte getData() {
+	public byte getData()
+	{
 		return data;
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + data;
@@ -47,7 +56,8 @@ public class MyMaterial {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)

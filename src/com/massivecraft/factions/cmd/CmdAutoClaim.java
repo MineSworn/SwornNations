@@ -12,13 +12,13 @@ public class CmdAutoClaim extends FCommand
 	{
 		super();
 		this.aliases.add("autoclaim");
-		
-		//this.requiredArgs.add("");
+
+		// this.requiredArgs.add("");
 		this.optionalArgs.put("faction", "your");
-		
+
 		this.permission = Permission.AUTOCLAIM.node;
 		this.disableOnLock = true;
-		
+
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
@@ -30,7 +30,8 @@ public class CmdAutoClaim extends FCommand
 	@Override
 	public void perform()
 	{
-		if (!fme.hasFaction() && args.size() == 0) {
+		if (!fme.hasFaction() && args.size() == 0)
+		{
 			msg("<b>You cannot claim land for no faction.");
 			return;
 		}
@@ -42,7 +43,7 @@ public class CmdAutoClaim extends FCommand
 			return;
 		}
 
-		if (! fme.canClaimForFaction(forFaction))
+		if (!fme.canClaimForFaction(forFaction))
 		{
 			if (myFaction == forFaction)
 				msg("<b>You must be <h>%s<b> to claim land.", Role.MODERATOR.toString());
@@ -51,11 +52,11 @@ public class CmdAutoClaim extends FCommand
 
 			return;
 		}
-		
+
 		fme.setAutoClaimFor(forFaction);
-		
+
 		msg("<i>Now auto-claiming land for <h>%s<i>.", forFaction.describeTo(fme));
 		fme.attemptClaim(forFaction, me.getLocation(), true);
 	}
-	
+
 }

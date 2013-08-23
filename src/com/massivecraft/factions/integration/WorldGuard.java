@@ -1,27 +1,27 @@
 package com.massivecraft.factions.integration;
 
-import com.massivecraft.factions.P;
+import static com.sk89q.worldguard.bukkit.BukkitUtil.toVector;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.UnsupportedIntersectionException;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import static com.sk89q.worldguard.bukkit.BukkitUtil.*;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.BlockVector;
-
-import org.bukkit.World;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+import com.massivecraft.factions.P;
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.UnsupportedIntersectionException;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
  * WorldGuard region checking
@@ -54,13 +54,13 @@ public class WorldGuard
 		return enabled;
 	}
 
-	// PVP Flag check 
+	// PVP Flag check
 	// Returns:
-	//   True: PVP is allowed
-	//   False: PVP is disallowed
+	// True: PVP is allowed
+	// False: PVP is disallowed
 	public static boolean isPVP(Player player)
 	{
-		if( ! enabled)
+		if (!enabled)
 		{
 			// No WG hooks so we'll always bypass this check.
 			return true;
@@ -77,11 +77,11 @@ public class WorldGuard
 
 	// Check for Regions in chunk the chunk
 	// Returns:
-	//   True: Regions found within chunk
-	//   False: No regions found within chunk
+	// True: Regions found within chunk
+	// False: No regions found within chunk
 	public static boolean checkForRegionsInChunk(Location loc)
 	{
-		if( ! enabled)
+		if (!enabled)
 		{
 			// No WG hooks so we'll always bypass this check.
 			return false;
@@ -94,14 +94,15 @@ public class WorldGuard
 		int maxChunkX = minChunkX + 15;
 		int maxChunkZ = minChunkZ + 15;
 
-		int worldHeight = world.getMaxHeight(); // Allow for heights other than default
+		int worldHeight = world.getMaxHeight(); // Allow for heights other than
+												// default
 
 		BlockVector minChunk = new BlockVector(minChunkX, 0, minChunkZ);
 		BlockVector maxChunk = new BlockVector(maxChunkX, worldHeight, maxChunkZ);
 
 		RegionManager regionManager = wg.getRegionManager(world);
 		ProtectedCuboidRegion region = new ProtectedCuboidRegion("wgfactionoverlapcheck", minChunk, maxChunk);
-		Map<String, ProtectedRegion> allregions = regionManager.getRegions(); 
+		Map<String, ProtectedRegion> allregions = regionManager.getRegions();
 		List<ProtectedRegion> allregionslist = new ArrayList<ProtectedRegion>(allregions.values());
 		List<ProtectedRegion> overlaps;
 		boolean foundregions = false;
@@ -109,7 +110,7 @@ public class WorldGuard
 		try
 		{
 			overlaps = region.getIntersectingRegions(allregionslist);
-			if(overlaps == null || overlaps.isEmpty())
+			if (overlaps == null || overlaps.isEmpty())
 			{
 				foundregions = false;
 			}

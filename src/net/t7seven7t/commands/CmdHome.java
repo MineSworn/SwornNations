@@ -23,61 +23,72 @@ import com.massivecraft.factions.struct.Relation;
 /**
  * @author t7seven7t
  */
-public class CmdHome implements CommandExecutor {
+public class CmdHome implements CommandExecutor
+{
 
 	private FPlayer fme;
-	
+
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	{
 		if (!(sender instanceof Player))
 			return true;
-		
+
 		fme = FPlayers.i.get((Player) sender);
-		if (!fme.hasHome()) {
+		if (!fme.hasHome())
+		{
 			fme.msg("<b>You do not have a home set. Do /sethome to set one.");
 			return true;
 		}
-		
-		if (!fme.hasFaction()) {
+
+		if (!fme.hasFaction())
+		{
 			fme.msg("You must have a faction to have a home.");
 			return true;
 		}
-		
+
 		// Just go ahead and override
-		if (Conf.homeBalanceOverride) {
+		if (Conf.homeBalanceOverride)
+		{
 			goHome();
 			return true;
 		}
-		
-		if (fme.getFaction().hasHome()) {
+
+		if (fme.getFaction().hasHome())
+		{
 			FLocation fHome = new FLocation(fme.getFaction().getHome());
 			FLocation home = new FLocation(fme.getHome());
-			if (fHome.getDistanceTo(home) > 20.0 || Board.getAbsoluteFactionAt(home) != fme.getFaction()) {
+			if (fHome.getDistanceTo(home) > 20.0 || Board.getAbsoluteFactionAt(home) != fme.getFaction())
+			{
 				fme.msg("You're home was set too far away from your faction home, or outside of your territory and has become unset.");
 				fme.removeHome();
 				return true;
 			}
 		}
-		
-		if (isEnemyNearby(Board.getFactionAt(new FLocation(fme.getPlayer().getLocation())), fme.getPlayer().getLocation())) return true;
-		
-		if (EssentialsFeatures.handleTeleport(fme.getPlayer(), fme.getHome())) return true;
-		
+
+		if (isEnemyNearby(Board.getFactionAt(new FLocation(fme.getPlayer().getLocation())), fme.getPlayer().getLocation()))
+			return true;
+
+		if (EssentialsFeatures.handleTeleport(fme.getPlayer(), fme.getHome()))
+			return true;
+
 		goHome();
-		
+
 		return true;
 	}
-	
-	public boolean isEnemyNearby(Faction faction, Location loc) {
-		if (Conf.homesTeleportAllowedEnemyDistance > 0
-				&& !faction.isSafeZone()
-				&& (!fme.isInOwnTerritory() || (fme.isInOwnTerritory() && !Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory))) {
+
+	public boolean isEnemyNearby(Faction faction, Location loc)
+	{
+		if (Conf.homesTeleportAllowedEnemyDistance > 0 && !faction.isSafeZone()
+				&& (!fme.isInOwnTerritory() || (fme.isInOwnTerritory() && !Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory)))
+		{
 			World w = loc.getWorld();
 			double x = loc.getX();
 			double y = loc.getY();
 			double z = loc.getZ();
 
-			for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+			for (Player p : Bukkit.getServer().getOnlinePlayers())
+			{
 				if (p == null || !p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
 					continue;
 
@@ -102,9 +113,11 @@ public class CmdHome implements CommandExecutor {
 		return false;
 	}
 
-	public void goHome() {
-		if (EssentialsFeatures.handleTeleport(fme.getPlayer(), fme.getHome())) return;
-		
+	public void goHome()
+	{
+		if (EssentialsFeatures.handleTeleport(fme.getPlayer(), fme.getHome()))
+			return;
+
 		fme.getPlayer().teleport(fme.getHome());
 	}
 }

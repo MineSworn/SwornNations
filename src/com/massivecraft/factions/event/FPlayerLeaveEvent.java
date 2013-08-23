@@ -27,39 +27,40 @@ public class FPlayerLeaveEvent extends Event implements Cancellable
 		reason = r;
 	}
 
-	public HandlerList getHandlers() 
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}
 
-	public static HandlerList getHandlerList() 
+	public static HandlerList getHandlerList()
 	{
 		return handlers;
 	}
-	
-	public PlayerLeaveReason getReason() 
+
+	public PlayerLeaveReason getReason()
 	{
 		return reason;
 	}
-	
+
 	public FPlayer getFPlayer()
 	{
 		return FPlayer;
 	}
-	
+
 	public Faction getFaction()
 	{
 		return Faction;
 	}
 
 	@Override
-	public boolean isCancelled() 
+	public boolean isCancelled()
 	{
 		return cancelled;
 	}
 
 	@Override
-	public void setCancelled(boolean c) 
+	public void setCancelled(boolean c)
 	{
 		if (reason == PlayerLeaveReason.DISBAND || reason == PlayerLeaveReason.RESET)
 		{
