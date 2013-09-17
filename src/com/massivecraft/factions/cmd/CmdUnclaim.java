@@ -46,7 +46,8 @@ public class CmdUnclaim extends FCommand
 				msg("<i>Safe zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
+					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
+							+ otherFaction.getTag());
 			}
 			else
 			{
@@ -62,7 +63,8 @@ public class CmdUnclaim extends FCommand
 				msg("<i>War zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
+					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
+							+ otherFaction.getTag());
 			}
 			else
 			{

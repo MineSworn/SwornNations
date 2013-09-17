@@ -176,7 +176,8 @@ public class P extends MPlugin
 		}.getType();
 
 		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
-				.registerTypeAdapter(LazyLocation.class, new MyLocationTypeAdapter()).registerTypeAdapter(MyMaterial.class, new MyMaterialTypeAdapter())
+				.registerTypeAdapter(LazyLocation.class, new MyLocationTypeAdapter())
+				.registerTypeAdapter(MyMaterial.class, new MyMaterialTypeAdapter())
 				.registerTypeAdapter(mapFLocToStringSetType, new MapFLocToStringSetTypeAdapter())
 				.registerTypeAdapter(NPermissionManager.class, new NPermissionManagerTypeAdapter());
 	}
@@ -416,7 +417,8 @@ public class P extends MPlugin
 	// check if player is allowed to build/destroy in a particular location
 	public boolean isPlayerAllowedToBuildHere(Player player, Location location)
 	{
-		return FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "", true, location.getWorld().getBlockAt(location).getType());
+		return FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "", true, location.getWorld().getBlockAt(location)
+				.getType());
 	}
 
 	// check if player is allowed to interact with the specified block

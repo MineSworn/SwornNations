@@ -227,7 +227,8 @@ public class FLocation
 			return false;
 
 		FLocation that = (FLocation) obj;
-		return this.x == that.x && this.z == that.z && (this.worldName == null ? that.worldName == null : this.worldName.equals(that.worldName));
+		return this.x == that.x && this.z == that.z
+				&& (this.worldName == null ? that.worldName == null : this.worldName.equals(that.worldName));
 	}
 
 	public boolean yequals(Object obj)

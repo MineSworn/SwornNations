@@ -42,7 +42,8 @@ public class CmdSetwarp extends FCommand
 			return;
 		}
 
-		if (Conf.warpsNotInOtherTerritory && (!Board.getFactionAt(new FLocation(me)).isNone()) && !(Board.getFactionAt(new FLocation(me)) == faction))
+		if (Conf.warpsNotInOtherTerritory && (!Board.getFactionAt(new FLocation(me)).isNone())
+				&& !(Board.getFactionAt(new FLocation(me)) == faction))
 		{
 			fme.msg("<b>Sorry,  your faction warp cannot be set in other claimed territory.");
 			return;

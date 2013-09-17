@@ -490,8 +490,9 @@ public class FactionsPlayerListener implements Listener
 			if (block != null)
 			{
 				if (!justCheck)
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", (new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(
-							Material.SOIL) ? "trample" : "use"), otherFaction.getTag(myFaction));
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
+							(new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
+							otherFaction.getTag(myFaction));
 			}
 			return false;
 		}
@@ -501,16 +502,18 @@ public class FactionsPlayerListener implements Listener
 			if (block.getType() == Material.CHEST)
 				if (!me.getFaction().playerHasPermission(me, NPermission.CHEST))
 				{
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", (new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(
-							Material.SOIL) ? "trample" : "use"), otherFaction.getTag(myFaction));
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
+							(new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
+							otherFaction.getTag(myFaction));
 					return false;
 				}
 			if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON || block.getType() == Material.STONE_PLATE
 					|| block.getType() == Material.WOOD_PLATE)
 				if (!me.getFaction().playerHasPermission(me, NPermission.SWITCH))
 				{
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", (new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(
-							Material.SOIL) ? "trample" : "use"), otherFaction.getTag(myFaction));
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
+							(new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
+							otherFaction.getTag(myFaction));
 					return false;
 				}
 		}
@@ -612,7 +615,8 @@ public class FactionsPlayerListener implements Listener
 
 				if (!me.getFaction().hasHome())
 				{
-					me.msg("<b>Please set a faction home first. " + (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
+					me.msg("<b>Please set a faction home first. "
+							+ (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
 					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
 					return true;
 				}

@@ -55,8 +55,8 @@ public class CmdPermanent extends FCommand
 			}
 			else
 			{
-				fplayer.msg((fme == null ? "A server admin" : fme.describeTo(fplayer, true)) + "<i> " + change + " the faction \"" + faction.getTag(fplayer)
-						+ "<i>\".");
+				fplayer.msg((fme == null ? "A server admin" : fme.describeTo(fplayer, true)) + "<i> " + change + " the faction \""
+						+ faction.getTag(fplayer) + "<i>\".");
 			}
 		}
 	}

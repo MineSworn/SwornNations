@@ -63,7 +63,8 @@ public class CmdSetHome implements CommandExecutor
 		}
 		else
 		{
-			fme.msg("<b>Please set a faction home first. " + (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
+			fme.msg("<b>Please set a faction home first. "
+					+ (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
 			fme.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
 			return true;
 		}

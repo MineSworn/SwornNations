@@ -74,7 +74,8 @@ public class CmdHome extends FCommand
 
 		if (!myFaction.hasHome())
 		{
-			fme.msg("<b>Your faction does not have a home. " + (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
+			fme.msg("<b>Your faction does not have a home. "
+					+ (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
 			fme.sendMessage(p.cmdBase.cmdSethome.getUseageTemplate());
 			return;
 		}
@@ -150,7 +151,8 @@ public class CmdHome extends FCommand
 
 	public boolean checkIsValidHome(Location home)
 	{
-		if (home.getWorld().getBlockAt(home).getType() == Material.AIR && home.getWorld().getBlockAt(home.clone().add(0, 1, 0)).getType() == Material.AIR
+		if (home.getWorld().getBlockAt(home).getType() == Material.AIR
+				&& home.getWorld().getBlockAt(home.clone().add(0, 1, 0)).getType() == Material.AIR
 				&& home.getWorld().getBlockAt(home.clone().subtract(0, -1, 0)).getType() != Material.AIR)
 			return true;
 		return false;

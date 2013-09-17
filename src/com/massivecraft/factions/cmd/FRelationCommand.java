@@ -98,8 +98,10 @@ public abstract class FRelationCommand extends FCommand
 				{
 					myFaction.setRelationWish(them, targetRelation);
 					them.setRelationWish(myFaction, targetRelation);
-					them.msg("<i>Your faction has now formed a Nation with " + myFaction.getRelationTo(them, true).getColor() + myFaction.getTag());
-					myFaction.msg("<i>Your faction has now formed a Nation with " + myFaction.getRelationTo(them, true).getColor() + them.getTag());
+					them.msg("<i>Your faction has now formed a Nation with " + myFaction.getRelationTo(them, true).getColor()
+							+ myFaction.getTag());
+					myFaction.msg("<i>Your faction has now formed a Nation with " + myFaction.getRelationTo(them, true).getColor()
+							+ them.getTag());
 					nationWishes.remove(them);
 					return;
 				}
@@ -109,7 +111,8 @@ public abstract class FRelationCommand extends FCommand
 				nationWishes.put(myFaction, them);
 				them.msg(myFaction.getRelationTo(them, true).getColor() + myFaction.getTag() + "<i> wishes to form a Nation with you.");
 				them.msg("<i>Type <c>/" + Conf.baseCommandAliases.get(0) + " " + targetRelation + " " + myFaction.getTag() + "<i> to accept.");
-				myFaction.msg(myFaction.getRelationTo(them, true).getColor() + them.getTag() + "<i> were informed that you wish to form a Nation with them.");
+				myFaction.msg(myFaction.getRelationTo(them, true).getColor() + them.getTag()
+						+ "<i> were informed that you wish to form a Nation with them.");
 				return;
 
 			}
@@ -147,15 +150,19 @@ public abstract class FRelationCommand extends FCommand
 			FactionRelationEvent relationEvent = new FactionRelationEvent(myFaction, them, oldRelation, currentRelation);
 			Bukkit.getServer().getPluginManager().callEvent(relationEvent);
 
-			them.msg("<i>Your faction is now " + currentRelationColor + targetRelation.toString() + "<i> to " + currentRelationColor + myFaction.getTag());
-			myFaction.msg("<i>Your faction is now " + currentRelationColor + targetRelation.toString() + "<i> to " + currentRelationColor + them.getTag());
+			them.msg("<i>Your faction is now " + currentRelationColor + targetRelation.toString() + "<i> to " + currentRelationColor
+					+ myFaction.getTag());
+			myFaction.msg("<i>Your faction is now " + currentRelationColor + targetRelation.toString() + "<i> to " + currentRelationColor
+					+ them.getTag());
 		}
 		// inform the other faction of your request
 		else
 		{
-			them.msg(currentRelationColor + myFaction.getTag() + "<i> wishes to be your " + targetRelation.getColor() + targetRelation.toString());
+			them.msg(currentRelationColor + myFaction.getTag() + "<i> wishes to be your " + targetRelation.getColor()
+					+ targetRelation.toString());
 			them.msg("<i>Type <c>/" + Conf.baseCommandAliases.get(0) + " " + targetRelation + " " + myFaction.getTag() + "<i> to accept.");
-			myFaction.msg(currentRelationColor + them.getTag() + "<i> were informed that you wish to be " + targetRelation.getColor() + targetRelation);
+			myFaction.msg(currentRelationColor + them.getTag() + "<i> were informed that you wish to be " + targetRelation.getColor()
+					+ targetRelation);
 		}
 
 		if (!targetRelation.isNeutral() && them.isPeaceful())
@@ -172,8 +179,10 @@ public abstract class FRelationCommand extends FCommand
 
 		if (!targetRelation.isNeutral() && (myFaction.isPermanentWar() || them.isPermanentWar()))
 		{
-			them.msg("<i>This will have no effect while " + (them.isPermanentWar() ? "their" : "your") + " faction is a permanent war faction.");
-			myFaction.msg("<i>This will have no effect while " + (them.isPermanentWar() ? "their" : "your") + " faction is a permanent war faction.");
+			them.msg("<i>This will have no effect while " + (them.isPermanentWar() ? "their" : "your")
+					+ " faction is a permanent war faction.");
+			myFaction.msg("<i>This will have no effect while " + (them.isPermanentWar() ? "their" : "your")
+					+ " faction is a permanent war faction.");
 		}
 
 		if (targetRelation == Relation.ALLY && fme.getRole() == Role.ADMIN)

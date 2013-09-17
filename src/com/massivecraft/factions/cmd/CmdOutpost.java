@@ -74,7 +74,8 @@ public class CmdOutpost extends FCommand
 
 		if (!myFaction.hasOutpost())
 		{
-			fme.msg("<b>Your faction does not have a outpost. " + (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
+			fme.msg("<b>Your faction does not have a outpost. "
+					+ (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
 			fme.sendMessage(p.cmdBase.cmdSetoutpost.getUseageTemplate());
 			return;
 		}

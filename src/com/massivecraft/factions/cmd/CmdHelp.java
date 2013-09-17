@@ -150,7 +150,9 @@ public class CmdHelp extends FCommand
 		pageLines.add(p.txt.parse("<i>Your default relation with other factions will be neutral."));
 		pageLines.add(p.txt.parse("<i>If BOTH factions choose \"ally\" you will be allies."));
 		pageLines.add(p.txt.parse("<i>If ONE faction chooses \"enemy\" you will be enemies."));
-		pageLines.add(p.txt.parse("<i>If BOTH factions choose \"nation\" you will be formed into a nation bond only broken on agreement by both factions"));
+		pageLines
+				.add(p.txt
+						.parse("<i>If BOTH factions choose \"nation\" you will be formed into a nation bond only broken on agreement by both factions"));
 		helpPages.add(pageLines);
 
 		pageLines = new ArrayList<String>();
@@ -185,7 +187,8 @@ public class CmdHelp extends FCommand
 		pageLines.add(p.txt.parse("<c>/f autoclaim [safezone|warzone] <i>take a guess"));
 		pageLines.add(p.cmdBase.cmdSafeunclaimall.getUseageTemplate(true));
 		pageLines.add(p.cmdBase.cmdWarunclaimall.getUseageTemplate(true));
-		pageLines.add(p.txt.parse("<i>Note: " + p.cmdBase.cmdUnclaim.getUseageTemplate(false) + P.p.txt.parse("<i>") + " works on safe/war zones as well."));
+		pageLines.add(p.txt.parse("<i>Note: " + p.cmdBase.cmdUnclaim.getUseageTemplate(false) + P.p.txt.parse("<i>")
+				+ " works on safe/war zones as well."));
 		pageLines.add(p.cmdBase.cmdPeaceful.getUseageTemplate(true));
 		helpPages.add(pageLines);
 

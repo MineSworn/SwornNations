@@ -40,7 +40,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 {
 	// Where did this player stand the last time we checked?
 	private transient FLocation lastStoodAt = new FLocation();
-	
+
 	// FIELD: factionId
 	private String factionId;
 
@@ -718,8 +718,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 			myFaction.detach();
 			if (Conf.logFactionDisband)
-				P.p.log("The faction " + myFaction.getTag() + " (" + myFaction.getId() + ") was disbanded due to the last player (" + this.getName()
-						+ ") leaving.");
+				P.p.log("The faction " + myFaction.getTag() + " (" + myFaction.getId() + ") was disbanded due to the last player ("
+						+ this.getName() + ") leaving.");
 		}
 	}
 
@@ -782,7 +782,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		}
 		else if (forFaction.getFPlayers().size() < Conf.claimsRequireMinFactionMembers && ownedLand >= 1)
 		{
-			error = P.p.txt.parse("<b>Factions must have at least <h>%s<b> members to claim more than 1 land.", Conf.claimsRequireMinFactionMembers);
+			error = P.p.txt.parse("<b>Factions must have at least <h>%s<b> members to claim more than 1 land.",
+					Conf.claimsRequireMinFactionMembers);
 		}
 		// else if (forFaction.getFPlayers().size() <
 		// Conf.claimsRequireMinFactionMembers &&
@@ -817,10 +818,12 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			error = P.p.txt.parse("<b>You can't claim the land belonging to other states of your nation.");
 		}
 		else if (Conf.claimsMustBeConnected && !this.isAdminBypassing() && myFaction.getLandRoundedInWorld(flocation.getWorldName()) > 0
-				&& !Board.isConnectedLocation(flocation, myFaction) && (!Conf.claimsCanBeUnconnectedIfOwnedByOtherFaction || !currentFaction.isNormal()))
+				&& !Board.isConnectedLocation(flocation, myFaction)
+				&& (!Conf.claimsCanBeUnconnectedIfOwnedByOtherFaction || !currentFaction.isNormal()))
 		{
 			if (Conf.claimsCanBeUnconnectedIfOwnedByOtherFaction)
-				error = P.p.txt.parse("<b>You can only claim additional land which is connected to your first claim or controlled by another faction!");
+				error = P.p.txt
+						.parse("<b>You can only claim additional land which is connected to your first claim or controlled by another faction!");
 			else
 				error = P.p.txt.parse("<b>You can only claim additional land which is connected to your first claim!");
 		}
@@ -833,7 +836,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			}
 			else if (currentFaction.isPeaceful())
 			{
-				error = P.p.txt.parse("%s<i> owns this land, and is a peaceful faction. You cannot claim land from them.", currentFaction.getTag(this));
+				error = P.p.txt.parse("%s<i> owns this land, and is a peaceful faction. You cannot claim land from them.",
+						currentFaction.getTag(this));
 			}
 			else if (!currentFaction.hasLandInflation())
 			{
@@ -848,7 +852,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		else if (currentFaction.hasHome() && Conf.homesMustBeLastClaimed && new FLocation(currentFaction.getHome()).equals(flocation)
 				&& Board.getFactionCoordCount(currentFaction) > 1)
 		{
-			error = P.p.txt.parse("<b>You cannot claim <h>%s<b>'s faction home while they have other land left.", currentFaction.getTag(this));
+			error = P.p.txt
+					.parse("<b>You cannot claim <h>%s<b>'s faction home while they have other land left.", currentFaction.getTag(this));
 		}
 
 		if (notifyFailure && error != null)
@@ -914,7 +919,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		informTheseFPlayers.addAll(forFaction.getFPlayersWhereOnline(true));
 		for (FPlayer fp : informTheseFPlayers)
 		{
-			fp.msg("<h>%s<i> claimed land for <h>%s<i> from <h>%s<i>.", this.describeTo(fp, true), forFaction.describeTo(fp), currentFaction.describeTo(fp));
+			fp.msg("<h>%s<i> claimed land for <h>%s<i> from <h>%s<i>.", this.describeTo(fp, true), forFaction.describeTo(fp),
+					currentFaction.describeTo(fp));
 		}
 
 		Board.setFactionAt(forFaction, flocation);
@@ -933,7 +939,9 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	@Override
 	public boolean shouldBeSaved()
 	{
-		if (!this.hasFaction() && (this.getPowerRounded() == this.getPowerMaxRounded() || this.getPowerRounded() == (int) Math.round(Conf.powerPlayerStarting)))
+		if (!this.hasFaction()
+				&& (this.getPowerRounded() == this.getPowerMaxRounded() || this.getPowerRounded() == (int) Math
+						.round(Conf.powerPlayerStarting)))
 			return false;
 		return !this.deleteMe;
 	}

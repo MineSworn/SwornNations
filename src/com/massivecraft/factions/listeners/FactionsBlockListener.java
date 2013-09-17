@@ -66,7 +66,8 @@ public class FactionsBlockListener implements Listener
 			return;
 
 		if (event.getInstaBreak()
-				&& !playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
+				&& !playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock()
+						.getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -271,7 +272,8 @@ public class FactionsBlockListener implements Listener
 				player.damage(Conf.actionDeniedPainAmount);
 
 				if (!Conf.ownedAreaDenyBuild)
-					me.msg("<b>It is painful to try to " + action + " in this territory, it is owned by: " + otherFaction.getOwnerListString(loc));
+					me.msg("<b>It is painful to try to " + action + " in this territory, it is owned by: "
+							+ otherFaction.getOwnerListString(loc));
 			}
 			if (Conf.ownedAreaDenyBuild)
 			{

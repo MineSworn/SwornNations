@@ -38,7 +38,8 @@ public class Board
 	{
 		if (flocation.getY() < Conf.territoryProtectMinimumHeight || flocation.getY() > Conf.territoryProtectMaximumHeight)
 		{
-			if (getAbsoluteFactionAt(flocation).isWarZone() || getAbsoluteFactionAt(flocation).isSafeZone() || getAbsoluteFactionAt(flocation).isPeaceful())
+			if (getAbsoluteFactionAt(flocation).isWarZone() || getAbsoluteFactionAt(flocation).isSafeZone()
+					|| getAbsoluteFactionAt(flocation).isPeaceful())
 				return getAbsoluteFactionAt(flocation);
 
 			return Factions.i.getNone();
@@ -426,7 +427,8 @@ public class Board
 			String[] coords = ll[1].split(",");
 			try
 			{
-				flocationClaimTimes.put(new FLocation(ll[0], Integer.parseInt(coords[0]), Integer.parseInt(coords[1])), Long.parseLong(entry.getValue()));
+				flocationClaimTimes.put(new FLocation(ll[0], Integer.parseInt(coords[0]), Integer.parseInt(coords[1])),
+						Long.parseLong(entry.getValue()));
 			}
 			catch (NumberFormatException ex)
 			{

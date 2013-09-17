@@ -156,12 +156,13 @@ public class DiscUtil
 	// -------------------------------------------- //
 	// DISK SPACE
 	// -------------------------------------------- //
-	
+
 	private static long lastWarn;
+
 	public static boolean checkDiskSpace()
 	{
 		long freeSpace = P.p.getDataFolder().getFreeSpace();
-		
+
 		if (freeSpace == 0)
 		{
 			long now = System.currentTimeMillis();
@@ -175,7 +176,7 @@ public class DiscUtil
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

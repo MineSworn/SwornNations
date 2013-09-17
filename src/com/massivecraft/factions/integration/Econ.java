@@ -134,7 +134,8 @@ public class Econ
 		return transferMoney(invoker, from, to, amount, true);
 	}
 
-	public static boolean transferMoney(EconomyParticipator invoker, EconomyParticipator from, EconomyParticipator to, double amount, boolean notify)
+	public static boolean transferMoney(EconomyParticipator invoker, EconomyParticipator from, EconomyParticipator to, double amount,
+			boolean notify)
 	{
 		if (!shouldBeUsed())
 			return false;
@@ -158,7 +159,8 @@ public class Econ
 		{
 			// There was not enough money to pay
 			if (invoker != null && notify)
-				invoker.msg("<h>%s<b> can't afford to transfer <h>%s<b> to %s<b>.", from.describeTo(invoker, true), moneyString(amount), to.describeTo(invoker));
+				invoker.msg("<h>%s<b> can't afford to transfer <h>%s<b> to %s<b>.", from.describeTo(invoker, true), moneyString(amount),
+						to.describeTo(invoker));
 
 			return false;
 		}
@@ -205,29 +207,32 @@ public class Econ
 		{
 			for (FPlayer recipient : recipients)
 			{
-				recipient.msg("<h>%s<i> was transfered from <h>%s<i> to <h>%s<i>.", moneyString(amount), from.describeTo(recipient), to.describeTo(recipient));
+				recipient.msg("<h>%s<i> was transfered from <h>%s<i> to <h>%s<i>.", moneyString(amount), from.describeTo(recipient),
+						to.describeTo(recipient));
 			}
 		}
 		else if (invoker == from)
 		{
 			for (FPlayer recipient : recipients)
 			{
-				recipient.msg("<h>%s<i> <h>gave %s<i> to <h>%s<i>.", from.describeTo(recipient, true), moneyString(amount), to.describeTo(recipient));
+				recipient.msg("<h>%s<i> <h>gave %s<i> to <h>%s<i>.", from.describeTo(recipient, true), moneyString(amount),
+						to.describeTo(recipient));
 			}
 		}
 		else if (invoker == to)
 		{
 			for (FPlayer recipient : recipients)
 			{
-				recipient.msg("<h>%s<i> <h>took %s<i> from <h>%s<i>.", to.describeTo(recipient, true), moneyString(amount), from.describeTo(recipient));
+				recipient.msg("<h>%s<i> <h>took %s<i> from <h>%s<i>.", to.describeTo(recipient, true), moneyString(amount),
+						from.describeTo(recipient));
 			}
 		}
 		else
 		{
 			for (FPlayer recipient : recipients)
 			{
-				recipient.msg("<h>%s<i> transfered <h>%s<i> from <h>%s<i> to <h>%s<i>.", invoker.describeTo(recipient, true), moneyString(amount),
-						from.describeTo(recipient), to.describeTo(recipient));
+				recipient.msg("<h>%s<i> transfered <h>%s<i> from <h>%s<i> to <h>%s<i>.", invoker.describeTo(recipient, true),
+						moneyString(amount), from.describeTo(recipient), to.describeTo(recipient));
 			}
 		}
 	}

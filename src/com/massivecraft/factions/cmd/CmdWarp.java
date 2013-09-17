@@ -44,7 +44,8 @@ public class CmdWarp extends FCommand
 
 		if (!myFaction.hasWarp())
 		{
-			fme.msg("<b>Your faction does not have a warp. " + (fme.getRole().value < Role.ADMIN.value ? "<i> Ask your leader to:" : "<i>You should:"));
+			fme.msg("<b>Your faction does not have a warp. "
+					+ (fme.getRole().value < Role.ADMIN.value ? "<i> Ask your leader to:" : "<i>You should:"));
 			fme.sendMessage(p.cmdBase.cmdSetwarp.getUseageTemplate());
 			return;
 		}

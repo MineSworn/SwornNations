@@ -235,15 +235,16 @@ public class FactionsEntityListener implements Listener
 		if (event.isCancelled())
 			return;
 
-		EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(event.getCombuster(), event.getEntity(), EntityDamageEvent.DamageCause.FIRE, 0.0D);
+		EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(event.getCombuster(), event.getEntity(),
+				EntityDamageEvent.DamageCause.FIRE, 0.0D);
 		if (!this.canDamagerHurtDamagee(sub, false))
 			event.setCancelled(true);
 		sub = null;
 	}
 
-	private static final Set<PotionEffectType> badPotionEffects = new LinkedHashSet<PotionEffectType>(Arrays.asList(PotionEffectType.BLINDNESS,
-			PotionEffectType.CONFUSION, PotionEffectType.HARM, PotionEffectType.HUNGER, PotionEffectType.POISON, PotionEffectType.SLOW,
-			PotionEffectType.SLOW_DIGGING, PotionEffectType.WEAKNESS));
+	private static final Set<PotionEffectType> badPotionEffects = new LinkedHashSet<PotionEffectType>(Arrays.asList(
+			PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.HARM, PotionEffectType.HUNGER, PotionEffectType.POISON,
+			PotionEffectType.SLOW, PotionEffectType.SLOW_DIGGING, PotionEffectType.WEAKNESS));
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPotionSplashEvent(PotionSplashEvent event)
@@ -355,7 +356,8 @@ public class FactionsEntityListener implements Listener
 		if (attacker.hasLoginPvpDisabled())
 		{
 			if (notify)
-				attacker.msg("<i>You can't hurt other players for " + Conf.noPVPDamageToOthersForXSecondsAfterLogin + " seconds after logging in.");
+				attacker.msg("<i>You can't hurt other players for " + Conf.noPVPDamageToOthersForXSecondsAfterLogin
+						+ " seconds after logging in.");
 			return false;
 		}
 
@@ -366,7 +368,8 @@ public class FactionsEntityListener implements Listener
 		if (locFaction.noPvPInTerritory())
 		{
 			if (notify)
-				attacker.msg("<i>You can't hurt other players while you are in " + (locFaction.isSafeZone() ? "a SafeZone." : "peaceful territory."));
+				attacker.msg("<i>You can't hurt other players while you are in "
+						+ (locFaction.isSafeZone() ? "a SafeZone." : "peaceful territory."));
 			return false;
 		}
 
@@ -442,7 +445,8 @@ public class FactionsEntityListener implements Listener
 		{
 			if (notify)
 			{
-				attacker.msg("<i>You can't hurt %s<i> in their own territory unless you declare them as an enemy.", defender.describeTo(attacker));
+				attacker.msg("<i>You can't hurt %s<i> in their own territory unless you declare them as an enemy.",
+						defender.describeTo(attacker));
 				defender.msg("%s<i> tried to hurt you.", attacker.describeTo(defender, true));
 			}
 			return false;
@@ -477,7 +481,8 @@ public class FactionsEntityListener implements Listener
 			return;
 		}
 
-		if (Conf.safeZoneNerfedCreatureTypes.contains(event.getEntityType()) && Board.getFactionAt(new FLocation(event.getLocation())).noMonstersInTerritory())
+		if (Conf.safeZoneNerfedCreatureTypes.contains(event.getEntityType())
+				&& Board.getFactionAt(new FLocation(event.getLocation())).noMonstersInTerritory())
 		{
 			event.setCancelled(true);
 		}
@@ -526,7 +531,8 @@ public class FactionsEntityListener implements Listener
 			return;
 		}
 
-		if (!FactionsBlockListener.playerCanBuildDestroyBlock((Player) breaker, event.getEntity().getLocation(), "remove paintings", false, Material.PAINTING))
+		if (!FactionsBlockListener.playerCanBuildDestroyBlock((Player) breaker, event.getEntity().getLocation(), "remove paintings", false,
+				Material.PAINTING))
 		{
 			event.setCancelled(true);
 		}
@@ -538,7 +544,8 @@ public class FactionsEntityListener implements Listener
 		if (event.isCancelled())
 			return;
 
-		if (!FactionsBlockListener.playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "place paintings", false, Material.PAINTING))
+		if (!FactionsBlockListener.playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "place paintings", false,
+				Material.PAINTING))
 		{
 			event.setCancelled(true);
 		}
@@ -570,8 +577,9 @@ public class FactionsEntityListener implements Listener
 		{
 			Faction faction = Board.getFactionAt(new FLocation(loc));
 			if ((faction.isNone() && Conf.wildernessBlockFireballs && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
-					|| (faction.isNormal() && (faction.hasPlayersOnline() ? Conf.territoryBlockFireballs : Conf.territoryBlockFireballsWhenOffline))
-					|| (faction.isWarZone() && Conf.warZoneBlockFireballs) || faction.isSafeZone())
+					|| (faction.isNormal() && (faction.hasPlayersOnline() ? Conf.territoryBlockFireballs
+							: Conf.territoryBlockFireballsWhenOffline)) || (faction.isWarZone() && Conf.warZoneBlockFireballs)
+					|| faction.isSafeZone())
 				event.setCancelled(true);
 		}
 

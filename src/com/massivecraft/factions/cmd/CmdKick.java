@@ -96,7 +96,8 @@ public class CmdKick extends FCommand
 		}
 
 		if (Conf.logFactionKick)
-			P.p.log((senderIsConsole ? "A console command" : fme.getName()) + " kicked " + you.getName() + " from the faction: " + yourFaction.getTag());
+			P.p.log((senderIsConsole ? "A console command" : fme.getName()) + " kicked " + you.getName() + " from the faction: "
+					+ yourFaction.getTag());
 
 		if (you.getRole() == Role.ADMIN)
 			yourFaction.promoteNewLeader();

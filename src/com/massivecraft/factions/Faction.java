@@ -308,7 +308,8 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public void confirmValidOutpost()
 	{
-		if (this.outpost == null || (this.outpost.getLocation() != null && Board.getFactionAt(new FLocation(this.outpost.getLocation())) == this))
+		if (this.outpost == null
+				|| (this.outpost.getLocation() != null && Board.getFactionAt(new FLocation(this.outpost.getLocation())) == this))
 			return;
 
 		msg("<b>Your faction outpost has been un-set since it is no longer in your territory.");
@@ -771,9 +772,10 @@ public class Faction extends Entity implements EconomyParticipator
 			if (oldLeader != null)
 				oldLeader.setRole(Role.NORMAL);
 			replacements.get(0).setRole(Role.ADMIN);
-			this.msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.",
-					oldLeader == null ? "" : oldLeader.getName(), replacements.get(0).getName());
-			P.p.log("Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: " + replacements.get(0).getName());
+			this.msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.", oldLeader == null ? ""
+					: oldLeader.getName(), replacements.get(0).getName());
+			P.p.log("Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: "
+					+ replacements.get(0).getName());
 		}
 	}
 
@@ -964,8 +966,8 @@ public class Faction extends Entity implements EconomyParticipator
 		// in own faction, with sufficient role or permission to bypass
 		// ownership?
 		if (fplayer.getFaction() == this
-				&& ((fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN) && fplayer.getFaction().playerHasPermission(
-						fplayer, NPermission.OWNER)) || Permission.OWNERSHIP_BYPASS.has(fplayer.getPlayer())))
+				&& ((fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN) && fplayer.getFaction()
+						.playerHasPermission(fplayer, NPermission.OWNER)) || Permission.OWNERSHIP_BYPASS.has(fplayer.getPlayer())))
 		{
 			return true;
 		}

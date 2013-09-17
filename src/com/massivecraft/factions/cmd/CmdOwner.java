@@ -100,8 +100,8 @@ public class CmdOwner extends FCommand
 			return;
 		}
 
-		if (Conf.ownedAreasPlayersCanOnlyClaimOwn && myFaction.doesLocationHaveOwnersSet(flocation) && !myFaction.isPlayerInOwnerList(fme.getName(), flocation)
-				&& !fme.isAdminBypassing())
+		if (Conf.ownedAreasPlayersCanOnlyClaimOwn && myFaction.doesLocationHaveOwnersSet(flocation)
+				&& !myFaction.isPlayerInOwnerList(fme.getName(), flocation) && !fme.isAdminBypassing())
 		{
 			fme.msg("<i>You cannot claim owner on this plot, it is already owned by %s.", myFaction.getOwnerListString(flocation));
 			return;

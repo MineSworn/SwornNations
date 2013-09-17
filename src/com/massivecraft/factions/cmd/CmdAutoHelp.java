@@ -33,7 +33,8 @@ public class CmdAutoHelp extends MCommand<P>
 
 		for (MCommand<?> scmd : pcmd.subCommands)
 		{
-			if (scmd.visibility == CommandVisibility.VISIBLE || (scmd.visibility == CommandVisibility.SECRET && scmd.validSenderPermissions(sender, false)))
+			if (scmd.visibility == CommandVisibility.VISIBLE
+					|| (scmd.visibility == CommandVisibility.SECRET && scmd.validSenderPermissions(sender, false)))
 			{
 				lines.add(scmd.getUseageTemplate(this.commandChain, true));
 			}

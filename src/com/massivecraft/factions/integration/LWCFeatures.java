@@ -30,7 +30,8 @@ public class LWCFeatures
 			return;
 
 		lwc = ((LWCPlugin) test).getLWC();
-		P.p.log("Successfully hooked into LWC!" + (Conf.lwcIntegration ? "" : " Integration is currently disabled, though (\"lwcIntegration\")."));
+		P.p.log("Successfully hooked into LWC!"
+				+ (Conf.lwcIntegration ? "" : " Integration is currently disabled, though (\"lwcIntegration\")."));
 	}
 
 	public static boolean getEnabled()

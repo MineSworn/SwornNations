@@ -20,7 +20,7 @@ public class PlayerEntity extends Entity
 		{
 			return player.isOnline();
 		}
-		
+
 		return false;
 	}
 

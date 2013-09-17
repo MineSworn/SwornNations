@@ -145,7 +145,8 @@ public abstract class MPlugin extends JavaPlugin
 
 	public GsonBuilder getGsonBuilder()
 	{
-		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls().excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE);
+		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls()
+				.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE);
 	}
 
 	// -------------------------------------------- //

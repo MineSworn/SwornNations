@@ -22,11 +22,13 @@ import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.P;
 
-public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLocation, Set<String>>>, JsonSerializer<Map<FLocation, Set<String>>>
+public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLocation, Set<String>>>,
+		JsonSerializer<Map<FLocation, Set<String>>>
 {
 
 	@Override
-	public Map<FLocation, Set<String>> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+	public Map<FLocation, Set<String>> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+			throws JsonParseException
 	{
 		try
 		{

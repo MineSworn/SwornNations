@@ -59,8 +59,8 @@ public class CmdJoin extends FCommand
 
 		if (Conf.factionMemberLimit > 0 && faction.getFPlayers().size() >= Conf.factionMemberLimit)
 		{
-			msg("<b>The faction %s <b>is at the limit of %d <b>members, so %s <b>annot currently join.", faction.getTag(fme), Conf.factionMemberLimit,
-					fplayer.describeTo(fme, false));
+			msg("<b>The faction %s <b>is at the limit of %d <b>members, so %s <b>annot currently join.", faction.getTag(fme),
+					Conf.factionMemberLimit, fplayer.describeTo(fme, false));
 			return;
 		}
 
@@ -119,7 +119,8 @@ public class CmdJoin extends FCommand
 		if (samePlayer && !fme.isAdminBypassing())
 		{
 			fplayer.setRole(Role.INITIATE);
-			faction.msg("%s<i> has been set to \"Initiate\". This rank does not allow the placing of TNT or access to public chests.", fplayer.getName());
+			faction.msg("%s<i> has been set to \"Initiate\". This rank does not allow the placing of TNT or access to public chests.",
+					fplayer.getName());
 			faction.msg("<i>This status can be removed using: " + P.p.cmdBase.cmdInitiate.getUseageTemplate(false) + "<i>.");
 		}
 
