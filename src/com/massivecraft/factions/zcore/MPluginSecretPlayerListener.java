@@ -15,7 +15,6 @@ import com.massivecraft.factions.zcore.persist.PlayerEntityCollection;
 public class MPluginSecretPlayerListener implements Listener
 {
 	private MPlugin p;
-
 	public MPluginSecretPlayerListener(MPlugin p)
 	{
 		this.p = p;
@@ -30,7 +29,7 @@ public class MPluginSecretPlayerListener implements Listener
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (p.logPlayerCommands())
-				p.log(event.getPlayer().getName() + " issued command: " + event.getMessage());
+				p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}
@@ -44,7 +43,7 @@ public class MPluginSecretPlayerListener implements Listener
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (p.logPlayerCommands())
-				p.log(event.getPlayer().getName() + " issued command: " + event.getMessage());
+				p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}

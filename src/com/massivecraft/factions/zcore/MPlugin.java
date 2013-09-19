@@ -103,7 +103,7 @@ public abstract class MPlugin extends JavaPlugin
 		long saveTicks = 20 * 60 * 30; // Approximately every 30 min
 		if (saveTask == null)
 		{
-			saveTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new SaveTask(this), saveTicks, saveTicks);
+			saveTask = new SaveTask(this).runTaskTimer(this, saveTicks, saveTicks).getTaskId();
 		}
 
 		loadSuccessful = true;
@@ -112,22 +112,25 @@ public abstract class MPlugin extends JavaPlugin
 
 	public void postEnable()
 	{
-		log(getDescription().getFullName() + " has been enabled " + (System.currentTimeMillis() - timeEnableStart) + "ms)");
+		log(getDescription().getFullName() + " has been enabled (" + (System.currentTimeMillis() - timeEnableStart) + "ms)");
 	}
 
 	@Override
 	public void onDisable()
 	{
+		long start = System.currentTimeMillis();
+		
 		if (saveTask != null)
 		{
-			this.getServer().getScheduler().cancelTask(saveTask);
+			getServer().getScheduler().cancelTask(saveTask);
 			saveTask = null;
 		}
+		
 		// only save data if plugin actually loaded successfully
 		if (loadSuccessful)
 			EM.saveAllToDisc();
 
-		log(getDescription().getFullName() + " has been disabled");
+		log(getDescription().getFullName() + " has been disabled (" + (System.currentTimeMillis() - start) + "ms)");
 	}
 
 	public void suicide()
