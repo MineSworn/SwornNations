@@ -1,9 +1,14 @@
 package me.t7seven7t.factions.util;
 
+import org.bukkit.Material;
+
+// TODO: Fix deprecation
 public class MyMaterial
 {
-
+	@Deprecated
 	private int typeId;
+	
+	private Material mat;
 	private byte data;
 
 	public MyMaterial(int typeId, byte data)
@@ -18,10 +23,16 @@ public class MyMaterial
 		this.data = (byte) data;
 	}
 
-	public MyMaterial(org.bukkit.Material mat)
+	public MyMaterial(Material mat)
 	{
-		this.typeId = mat.getId();
+		this.mat = mat;
 		this.data = 0;
+	}
+	
+	public MyMaterial(Material mat, byte data)
+	{
+		this.mat = mat;
+		this.data = data;
 	}
 
 	public MyMaterial(int typeId)
@@ -34,7 +45,14 @@ public class MyMaterial
 	{
 		return typeId + ":" + data;
 	}
+	
+	@SuppressWarnings("deprecation")
+	public Material getType()
+	{
+		return mat != null ? mat : Material.getMaterial(typeId);
+	}
 
+	@Deprecated
 	public int getTypeId()
 	{
 		return typeId;

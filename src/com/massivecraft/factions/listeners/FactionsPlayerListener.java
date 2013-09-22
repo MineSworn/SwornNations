@@ -346,7 +346,7 @@ public class FactionsPlayerListener implements Listener
 			{
 				if (item != null)
 				{
-					if (!Conf.territoryDenyUseageMaterials.contains(new MyMaterial(item.getTypeId())))
+					if (!Conf.territoryDenyUseageMaterials.contains(new MyMaterial(item.getType())))
 						return true; // Item isn't one we're preventing for
 										// online factions.
 				}
@@ -355,7 +355,7 @@ public class FactionsPlayerListener implements Listener
 			{
 				if (item != null)
 				{
-					if (!Conf.territoryDenyUseageMaterialsWhenOffline.contains(new MyMaterial(item.getTypeId())))
+					if (!Conf.territoryDenyUseageMaterialsWhenOffline.contains(new MyMaterial(item.getType())))
 						return true; // Item isn't one we're preventing for
 										// offline factions.
 				}
@@ -380,7 +380,7 @@ public class FactionsPlayerListener implements Listener
 
 			if (item != null)
 			{
-				if (!Conf.safeZoneDenyUseageMaterials.contains(new MyMaterial(item.getTypeId())))
+				if (!Conf.safeZoneDenyUseageMaterials.contains(new MyMaterial(item.getType())))
 					return true; // Item isn't one we're preventing for
 									// safezones.
 			}
@@ -426,6 +426,7 @@ public class FactionsPlayerListener implements Listener
 		return true;
 	}
 
+	@SuppressWarnings("deprecation") // TODO: Replacement for getData()
 	public static boolean canPlayerUseBlock(Player player, Block block, boolean justCheck)
 	{
 		String name = player.getName();
@@ -451,7 +452,7 @@ public class FactionsPlayerListener implements Listener
 
 			if (block != null)
 			{
-				if (!Conf.safeZoneProtectedMaterials.contains(new MyMaterial(block.getTypeId())))
+				if (!Conf.safeZoneProtectedMaterials.contains(new MyMaterial(block.getType())))
 					return true; // Block isn't one we're protecting for
 									// safezones.
 			}
@@ -467,7 +468,7 @@ public class FactionsPlayerListener implements Listener
 		{
 			if (block != null)
 			{
-				if (!Conf.territoryProtectedMaterials.contains(new MyMaterial(block.getTypeId())))
+				if (!Conf.territoryProtectedMaterials.contains(new MyMaterial(block.getType())))
 					return true;
 			}
 		}
@@ -475,7 +476,7 @@ public class FactionsPlayerListener implements Listener
 		{
 			if (block != null)
 			{
-				if (!Conf.territoryProtectedMaterialsWhenOffline.contains(new MyMaterial(block.getTypeId())))
+				if (!Conf.territoryProtectedMaterialsWhenOffline.contains(new MyMaterial(block.getType())))
 					return true;
 			}
 		}
@@ -491,7 +492,7 @@ public class FactionsPlayerListener implements Listener
 			{
 				if (!justCheck)
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							(new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
+							(new MyMaterial(block.getType(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
 							otherFaction.getTag(myFaction));
 			}
 			return false;
@@ -503,7 +504,7 @@ public class FactionsPlayerListener implements Listener
 				if (!me.getFaction().playerHasPermission(me, NPermission.CHEST))
 				{
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							(new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
+							(new MyMaterial(block.getType(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
 							otherFaction.getTag(myFaction));
 					return false;
 				}
@@ -512,7 +513,7 @@ public class FactionsPlayerListener implements Listener
 				if (!me.getFaction().playerHasPermission(me, NPermission.SWITCH))
 				{
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							(new MyMaterial(block.getTypeId(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
+							(new MyMaterial(block.getType(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
 							otherFaction.getTag(myFaction));
 					return false;
 				}
@@ -749,7 +750,7 @@ public class FactionsPlayerListener implements Listener
 		Faction fac = Board.getFactionAt(floc);
 		for (MyMaterial blockedMaterial : Conf.ownTerritoryOnlyMaterials)
 		{
-			if (event.getItem().getTypeId() == blockedMaterial.getTypeId())
+			if (event.getItem().getType() == blockedMaterial.getType())
 			{
 				if (!canUseBlockedItemHere(floc, fac, fplayer, false))
 				{
@@ -761,7 +762,7 @@ public class FactionsPlayerListener implements Listener
 
 		for (MyMaterial blockedMaterial : Conf.ownTerritoryAndWildernessMaterials)
 		{
-			if (event.getItem().getTypeId() == blockedMaterial.getTypeId())
+			if (event.getItem().getType() == blockedMaterial.getType())
 			{
 				if (!canUseBlockedItemHere(floc, fac, fplayer, true))
 				{

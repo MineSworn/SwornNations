@@ -9,7 +9,6 @@ import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
 
 public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 {
-
 	@Override
 	public MyMaterial read(JsonReader reader) throws IOException
 	{
@@ -32,8 +31,9 @@ public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 			writer.nullValue();
 			return;
 		}
-		String item = value.getTypeId() + ":" + value.getData();
+
+		String item = value.getMaterial();
+		
 		writer.value(item);
 	}
-
 }
