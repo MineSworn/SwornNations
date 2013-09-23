@@ -426,7 +426,6 @@ public class FactionsPlayerListener implements Listener
 		return true;
 	}
 
-	@SuppressWarnings("deprecation") // TODO: Replacement for getData()
 	public static boolean canPlayerUseBlock(Player player, Block block, boolean justCheck)
 	{
 		String name = player.getName();
@@ -492,8 +491,7 @@ public class FactionsPlayerListener implements Listener
 			{
 				if (!justCheck)
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							(new MyMaterial(block.getType(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
-							otherFaction.getTag(myFaction));
+							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
 			}
 			return false;
 		}
@@ -504,8 +502,7 @@ public class FactionsPlayerListener implements Listener
 				if (!me.getFaction().playerHasPermission(me, NPermission.CHEST))
 				{
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							(new MyMaterial(block.getType(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
-							otherFaction.getTag(myFaction));
+							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
 					return false;
 				}
 			if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON || block.getType() == Material.STONE_PLATE
@@ -513,8 +510,7 @@ public class FactionsPlayerListener implements Listener
 				if (!me.getFaction().playerHasPermission(me, NPermission.SWITCH))
 				{
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							(new MyMaterial(block.getType(), block.getData()) == new MyMaterial(Material.SOIL) ? "trample" : "use"),
-							otherFaction.getTag(myFaction));
+							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
 					return false;
 				}
 		}

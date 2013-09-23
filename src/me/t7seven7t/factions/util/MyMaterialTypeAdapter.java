@@ -2,10 +2,13 @@ package me.t7seven7t.factions.util;
 
 import java.io.IOException;
 
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.com.google.gson.TypeAdapter;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonToken;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
+
+import com.massivecraft.factions.util.MaterialUtil;
 
 public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 {
@@ -17,10 +20,13 @@ public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 			reader.nextNull();
 			return null;
 		}
+		
 		String[] item = reader.nextString().split(":");
-		int id = Integer.parseInt(item[0]);
-		int data = Integer.parseInt(item[1]);
-		return new MyMaterial(id, data);
+		
+		Material mat = MaterialUtil.getMaterial(item[0]);
+		short data = Short.parseShort(item[1]);
+
+		return new MyMaterial(mat, data);
 	}
 
 	@Override
