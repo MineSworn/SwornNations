@@ -9,7 +9,7 @@ public class MyMaterial
 	
 	public MyMaterial(Material mat)
 	{
-		this.mat = mat;
+		this(mat, (short) 0);
 	}
 	
 	public MyMaterial(Material mat, short data)
@@ -18,19 +18,20 @@ public class MyMaterial
 		this.data = data;
 	}
 
-	public String getMaterial()
-	{
-		return mat.toString() + ":" + data;
-	}
-
-	public Material getType()
+	public final Material getType()
 	{
 		return mat;
 	}
 
-	public short getData()
+	public final short getData()
 	{
 		return data;
+	}
+
+	@Override
+	public String toString()
+	{
+		return mat.toString() + ":" + data;
 	}
 
 	@Override

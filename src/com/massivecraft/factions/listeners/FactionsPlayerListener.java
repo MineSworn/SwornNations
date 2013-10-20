@@ -245,37 +245,37 @@ public class FactionsPlayerListener implements Listener
 		if (block == null)
 			return; // clicked in air, apparently
 
-		// Basically, this will function as a catch-all for item clicking exploits
-		ItemStack inHand = player.getItemInHand();
-		if (inHand != null && inHand.getType() != Material.AIR)
-		{
-			Faction fac = Board.getAbsoluteFactionAt(new FLocation(block.getLocation()));
-			if (inHand.getType() == Material.WATER_BUCKET || inHand.getType() == Material.LAVA_BUCKET)
-			{
-				if (fac.isSafeZone() && ! Permission.MANAGE_SAFE_ZONE.has(player))
-				{
-					fme.msg("<b>You do not have permission to use buckets in %s<b>.", fac.describeTo(fme));
-					event.setCancelled(true);
-					return;
-				}
-
-				if (fac.isWarZone() && !Permission.MANAGE_WAR_ZONE.has(player))
-				{
-					fme.msg("<b>You do not have permission to use buckets in %s<b>.", fac.describeTo(fme));
-					event.setCancelled(true);
-					return;
-				}
-			}
-			else
-			{
-				if (fac != fme.getFaction() && ! fac.isNone())
-				{
-					fme.msg("<b>You cannot do this with an item in your hand, #ChampstersLaw");
-					event.setCancelled(true);
-					return;
-				}
-			}
-		}
+//		// Basically, this will function as a catch-all for item clicking exploits
+//		ItemStack inHand = player.getItemInHand();
+//		if (inHand != null && inHand.getType() != Material.AIR)
+//		{
+//			Faction fac = Board.getAbsoluteFactionAt(new FLocation(block.getLocation()));
+//			if (inHand.getType() == Material.WATER_BUCKET || inHand.getType() == Material.LAVA_BUCKET)
+//			{
+//				if (fac.isSafeZone() && ! Permission.MANAGE_SAFE_ZONE.has(player))
+//				{
+//					fme.msg("<b>You do not have permission to use buckets in %s<b>.", fac.describeTo(fme));
+//					event.setCancelled(true);
+//					return;
+//				}
+//
+//				if (fac.isWarZone() && !Permission.MANAGE_WAR_ZONE.has(player))
+//				{
+//					fme.msg("<b>You do not have permission to use buckets in %s<b>.", fac.describeTo(fme));
+//					event.setCancelled(true);
+//					return;
+//				}
+//			}
+//			else
+//			{
+//				if (fac != fme.getFaction() && ! fac.isNone())
+//				{
+//					fme.msg("<b>You cannot do this with an item in your hand, #ChampstersLaw");
+//					event.setCancelled(true);
+//					return;
+//				}
+//			}
+//		}
 
 		if (! canPlayerUseBlock(player, block, false))
 		{
@@ -471,8 +471,7 @@ public class FactionsPlayerListener implements Listener
 		FLocation loc = new FLocation(block);
 		Faction otherFaction = Board.getFactionAt(loc);
 
-		// no door/chest/whatever protection in wilderness, war zones, or safe
-		// zones
+		// no door/chest/whatever protection in wilderness, war zones, or safe zones
 		if (!otherFaction.isNormal())
 			return true;
 
@@ -484,8 +483,7 @@ public class FactionsPlayerListener implements Listener
 			if (block != null)
 			{
 				if (! Conf.safeZoneProtectedMaterials.contains(new MyMaterial(block.getType())))
-					return true; // Block isn't one we're protecting for
-									// safezones.
+					return true; // Block isn't one we're protecting for safezones.
 			}
 
 			return false;
@@ -568,7 +566,7 @@ public class FactionsPlayerListener implements Listener
 
 		Location home = me.getFaction().getHome();
 		if (Conf.homesEnabled && Conf.homesTeleportToOnDeath && home != null
-				&& (Conf.homesRespawnFromNoPowerLossWorlds || !Conf.worldsNoPowerLoss.contains(event.getPlayer().getWorld().getName())))
+				&& (Conf.homesRespawnFromNoPowerLossWorlds || ! Conf.worldsNoPowerLoss.contains(event.getPlayer().getWorld().getName())))
 		{
 			event.setRespawnLocation(home);
 		}

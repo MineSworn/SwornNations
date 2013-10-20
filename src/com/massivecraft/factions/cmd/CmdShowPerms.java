@@ -66,7 +66,7 @@ public class CmdShowPerms extends FCommand
 			if (!fme.hasFaction())
 				return;
 			Role role = null;
-			if (args.get(1).equalsIgnoreCase("mod") || args.get(1).equalsIgnoreCase(Role.MODERATOR.toString()))
+			if (args.get(1).equalsIgnoreCase("mod") || args.get(1).equalsIgnoreCase("moderator"))
 				role = Role.MODERATOR;
 			else if (args.get(1).equalsIgnoreCase("coadmin") || args.get(1).equalsIgnoreCase("co-admin"))
 				role = Role.COADMIN;
@@ -74,6 +74,8 @@ public class CmdShowPerms extends FCommand
 				role = Role.OFFICER;
 			else if (args.get(1).equalsIgnoreCase("default") || args.get(1).equalsIgnoreCase("normal"))
 				role = Role.NORMAL;
+			else if (args.get(1).equalsIgnoreCase("initiate"))
+				role = Role.INITIATE;
 
 			if (role == null)
 			{

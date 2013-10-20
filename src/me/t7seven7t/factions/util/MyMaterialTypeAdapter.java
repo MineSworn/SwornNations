@@ -38,8 +38,6 @@ public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 			return;
 		}
 
-		String item = value.getMaterial();
-		
-		writer.value(item);
+		writer.value(value.toString());
 	}
 }

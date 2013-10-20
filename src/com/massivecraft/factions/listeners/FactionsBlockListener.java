@@ -31,19 +31,15 @@ public class FactionsBlockListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		if (event.isCancelled())
-			return;
-		if (!event.canBuild())
+		if (event.isCancelled() || ! event.canBuild())
 			return;
 
 		// special case for flint&steel, which should only be prevented by
 		// DenyUsage list
 		if (event.getBlockPlaced().getType() == Material.FIRE)
-		{
 			return;
-		}
 
-		if (!playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "build", false, event.getBlock().getType()))
+		if (! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "build", false, event.getBlock().getType()))
 			event.setCancelled(true);
 	}
 
@@ -53,7 +49,7 @@ public class FactionsBlockListener implements Listener
 		if (event.isCancelled())
 			return;
 
-		if (!playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
+		if (! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -66,7 +62,7 @@ public class FactionsBlockListener implements Listener
 			return;
 
 		if (event.getInstaBreak()
-				&& !playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock()
+				&& ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock()
 						.getType()))
 		{
 			event.setCancelled(true);
