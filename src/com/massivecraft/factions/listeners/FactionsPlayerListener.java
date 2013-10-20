@@ -247,7 +247,7 @@ public class FactionsPlayerListener implements Listener
 
 		// Basically, this will function as a catch-all for item clicking exploits
 		ItemStack inHand = player.getItemInHand();
-		if (inHand != null)
+		if (inHand != null && inHand.getType() != Material.AIR)
 		{
 			Faction fac = Board.getAbsoluteFactionAt(new FLocation(block.getLocation()));
 			if (inHand.getType() == Material.WATER_BUCKET || inHand.getType() == Material.LAVA_BUCKET)
