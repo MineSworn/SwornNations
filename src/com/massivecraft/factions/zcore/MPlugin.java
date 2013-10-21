@@ -112,7 +112,7 @@ public abstract class MPlugin extends JavaPlugin
 
 	public void postEnable()
 	{
-		log(getDescription().getFullName() + " has been enabled (" + (System.currentTimeMillis() - timeEnableStart) + "ms)");
+		log("%s has been enabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - timeEnableStart);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public abstract class MPlugin extends JavaPlugin
 		if (loadSuccessful)
 			EM.saveAllToDisc();
 
-		log(getDescription().getFullName() + " has been disabled (" + (System.currentTimeMillis() - start) + "ms)");
+		log("%s has been enabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	public void suicide()

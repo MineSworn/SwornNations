@@ -14,7 +14,6 @@ import com.massivecraft.factions.util.MiscUtil;
 
 public class FLocation
 {
-
 	private String worldName = "world";
 	private int x = 0;
 	private int z = 0;
@@ -26,7 +25,6 @@ public class FLocation
 
 	public FLocation()
 	{
-
 	}
 
 	public FLocation(String worldName, int x, int z)

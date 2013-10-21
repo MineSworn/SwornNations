@@ -282,15 +282,6 @@ public class Conf
 	public static Set<MyMaterial> safeZoneDenyUseageMaterials = new HashSet<MyMaterial>();
 	public static Set<MyMaterial> safeZoneProtectedMaterials = new HashSet<MyMaterial>();
 
-	// public static Set<Material> territoryProtectedMaterials =
-	// EnumSet.noneOf(Material.class);
-	// public static Set<Material> territoryDenyUseageMaterials =
-	// EnumSet.noneOf(Material.class);
-	// public static Set<Material> territoryProtectedMaterialsWhenOffline =
-	// EnumSet.noneOf(Material.class);
-	// public static Set<Material> territoryDenyUseageMaterialsWhenOffline =
-	// EnumSet.noneOf(Material.class);
-
 	public static transient Set<EntityType> safeZoneNerfedCreatureTypes = EnumSet.noneOf(EntityType.class);
 
 	// Spout features

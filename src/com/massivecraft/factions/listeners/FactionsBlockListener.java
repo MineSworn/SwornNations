@@ -72,9 +72,7 @@ public class FactionsBlockListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPistonExtend(BlockPistonExtendEvent event)
 	{
-		if (event.isCancelled())
-			return;
-		if (!Conf.pistonProtectionThroughDenyBuild)
+		if (event.isCancelled() || ! Conf.pistonProtectionThroughDenyBuild)
 			return;
 
 		Faction pistonFaction = Board.getFactionAt(new FLocation(event.getBlock()));
@@ -85,7 +83,7 @@ public class FactionsBlockListener implements Listener
 
 		// if potentially pushing into air in another territory, we need to
 		// check it out
-		if (targetBlock.isEmpty() && !canPistonMoveBlock(pistonFaction, targetBlock.getLocation()))
+		if (targetBlock.isEmpty() && ! canPistonMoveBlock(pistonFaction, targetBlock.getLocation()))
 		{
 			event.setCancelled(true);
 			return;

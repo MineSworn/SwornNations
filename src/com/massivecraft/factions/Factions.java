@@ -20,13 +20,14 @@ import com.massivecraft.factions.zcore.util.TextUtil;
 public class Factions extends EntityCollection<Faction>
 {
 	public static Factions i = new Factions();
-
-	P p = P.p;
+	private final P p;
 
 	private Factions()
 	{
 		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(), new File(P.p.getDataFolder(),
 				"factions.json"), P.p.gson);
+
+		this.p = P.p;
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class Factions extends EntityCollection<Faction>
 	@Override
 	public boolean loadFromDisc()
 	{
-		if (!super.loadFromDisc())
+		if (! super.loadFromDisc())
 			return false;
 
 		// Make sure the default neutral faction exists
@@ -99,9 +100,9 @@ public class Factions extends EntityCollection<Faction>
 	@Override
 	public Faction get(String id)
 	{
-		if (!exists(id))
+		if (! exists(id))
 		{
-			if (!DiscUtil.checkDiskSpace())
+			if (! DiscUtil.checkDiskSpace())
 			{
 				p.log(Level.WARNING, "Non existing factionId " + id + " requested! Issuing cleaning!");
 				Board.clean();

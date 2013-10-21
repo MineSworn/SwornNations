@@ -4,8 +4,12 @@ import com.massivecraft.factions.Conf;
 
 public enum Role
 {
-	ADMIN(4, "admin"), COADMIN(3, "co-admin"), MODERATOR(2, "moderator"), OFFICER(1, "officer"), NORMAL(0, "normal member"), INITIATE(-1,
-			"initiate");
+	ADMIN(4, "admin"),
+	COADMIN(3, "co-admin"),
+	MODERATOR(2, "moderator"), 
+	OFFICER(1, "officer"), 
+	NORMAL(0, "normal member"),
+	INITIATE(-1, "initiate");
 
 	public final int value;
 	public final String nicename;

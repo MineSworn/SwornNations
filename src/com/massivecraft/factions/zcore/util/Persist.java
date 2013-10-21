@@ -6,13 +6,9 @@ import java.util.logging.Level;
 
 import com.massivecraft.factions.zcore.MPlugin;
 
-// TODO: Give better name and place to differenciate from the entity-orm-ish system in "com.massivecraft.core.persist".
-
 public class Persist
 {
-
 	private MPlugin p;
-
 	public Persist(MPlugin p)
 	{
 		this.p = p;

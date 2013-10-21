@@ -74,6 +74,8 @@ public class P extends MPlugin
 	// Persistance related
 	private boolean locked = false;
 
+	private String lockReason = "locked by Admin";
+
 	public boolean getLocked()
 	{
 		return this.locked;
@@ -83,6 +85,16 @@ public class P extends MPlugin
 	{
 		this.locked = val;
 		this.setAutoSave(val);
+	}
+
+	public String getLockReason()
+	{
+		return lockReason;
+	}
+
+	public void setLockReason(String val)
+	{
+		this.lockReason = val;
 	}
 
 	private Integer AutoLeaveTask = null;

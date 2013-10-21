@@ -182,7 +182,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean noExplosionsInTerritory()
 	{
-		return this.peaceful && !peacefulExplosionsEnabled;
+		return this.peaceful && ! peacefulExplosionsEnabled;
 	}
 
 	// FIELD: permanent
@@ -714,12 +714,8 @@ public class Faction extends Entity implements EconomyParticipator
 
 		// even if all players are technically logged off, maybe someone was on
 		// recently enough to not consider them officially offline yet
-		if (Conf.considerFactionsReallyOfflineAfterXMinutes > 0
-				&& System.currentTimeMillis() < lastPlayerLoggedOffTime + (Conf.considerFactionsReallyOfflineAfterXMinutes * 60000))
-		{
-			return true;
-		}
-		return false;
+		return (Conf.considerFactionsReallyOfflineAfterXMinutes > 0
+				&& System.currentTimeMillis() < lastPlayerLoggedOffTime + (Conf.considerFactionsReallyOfflineAfterXMinutes * 60000));
 	}
 
 	public void memberLoggedOff()

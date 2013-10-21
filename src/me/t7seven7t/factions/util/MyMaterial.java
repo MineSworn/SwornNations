@@ -6,16 +6,16 @@ public class MyMaterial
 {
 	private Material mat;
 	private short data;
-	
-	public MyMaterial(Material mat)
-	{
-		this(mat, (short) 0);
-	}
-	
+
 	public MyMaterial(Material mat, short data)
 	{
 		this.mat = mat;
 		this.data = data;
+	}
+	
+	public MyMaterial(Material mat)
+	{
+		this(mat, (short) 0);
 	}
 
 	public final Material getType()
@@ -49,5 +49,16 @@ public class MyMaterial
 		if (mat != other.mat)
 			return false;
 		return true;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int hash = 1;
+
+		hash *= mat.hashCode();
+		hash *= data;
+
+		return hash;
 	}
 }

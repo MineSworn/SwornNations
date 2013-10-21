@@ -1,8 +1,8 @@
 package com.massivecraft.factions.listeners;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import me.t7seven7t.factions.util.MyMaterial;
 import me.t7seven7t.swornnations.npermissions.NPermission;
@@ -232,7 +232,7 @@ public class FactionsPlayerListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		if (event.isCancelled())
+		if (event.isCancelled() || ! event.hasBlock())
 			return;
 
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.PHYSICAL)
@@ -242,10 +242,7 @@ public class FactionsPlayerListener implements Listener
 		Player player = event.getPlayer();
 		FPlayer fme = FPlayers.i.get(player);
 
-		if (block == null)
-			return; // clicked in air, apparently
-
-//		// Basically, this will function as a catch-all for item clicking exploits
+//		Champster's law, this is a last-ditch effort if needed
 //		ItemStack inHand = player.getItemInHand();
 //		if (inHand != null && inHand.getType() != Material.AIR)
 //		{
@@ -379,8 +376,7 @@ public class FactionsPlayerListener implements Listener
 				if (item != null)
 				{
 					if (! Conf.territoryDenyUseageMaterials.contains(new MyMaterial(item.getType())))
-						return true; // Item isn't one we're preventing for
-										// online factions.
+						return true; // Item isn't one we're preventing for online factions.
 				}
 			}
 			else
@@ -388,8 +384,7 @@ public class FactionsPlayerListener implements Listener
 				if (item != null)
 				{
 					if (! Conf.territoryDenyUseageMaterialsWhenOffline.contains(new MyMaterial(item.getType())))
-						return true; // Item isn't one we're preventing for
-										// offline factions.
+						return true; // Item isn't one we're preventing for offline factions.
 				}
 			}
 		}
@@ -397,8 +392,7 @@ public class FactionsPlayerListener implements Listener
 		if (otherFaction.isNone())
 		{
 			if (! Conf.wildernessDenyUseage || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName()))
-				return true; // This is not faction territory. Use whatever you
-								// like here.
+				return true; // This is not faction territory. Use whatever you like here.
 
 			if (! justCheck)
 				me.msg("<b>You can't use that in the wilderness.");
@@ -413,8 +407,7 @@ public class FactionsPlayerListener implements Listener
 			if (item != null)
 			{
 				if (! Conf.safeZoneDenyUseageMaterials.contains(new MyMaterial(item.getType())))
-					return true; // Item isn't one we're preventing for
-									// safezones.
+					return true; // Item isn't one we're preventing for safezones.
 			}
 
 			if (! justCheck)
@@ -529,20 +522,24 @@ public class FactionsPlayerListener implements Listener
 		if (block != null)
 		{
 			if (block.getType() == Material.CHEST)
+			{
 				if (! me.getFaction().playerHasPermission(me, NPermission.CHEST))
 				{
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
 							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
 					return false;
 				}
+			}
 			if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON || block.getType() == Material.STONE_PLATE
 					|| block.getType() == Material.WOOD_PLATE)
+			{
 				if (! me.getFaction().playerHasPermission(me, NPermission.SWITCH))
 				{
 					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
 							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
 					return false;
 				}
+			}
 		}
 
 		// Also cancel if player doesn't have ownership rights for this claim
@@ -615,15 +612,17 @@ public class FactionsPlayerListener implements Listener
 
 		String shortCmd; // command without the slash at the beginning
 		if (fullCmd.startsWith("/"))
+		{
 			shortCmd = fullCmd.substring(1);
+		}
 		else
 		{
 			shortCmd = fullCmd;
 			fullCmd = "/" + fullCmd;
 		}
 
-		if (me.hasFaction() && !me.isAdminBypassing() && !Conf.permanentFactionMemberDenyCommands.isEmpty() && me.getFaction().isPermanent()
-				&& isCommandInList(fullCmd, shortCmd, Conf.permanentFactionMemberDenyCommands.iterator()))
+		if (me.hasFaction() && !me.isAdminBypassing() && ! Conf.permanentFactionMemberDenyCommands.isEmpty() && me.getFaction().isPermanent()
+				&& isCommandInList(fullCmd, shortCmd, Conf.permanentFactionMemberDenyCommands))
 		{
 			me.msg("<b>You can't use the command \"" + fullCmd + "\" because you are in a permanent faction.");
 			return true;
@@ -685,14 +684,14 @@ public class FactionsPlayerListener implements Listener
 		}
 
 		if (rel.isNeutral() && ! Conf.territoryNeutralDenyCommands.isEmpty() && ! me.isAdminBypassing()
-				&& isCommandInList(fullCmd, shortCmd, Conf.territoryNeutralDenyCommands.iterator()))
+				&& isCommandInList(fullCmd, shortCmd, Conf.territoryNeutralDenyCommands))
 		{
 			me.msg("<b>You can't use the command \"" + fullCmd + "\" in neutral territory.");
 			return true;
 		}
 
 		if (rel.isEnemy() && !Conf.territoryEnemyDenyCommands.isEmpty() && ! me.isAdminBypassing()
-				&& isCommandInList(fullCmd, shortCmd, Conf.territoryEnemyDenyCommands.iterator()))
+				&& isCommandInList(fullCmd, shortCmd, Conf.territoryEnemyDenyCommands))
 		{
 			me.msg("<b>You can't use the command \"" + fullCmd + "\" in enemy territory.");
 			return true;
@@ -701,60 +700,46 @@ public class FactionsPlayerListener implements Listener
 		return false;
 	}
 
-	private static boolean isCommandInList(String fullCmd, String shortCmd, Iterator<String> iter)
+	private static boolean isCommandInList(String fullCmd, String shortCmd, Set<String> list)
 	{
-		String cmdCheck;
-		while (iter.hasNext())
+		for (String cmdCheck : list)
 		{
-			cmdCheck = iter.next();
-			if (cmdCheck == null)
-			{
-				iter.remove();
-				continue;
-			}
-
 			cmdCheck = cmdCheck.toLowerCase();
-			if (fullCmd.startsWith(cmdCheck) || shortCmd.startsWith(cmdCheck))
+			if (shortCmd.matches(cmdCheck + ".*") || fullCmd.matches(cmdCheck + ".*"))
 				return true;
 		}
+
 		return false;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInitiateInteract(PlayerInteractEvent event)
 	{
-		if (event.isCancelled())
+		if (event.isCancelled() || ! event.hasBlock())
 			return;
 
 		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
 		if (! fplayer.hasFaction())
 			return;
 
-		Faction faction = fplayer.getFaction();
-
 		Role role = fplayer.getRole();
 		if (role != Role.INITIATE)
 			return;
 
+		Faction faction = fplayer.getFaction();
 		Faction fLoc = Board.getFactionAt(new FLocation(fplayer));
 		if (fLoc == null || fLoc != faction)
 			return;
 
-		if (event.hasBlock())
+		Block block = event.getClickedBlock();
+		BlockState state = block.getState();
+		if (state instanceof Chest)
 		{
-			Block block = event.getClickedBlock();
-			if (block == null)
-				return;
-
-			BlockState state = block.getState();
-			if (state instanceof Chest)
+			FLocation loc = new FLocation(block);
+			if (! faction.doesLocationHaveOwnersSet(loc) || ! faction.playerHasOwnershipRights(fplayer, loc))
 			{
-				FLocation loc = new FLocation(block);
-				if (! faction.doesLocationHaveOwnersSet(loc) || ! faction.playerHasOwnershipRights(fplayer, loc))
-				{
-					fplayer.msg("<i>You do not have permission to access chests not in your area.");
-					event.setCancelled(true);
-				}
+				fplayer.msg("<i>You do not have permission to access chests not in your area.");
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -762,44 +747,33 @@ public class FactionsPlayerListener implements Listener
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockedItemInteract(PlayerInteractEvent event)
 	{
-		if (event.isCancelled())
+		if (event.isCancelled() || ! event.hasItem())
 			return;
 
-		FPlayer fplayer = FPlayers.i.get(event.getPlayer());
-		if (fplayer == null)
-			return;
-
-		if (! event.hasItem())
-			return;
-
+		FPlayer fme = FPlayers.i.get(event.getPlayer());
 		FLocation floc = new FLocation(event.getPlayer());
 		Faction fac = Board.getFactionAt(floc);
-		for (MyMaterial blockedMaterial : Conf.ownTerritoryOnlyMaterials)
+
+		if (Conf.ownTerritoryOnlyMaterials.contains(new MyMaterial(event.getItem().getType())))
 		{
-			if (event.getItem().getType() == blockedMaterial.getType())
+			if (! canUseBlockedItemHere(floc, fac, fme, false))
 			{
-				if (!canUseBlockedItemHere(floc, fac, fplayer, false))
-				{
-					fplayer.msg("<i>You cannot use this item outside your own territory!");
-					event.setCancelled(true);
-				}
+				fme.msg("<i>You cannot use this item outside your own territory!");
+				event.setCancelled(true);
 			}
 		}
 
-		for (MyMaterial blockedMaterial : Conf.ownTerritoryAndWildernessMaterials)
+		if (Conf.ownTerritoryAndWildernessMaterials.contains(new MyMaterial(event.getItem().getType())))
 		{
-			if (event.getItem().getType() == blockedMaterial.getType())
+			if (! canUseBlockedItemHere(floc, fac, fme, true))
 			{
-				if (!canUseBlockedItemHere(floc, fac, fplayer, true))
-				{
-					fplayer.msg("<i>You cannot use this item outside your own territory or wilderness!");
-					event.setCancelled(true);
-				}
+				fme.msg("<i>You cannot use this item outside your own territory or wilderness!");
+				event.setCancelled(true);
 			}
 		}
 	}
 
-	public boolean canUseBlockedItemHere(FLocation floc, Faction fac, FPlayer pl, boolean both)
+	public static boolean canUseBlockedItemHere(FLocation floc, Faction fac, FPlayer pl, boolean both)
 	{
 		if (fac.isSafeZone() || fac.isWarZone())
 			return false;

@@ -74,7 +74,7 @@ public abstract class FCommand extends MCommand<P>
 	{
 		if (p.getLocked() && this.disableOnLock)
 		{
-			msg("<b>Factions was locked by an admin. Please try again later.");
+			msg("<b>Factions is currently locked. Reason: %s", p.getLockReason());
 			return false;
 		}
 
