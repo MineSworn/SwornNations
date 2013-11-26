@@ -13,7 +13,6 @@ import com.massivecraft.factions.struct.Role;
 
 public class CmdShow extends FCommand
 {
-
 	public CmdShow()
 	{
 		this.aliases.add("show");
@@ -25,7 +24,8 @@ public class CmdShow extends FCommand
 		this.permission = Permission.SHOW.node;
 		this.disableOnLock = false;
 
-		senderMustBePlayer = true;
+//		senderMustBePlayer = true;
+		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
@@ -35,16 +35,26 @@ public class CmdShow extends FCommand
 	public void perform()
 	{
 		Faction faction = myFaction;
-		if (this.argIsSet(0))
+		if (argIsSet(0))
 		{
-			faction = this.argAsFaction(0);
+			faction = argAsFaction(0);
 			if (faction == null)
 				return;
 		}
 
+		// Special case for console
+		if (senderIsConsole)
+		{
+			if (faction == null)
+			{
+				msg("<b>You must specify a valid faction!");
+				return;
+			}
+		}
+
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.econCostShow, "to show faction information", "for showing faction information"))
+		if (! payForCommand(Conf.econCostShow, "to show faction information", "for showing faction information"))
 			return;
 
 		Collection<FPlayer> admins = faction.getFPlayersWhereRole(Role.ADMIN);
@@ -54,7 +64,7 @@ public class CmdShow extends FCommand
 		Collection<FPlayer> normals = faction.getFPlayersWhereRole(Role.NORMAL);
 		Collection<FPlayer> initiates = faction.getFPlayersWhereRole(Role.INITIATE);
 
-		msg(p.txt.titleize(faction.getTag(fme)));
+		msg(p.txt.titleize(faction.getTag(rme)));
 		msg("<a>Description: <i>%s", faction.getDescription());
 		if (!faction.isNormal())
 		{
@@ -117,7 +127,7 @@ public class CmdShow extends FCommand
 			Relation rel = otherFaction.getRelationTo(faction);
 			if (!rel.isAlly() && !rel.isEnemy() && !rel.isNation())
 				continue;
-			listpart = otherFaction.getTag(fme) + p.txt.parse("<i>") + ", ";
+			listpart = otherFaction.getTag(rme) + p.txt.parse("<i>") + ", ";
 			if (rel.isAlly())
 				allyList += listpart;
 			else if (rel.isEnemy())
@@ -141,7 +151,7 @@ public class CmdShow extends FCommand
 		String offlineList = p.txt.parse("<a>") + "Members offline: ";
 		for (FPlayer follower : admins)
 		{
-			listpart = follower.getNameAndTitle(fme) + p.txt.parse("<i>") + ", ";
+			listpart = follower.getNameAndTitle(rme) + p.txt.parse("<i>") + ", ";
 			if (follower.isOnlineAndVisibleTo(me))
 			{
 				onlineList += listpart;
@@ -153,7 +163,7 @@ public class CmdShow extends FCommand
 		}
 		for (FPlayer follower : coadmins)
 		{
-			listpart = follower.getNameAndTitle(fme) + p.txt.parse("<i>") + ", ";
+			listpart = follower.getNameAndTitle(rme) + p.txt.parse("<i>") + ", ";
 			if (follower.isOnlineAndVisibleTo(me))
 			{
 				onlineList += listpart;
@@ -165,7 +175,7 @@ public class CmdShow extends FCommand
 		}
 		for (FPlayer follower : mods)
 		{
-			listpart = follower.getNameAndTitle(fme) + p.txt.parse("<i>") + ", ";
+			listpart = follower.getNameAndTitle(rme) + p.txt.parse("<i>") + ", ";
 			if (follower.isOnlineAndVisibleTo(me))
 			{
 				onlineList += listpart;
@@ -177,7 +187,7 @@ public class CmdShow extends FCommand
 		}
 		for (FPlayer follower : officers)
 		{
-			listpart = follower.getNameAndTitle(fme) + p.txt.parse("<i>") + ", ";
+			listpart = follower.getNameAndTitle(rme) + p.txt.parse("<i>") + ", ";
 			if (follower.isOnlineAndVisibleTo(me))
 			{
 				onlineList += listpart;
@@ -189,7 +199,7 @@ public class CmdShow extends FCommand
 		}
 		for (FPlayer follower : normals)
 		{
-			listpart = follower.getNameAndTitle(fme) + p.txt.parse("<i>") + ", ";
+			listpart = follower.getNameAndTitle(rme) + p.txt.parse("<i>") + ", ";
 			if (follower.isOnlineAndVisibleTo(me))
 			{
 				onlineList += listpart;
@@ -201,7 +211,7 @@ public class CmdShow extends FCommand
 		}
 		for (FPlayer follower : initiates)
 		{
-			listpart = follower.getNameAndTitle(fme) + p.txt.parse("<i>") + ", ";
+			listpart = follower.getNameAndTitle(rme) + p.txt.parse("<i>") + ", ";
 			if (follower.isOnlineAndVisibleTo(me))
 			{
 				onlineList += listpart;
@@ -224,5 +234,4 @@ public class CmdShow extends FCommand
 		sendMessage(onlineList);
 		sendMessage(offlineList);
 	}
-
 }

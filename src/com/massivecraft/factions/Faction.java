@@ -70,13 +70,8 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean isInvited(FPlayer fplayer)
 	{
-		if (unconfirmedInvites.contains(fplayer.getName().toLowerCase()))
-			return true;
-
-		if (confirmedInvites.contains(fplayer.getName().toLowerCase()))
-			return true;
-
-		return false;
+		String name = fplayer.getName().toLowerCase();
+		return unconfirmedInvites.contains(name) || confirmedInvites.contains(name);
 	}
 
 	private Set<String> confirmedInvites;
@@ -192,7 +187,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean isPermanent()
 	{
-		return permanent || !this.isNormal();
+		return permanent || ! isNormal();
 	}
 
 	public void setPermanent(boolean isPermanent)
@@ -205,30 +200,22 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public String getTag()
 	{
-		return this.tag;
+		return tag;
 	}
 
 	public String getTag(String prefix)
 	{
-		return prefix + this.tag;
+		return prefix + tag;
 	}
 
-	public String getTag(Faction otherFaction)
+	public String getTag(RelationParticipator rp)
 	{
-		if (otherFaction == null)
+		if (rp == null)
 		{
 			return getTag();
 		}
-		return this.getTag(this.getColorTo(otherFaction).toString());
-	}
 
-	public String getTag(FPlayer otherFplayer)
-	{
-		if (otherFplayer == null)
-		{
-			return getTag();
-		}
-		return this.getTag(this.getColorTo(otherFplayer).toString());
+		return getTag(getColorTo(rp).toString());
 	}
 
 	public void setTag(String str)
@@ -237,6 +224,7 @@ public class Faction extends Entity implements EconomyParticipator
 		{
 			str = str.toUpperCase();
 		}
+
 		this.tag = str;
 	}
 
@@ -279,8 +267,8 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public void confirmValidHome()
 	{
-		if (!Conf.homesMustBeInClaimedTerritory || this.home == null
-				|| (this.home.getLocation() != null && Board.getFactionAt(new FLocation(this.home.getLocation())) == this))
+		if (! Conf.homesMustBeInClaimedTerritory || home == null
+				|| (home.getLocation() != null && Board.getFactionAt(new FLocation(home.getLocation())) == this))
 			return;
 
 		msg("<b>Your faction home has been un-set since it is no longer in your territory.");
@@ -303,13 +291,13 @@ public class Faction extends Entity implements EconomyParticipator
 	public Location getOutpost()
 	{
 		confirmValidOutpost();
-		return (this.outpost != null) ? this.outpost.getLocation() : null;
+		return (outpost != null) ? outpost.getLocation() : null;
 	}
 
 	public void confirmValidOutpost()
 	{
-		if (this.outpost == null
-				|| (this.outpost.getLocation() != null && Board.getFactionAt(new FLocation(this.outpost.getLocation())) == this))
+		if (outpost == null
+				|| (outpost.getLocation() != null && Board.getFactionAt(new FLocation(outpost.getLocation())) == this))
 			return;
 
 		msg("<b>Your faction outpost has been un-set since it is no longer in your territory.");
@@ -327,21 +315,21 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean hasWarp()
 	{
-		return this.getWarp() != null;
+		return getWarp() != null;
 	}
 
 	public Location getWarp()
 	{
 		confirmValidWarp();
-		return (this.warp != null) ? this.warp.getLocation() : null;
+		return (warp != null) ? warp.getLocation() : null;
 	}
 
 	public void confirmValidWarp()
 	{
-		if ((System.currentTimeMillis() - this.warpSaveTime) > Conf.warpsDecayTime * 60 * 1000)
+		if ((System.currentTimeMillis() - warpSaveTime) > Conf.warpsDecayTime * 60 * 1000)
 		{
 			msg("<b>Your faction warp has been un-set.");
-			this.warp = null;
+			warp = null;
 		}
 	}
 
@@ -355,10 +343,10 @@ public class Faction extends Entity implements EconomyParticipator
 	@Override
 	public String getAccountId()
 	{
-		String aid = "faction-" + this.getId();
+		String aid = "faction-" + getId();
 
 		// We need to override the default money given to players.
-		if (!Econ.hasAccount(aid))
+		if (! Econ.hasAccount(aid))
 		{
 			Econ.setBalance(aid, 0);
 		}

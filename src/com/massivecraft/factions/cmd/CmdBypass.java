@@ -10,7 +10,6 @@ public class CmdBypass extends FCommand
 		super();
 		this.aliases.add("bypass");
 
-		// this.requiredArgs.add("");
 		this.optionalArgs.put("on/off", "flip");
 
 		this.permission = Permission.BYPASS.node;
@@ -25,7 +24,7 @@ public class CmdBypass extends FCommand
 	@Override
 	public void perform()
 	{
-		fme.setIsAdminBypassing(this.argAsBool(0, !fme.isAdminBypassing()));
+		fme.setIsAdminBypassing(argAsBool(0, ! fme.isAdminBypassing()));
 
 		// TODO: Move this to a transient field in the model??
 		if (fme.isAdminBypassing())

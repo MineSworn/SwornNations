@@ -173,6 +173,12 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 	public boolean isAdminBypassing()
 	{
+		// Check if they still have the bypass permission
+		if (! Permission.BYPASS.has(getPlayer()) && isAdminBypassing)
+		{
+			this.isAdminBypassing = false;
+		}
+
 		return this.isAdminBypassing;
 	}
 
@@ -351,16 +357,17 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 	public String getName()
 	{
-		return this.getId(); // TODO: ... display name or remove completeley
+		return getId();
 	}
 
 	public String getTag()
 	{
-		if (!this.hasFaction())
+		if (! hasFaction())
 		{
 			return "";
 		}
-		return this.getFaction().getTag();
+
+		return getFaction().getTag();
 	}
 
 	// Base concatenations:
@@ -389,14 +396,14 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	// Colored concatenations:
 	// These are used in information messages
 
-	public String getNameAndTitle(Faction faction)
+	public String getNameAndTitle(RelationParticipator rp)
 	{
-		return this.getColorTo(faction) + this.getNameAndTitle();
-	}
+		if (rp == null)
+		{
+			return getNameAndTitle();
+		}
 
-	public String getNameAndTitle(FPlayer fplayer)
-	{
-		return this.getColorTo(fplayer) + this.getNameAndTitle();
+		return getColorTo(rp) + getNameAndTitle();
 	}
 
 	// Chat Tag:

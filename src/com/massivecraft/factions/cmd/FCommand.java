@@ -15,9 +15,11 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.P;
+import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.util.Console;
 import com.massivecraft.factions.zcore.MCommand;
 
 public abstract class FCommand extends MCommand<P>
@@ -32,6 +34,7 @@ public abstract class FCommand extends MCommand<P>
 	public boolean senderMustBeAdmin;
 	public boolean commandNotNeedFaction;
 	public NPermission senderMustHaveNPermission;
+	public RelationParticipator rme;
 
 	public boolean isMoneyCommand;
 
@@ -59,13 +62,16 @@ public abstract class FCommand extends MCommand<P>
 		if (sender instanceof Player)
 		{
 			this.fme = FPlayers.i.get((Player) sender);
-			this.myFaction = this.fme.getFaction();
+			this.myFaction = fme.getFaction();
+			this.rme = fme;
 		}
 		else
 		{
 			this.fme = null;
 			this.myFaction = null;
+			this.rme = Console.get();
 		}
+
 		super.execute(sender, args, commandChain);
 	}
 
