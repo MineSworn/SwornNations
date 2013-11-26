@@ -26,7 +26,6 @@ public class CmdBypass extends FCommand
 	{
 		fme.setIsAdminBypassing(argAsBool(0, ! fme.isAdminBypassing()));
 
-		// TODO: Move this to a transient field in the model??
 		if (fme.isAdminBypassing())
 		{
 			fme.msg("<i>You have enabled admin bypass mode. You will be able to build or destroy anywhere.");

@@ -19,7 +19,6 @@ import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
-import com.massivecraft.factions.util.Console;
 import com.massivecraft.factions.zcore.MCommand;
 
 public abstract class FCommand extends MCommand<P>
@@ -69,7 +68,7 @@ public abstract class FCommand extends MCommand<P>
 		{
 			this.fme = null;
 			this.myFaction = null;
-			this.rme = Console.get();
+			this.rme = p.getConsole();
 		}
 
 		super.execute(sender, args, commandChain);

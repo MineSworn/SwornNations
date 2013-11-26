@@ -40,6 +40,7 @@ import com.massivecraft.factions.struct.ChatMode;
 import com.massivecraft.factions.tasks.AutoCleanupTask;
 import com.massivecraft.factions.tasks.AutoLeaveTask;
 import com.massivecraft.factions.tasks.InitiateCleanupTask;
+import com.massivecraft.factions.util.Console;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MapFLocToStringSetTypeAdapter;
 import com.massivecraft.factions.util.MyLocationTypeAdapter;
@@ -70,6 +71,13 @@ public class P extends MPlugin
 	public final FactionsEntityListener entityListener;
 	public final FactionsExploitListener exploitListener;
 	public final FactionsBlockListener blockListener;
+
+	public final Console console;
+
+	public Console getConsole()
+	{
+		return console;
+	}
 
 	// Persistance related
 	private boolean locked = false;
@@ -111,6 +119,7 @@ public class P extends MPlugin
 		this.entityListener = new FactionsEntityListener();
 		this.exploitListener = new FactionsExploitListener();
 		this.blockListener = new FactionsBlockListener();
+		this.console = Console.get();
 	}
 
 	@Override
