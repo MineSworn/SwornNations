@@ -48,16 +48,18 @@ import com.massivecraft.factions.zcore.MPlugin;
 import com.massivecraft.factions.zcore.util.TextUtil;
 
 /**
- * 
- * @author dmulloy2
- * 
- *         This plugin was forked from Olof Larsson and Brett Flannigan's
- *         original Factions plugin: https://github.com/MassiveCraft/Factions
- * 
- *         The goal of the SwornFactions fork is to add extra functionality to
- *         the original plugin and continue support of the 1.6 branch of
- *         Factions for future Minecraft updates.
- * 
+ * This plugin was forked from Olof Larsson and Brett Flannigan's original
+ * Factions plugin: https://github.com/MassiveCraft/Factions
+ * <p>
+ * The goal of the SwornFactions fork is to add extra functionality to the
+ * original plugin and continue support of the 1.6 branch of Factions for future
+ * Minecraft updates.
+ * <p>
+ * Maintainers:
+ * <ul>
+ * <li>t7seven7t - 2012 - 2013</li>
+ * <li>dmulloy2 - current</li>
+ * </ul>
  */
 
 public class P extends MPlugin
