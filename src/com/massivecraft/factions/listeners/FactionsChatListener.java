@@ -21,7 +21,6 @@ import com.massivecraft.factions.struct.Relation;
 public class FactionsChatListener implements Listener
 {
 	private final P p;
-
 	public FactionsChatListener(final P p)
 	{
 		this.p = p;

@@ -105,9 +105,7 @@ public class RelationUtil
 
 		if (fthat.getRelationWish(fme) == Relation.NATION || fme.getRelationWish(fme) == Relation.NATION)
 		{
-
 			return Relation.NATION;
-
 		}
 
 		if (fme.getRelationWish(fthat).value >= fthat.getRelationWish(fme).value)

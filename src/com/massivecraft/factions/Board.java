@@ -103,10 +103,11 @@ public class Board
 			Entry<FLocation, String> entry = iter.next();
 			if (entry.getValue().equals(factionId))
 			{
-				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
+				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.isEnabled())
 				{
 					LWCFeatures.clearAllChests(entry.getKey());
 				}
+
 				iter.remove();
 			}
 		}
@@ -239,7 +240,7 @@ public class Board
 			Entry<FLocation, String> entry = iter.next();
 			if (!Factions.i.exists(entry.getValue()))
 			{
-				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
+				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.isEnabled())
 				{
 					LWCFeatures.clearAllChests(entry.getKey());
 				}

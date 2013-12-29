@@ -127,8 +127,9 @@ public class P extends MPlugin
 	@Override
 	public void onEnable()
 	{
-		if (!preEnable())
+		if (! preEnable())
 			return;
+
 		this.loadSuccessful = false;
 
 		// Load Conf from disk
@@ -226,9 +227,10 @@ public class P extends MPlugin
 	{
 		if (AutoLeaveTask != null)
 		{
-			if (!restartIfRunning)
+			if (! restartIfRunning)
 				return;
-			this.getServer().getScheduler().cancelTask(AutoLeaveTask);
+
+			getServer().getScheduler().cancelTask(AutoLeaveTask);
 		}
 
 		if (Conf.autoLeaveRoutineRunsEveryXMinutes > 0.0)
@@ -309,7 +311,8 @@ public class P extends MPlugin
 	{
 		if (event == null)
 			return false;
-		return (isPlayerFactionChatting(event.getPlayer()) || isFactionsCommand(event.getMessage()));
+
+		return isPlayerFactionChatting(event.getPlayer()) || isFactionsCommand(event.getMessage());
 	}
 
 	// Does player have Faction Chat enabled? If so, chat plugins should
@@ -320,10 +323,11 @@ public class P extends MPlugin
 	{
 		if (player == null)
 			return false;
-		FPlayer me = FPlayers.i.get(player);
 
+		FPlayer me = FPlayers.i.get(player);
 		if (me == null)
 			return false;
+
 		return me.getChatMode().isAtLeast(ChatMode.ALLIANCE);
 	}
 
@@ -336,7 +340,8 @@ public class P extends MPlugin
 	{
 		if (check == null || check.isEmpty())
 			return false;
-		return this.handleCommand(null, check, true);
+
+		return handleCommand(null, check, true);
 	}
 
 	// Get a player's faction tag (faction name), mainly for usage by chat
@@ -374,6 +379,7 @@ public class P extends MPlugin
 				// everything checks out, give the colored tag
 				tag = me.getChatTag(you).trim();
 		}
+
 		if (tag.isEmpty())
 			tag = "~";
 
@@ -402,6 +408,7 @@ public class P extends MPlugin
 		{
 			tags.add(faction.getTag());
 		}
+
 		return tags;
 	}
 
@@ -417,6 +424,7 @@ public class P extends MPlugin
 				players.add(fplayer.getName());
 			}
 		}
+
 		return players;
 	}
 
@@ -432,6 +440,7 @@ public class P extends MPlugin
 				players.add(fplayer.getName());
 			}
 		}
+
 		return players;
 	}
 

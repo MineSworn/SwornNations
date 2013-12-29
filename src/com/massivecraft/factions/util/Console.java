@@ -3,10 +3,12 @@
  */
 package com.massivecraft.factions.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.P;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.zcore.util.TextUtil;
@@ -23,8 +25,7 @@ public class Console implements RelationParticipator
 	// Instance
 	// -------------------------------
 
-	private static Console i;
-	public Console() { i = this; }
+	private static Console i = new Console();
 	public static Console get() { return i; }
 
 	// FIELD: name
@@ -101,5 +102,17 @@ public class Console implements RelationParticipator
 	public ChatColor getColorTo(RelationParticipator rp)
 	{
 		return ChatColor.WHITE;
+	}
+
+	@Override
+	public void msg(String str, Object... args)
+	{
+		sendMessage(P.p.txt.parse(str, args));
+	}
+
+	@Override
+	public void sendMessage(String str)
+	{
+		Bukkit.getConsoleSender().sendMessage(str);
 	}
 }

@@ -894,7 +894,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		if (mustPay && !Econ.modifyMoney(payee, -cost, "to claim this land", "for claiming this land"))
 			return false;
 
-		if (LWCFeatures.getEnabled() && forFaction.isNormal() && Conf.onCaptureResetLwcLocks)
+		if (LWCFeatures.isEnabled() && forFaction.isNormal() && Conf.onCaptureResetLwcLocks)
 		{
 			LWCFeatures.clearOtherChests(flocation, this.getFaction());
 		}

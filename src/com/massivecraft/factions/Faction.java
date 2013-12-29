@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import me.t7seven7t.swornnations.npermissions.NPermission;
 import me.t7seven7t.swornnations.npermissions.NPermissionManager;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -777,6 +776,7 @@ public class Faction extends Entity implements EconomyParticipator
 		}
 	}
 
+	@Override
 	public void sendMessage(String message)
 	{
 		for (FPlayer fplayer : this.getFPlayersWhereOnline(true))
@@ -804,11 +804,12 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public void clearClaimOwnership(FLocation loc)
 	{
-		if (Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
+		if (Conf.onUnclaimResetLwcLocks && LWCFeatures.isEnabled())
 		{
 			LWCFeatures.clearAllChests(loc);
-			Bukkit.getServer().broadcastMessage("boardclearat / clearclaim");
+//			Bukkit.getServer().broadcastMessage("boardclearat / clearclaim");
 		}
+
 		claimOwnership.remove(loc);
 	}
 
@@ -840,7 +841,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 			if (ownerData.isEmpty())
 			{
-				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.getEnabled())
+				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.isEnabled())
 				{
 					LWCFeatures.clearAllChests(entry.getKey());
 				}

@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 
 import com.massivecraft.factions.struct.Relation;
 
-public interface RelationParticipator
+public interface RelationParticipator extends ChatParticipator
 {
 	public String describeTo(RelationParticipator that);
 
