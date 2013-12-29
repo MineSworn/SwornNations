@@ -39,7 +39,6 @@ import com.massivecraft.factions.listeners.FactionsPlayerListener;
 import com.massivecraft.factions.struct.ChatMode;
 import com.massivecraft.factions.tasks.AutoCleanupTask;
 import com.massivecraft.factions.tasks.AutoLeaveTask;
-import com.massivecraft.factions.tasks.InitiateCleanupTask;
 import com.massivecraft.factions.util.Console;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MapFLocToStringSetTypeAdapter;
@@ -185,8 +184,6 @@ public class P extends MPlugin
 
 		getCommand("home").setExecutor(new CmdHome());
 		getCommand("sethome").setExecutor(new CmdSetHome());
-
-		new InitiateCleanupTask().runTaskAsynchronously(this);
 
 		postEnable();
 		this.loadSuccessful = true;
