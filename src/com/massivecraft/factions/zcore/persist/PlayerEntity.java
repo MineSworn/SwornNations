@@ -28,7 +28,13 @@ public class PlayerEntity extends Entity
 	// online
 	public boolean isOnlineAndVisibleTo(Player player)
 	{
-		return isOnline() && getPlayer().canSee(player);
+		if (player != null)
+		{
+			Player p = getPlayer();
+			return p != null && player.canSee(p);
+		}
+
+		return true;
 	}
 
 	public boolean isOffline()
