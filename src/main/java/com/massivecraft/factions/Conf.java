@@ -387,6 +387,9 @@ public class Conf
 		territoryProtectedMaterials.add(new MyMaterial(Material.STONE_BUTTON));
 		territoryProtectedMaterials.add(new MyMaterial(Material.STONE_PLATE));
 		territoryProtectedMaterials.add(new MyMaterial(Material.ENDER_CHEST));
+		territoryProtectedMaterials.add(new MyMaterial(Material.TRAPPED_CHEST));
+		territoryProtectedMaterials.add(new MyMaterial(Material.IRON_PLATE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.GOLD_PLATE));
 
 		territoryDenyUseageMaterials.add(new MyMaterial(Material.FLINT_AND_STEEL));
 		territoryDenyUseageMaterials.add(new MyMaterial(Material.BUCKET));
@@ -412,6 +415,9 @@ public class Conf
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.STONE_BUTTON));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.STONE_PLATE));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.ENDER_CHEST));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.TRAPPED_CHEST));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.IRON_PLATE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.GOLD_PLATE));
 
 		territoryDenyUseageMaterialsWhenOffline.add(new MyMaterial(Material.FLINT_AND_STEEL));
 		territoryDenyUseageMaterialsWhenOffline.add(new MyMaterial(Material.BUCKET));
