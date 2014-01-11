@@ -25,7 +25,6 @@ import com.massivecraft.factions.struct.Relation;
  */
 public class CmdHome implements CommandExecutor
 {
-
 	private FPlayer fme;
 
 	@Override
@@ -48,7 +47,7 @@ public class CmdHome implements CommandExecutor
 		}
 
 		// Just go ahead and override
-		if (Conf.homeBalanceOverride)
+		if (Conf.playerHomesOverride)
 		{
 			goHome();
 			return true;
@@ -67,9 +66,6 @@ public class CmdHome implements CommandExecutor
 		}
 
 		if (isEnemyNearby(Board.getFactionAt(new FLocation(fme.getPlayer().getLocation())), fme.getPlayer().getLocation()))
-			return true;
-
-		if (EssentialsFeatures.handleTeleport(fme.getPlayer(), fme.getHome()))
 			return true;
 
 		goHome();

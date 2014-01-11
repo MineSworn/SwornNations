@@ -14,6 +14,7 @@ import com.massivecraft.factions.event.LandClaimEvent;
 import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
+import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
 import com.massivecraft.factions.integration.WorldGuard;
 import com.massivecraft.factions.struct.ChatMode;
@@ -969,6 +970,14 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 		msg("<b>Your faction home has been un-set since it is no longer in your territory.");
 		this.home = null;
+	}
+
+	public void goHome()
+	{
+		if (EssentialsFeatures.handleTeleport(getPlayer(), getHome()))
+			return;
+
+		getPlayer().teleport(getHome());
 	}
 
 }

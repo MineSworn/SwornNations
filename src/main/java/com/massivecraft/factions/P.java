@@ -11,8 +11,6 @@ import me.t7seven7t.factions.util.MyMaterial;
 import me.t7seven7t.factions.util.MyMaterialTypeAdapter;
 import me.t7seven7t.factions.util.NPermissionManagerTypeAdapter;
 import me.t7seven7t.swornnations.npermissions.NPermissionManager;
-import net.t7seven7t.commands.CmdHome;
-import net.t7seven7t.commands.CmdSetHome;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -182,8 +180,8 @@ public class P extends MPlugin
 		// command interface, provide it
 		getCommand(refCommand).setExecutor(this);
 
-		getCommand("home").setExecutor(new CmdHome());
-		getCommand("sethome").setExecutor(new CmdSetHome());
+//		getCommand("home").setExecutor(new CmdHome());
+//		getCommand("sethome").setExecutor(new CmdSetHome());
 
 		postEnable();
 		this.loadSuccessful = true;

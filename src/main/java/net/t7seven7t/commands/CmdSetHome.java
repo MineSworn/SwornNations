@@ -21,7 +21,6 @@ import com.massivecraft.factions.struct.Role;
  */
 public class CmdSetHome implements CommandExecutor
 {
-
 	private FPlayer fme;
 
 	@Override
@@ -38,7 +37,7 @@ public class CmdSetHome implements CommandExecutor
 		}
 
 		// Just go ahead and override
-		if (Conf.homeBalanceOverride)
+		if (Conf.playerHomesOverride)
 		{
 			fme.setHome(fme.getPlayer().getLocation());
 			fme.msg("<i>Home set!");

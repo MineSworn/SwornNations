@@ -7,8 +7,10 @@ import java.util.Set;
 import me.t7seven7t.factions.util.MyMaterial;
 import me.t7seven7t.swornnations.npermissions.NPermission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -19,6 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -242,38 +245,6 @@ public class FactionsPlayerListener implements Listener
 		Player player = event.getPlayer();
 		FPlayer fme = FPlayers.i.get(player);
 
-//		Champster's law, this is a last-ditch effort if needed
-//		ItemStack inHand = player.getItemInHand();
-//		if (inHand != null && inHand.getType() != Material.AIR)
-//		{
-//			Faction fac = Board.getAbsoluteFactionAt(new FLocation(block.getLocation()));
-//			if (inHand.getType() == Material.WATER_BUCKET || inHand.getType() == Material.LAVA_BUCKET)
-//			{
-//				if (fac.isSafeZone() && ! Permission.MANAGE_SAFE_ZONE.has(player))
-//				{
-//					fme.msg("<b>You do not have permission to use buckets in %s<b>.", fac.describeTo(fme));
-//					event.setCancelled(true);
-//					return;
-//				}
-//
-//				if (fac.isWarZone() && !Permission.MANAGE_WAR_ZONE.has(player))
-//				{
-//					fme.msg("<b>You do not have permission to use buckets in %s<b>.", fac.describeTo(fme));
-//					event.setCancelled(true);
-//					return;
-//				}
-//			}
-//			else
-//			{
-//				if (fac != fme.getFaction() && ! fac.isNone())
-//				{
-//					fme.msg("<b>You cannot do this with an item in your hand, #ChampstersLaw");
-//					event.setCancelled(true);
-//					return;
-//				}
-//			}
-//		}
-
 		if (! canPlayerUseBlock(player, block, false))
 		{
 			event.setCancelled(true);
@@ -306,12 +277,12 @@ public class FactionsPlayerListener implements Listener
 			return;
 		}
 
-		if (block.getType() == Material.BED_BLOCK)
+		if (block.getType() == Material.BED_BLOCK && Conf.playerHomesEnabled)
 		{
 			if (Board.getFactionAt(new FLocation(block)) != fme.getFaction())
 				return;
 
-			if (! Conf.homeBalanceOverride)
+			if (! Conf.playerHomesOverride)
 			{
 				if (fme.getFaction().hasHome())
 				{
@@ -707,6 +678,142 @@ public class FactionsPlayerListener implements Listener
 			cmdCheck = cmdCheck.toLowerCase();
 			if (shortCmd.matches(cmdCheck + ".*") || fullCmd.matches(cmdCheck + ".*"))
 				return true;
+		}
+
+		return false;
+	}
+
+	// -------------------------------------------- //
+	// Player Homes
+	// -------------------------------------------- //
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
+	{
+		String message = event.getMessage().toLowerCase();
+		if (message.startsWith("/home") && Conf.playerHomesEnabled)
+		{
+			event.setCancelled(true);
+
+			FPlayer fme = FPlayers.i.get(event.getPlayer());
+			if (! fme.hasHome())
+			{
+				fme.msg("<b>You do not have a home set. Do /sethome to set one.");
+				return;
+			}
+
+			if (! fme.hasFaction())
+			{
+				fme.msg("You must have a faction to have a home.");
+				return;
+			}
+
+			// Just go ahead and override
+			if (Conf.playerHomesOverride)
+			{
+				fme.goHome();
+				return;
+			}
+
+			if (fme.getFaction().hasHome())
+			{
+				FLocation fHome = new FLocation(fme.getFaction().getHome());
+				FLocation home = new FLocation(fme.getHome());
+				if (fHome.getDistanceTo(home) > 20.0 || Board.getAbsoluteFactionAt(home) != fme.getFaction())
+				{
+					fme.msg("You're home was set too far away from your faction home, or outside of your territory and has become unset.");
+					fme.removeHome();
+					return;
+				}
+			}
+
+			if (isEnemyNearby(fme, Board.getFactionAt(new FLocation(fme.getPlayer().getLocation())), fme.getPlayer().getLocation()))
+				return;
+
+			fme.goHome();
+			return;
+		}
+		else if (message.startsWith("/sethome") && Conf.playerHomesEnabled)
+		{
+			event.setCancelled(true);
+			
+			FPlayer fme = FPlayers.i.get(event.getPlayer());
+			if (! fme.hasFaction())
+			{
+				fme.msg("<b>You must have a faction to do this!");
+				return;
+			}
+
+			// Just go ahead and override
+			if (Conf.playerHomesOverride)
+			{
+				fme.setHome(fme.getPlayer().getLocation());
+				fme.msg("<i>Home set!");
+				return;
+			}
+
+			if (Board.getFactionAt(new FLocation(fme)) != fme.getFaction())
+			{
+				fme.msg("<b>Sorry, your faction home can only be set inside your own claimed territory.");
+				return;
+			}
+
+			if (fme.getFaction().hasHome())
+			{
+				FLocation fHome = new FLocation(fme.getFaction().getHome());
+				FLocation loc = new FLocation(fme.getPlayer().getLocation());
+				if (fHome.getDistanceTo(loc) > 20.0 || Board.getAbsoluteFactionAt(loc) != fme.getFaction())
+				{
+					fme.msg("<b>You're too far away from your faction home to set you're home.");
+					return;
+				}
+			}
+			else
+			{
+				fme.msg("<b>Please set a faction home first. "
+						+ (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
+				fme.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
+				return;
+			}
+
+			fme.setHome(fme.getPlayer().getLocation());
+			fme.msg("<i>Home set!");
+			return;
+		}
+	}
+
+	public static boolean isEnemyNearby(FPlayer fme, Faction faction, Location loc)
+	{
+		if (Conf.homesTeleportAllowedEnemyDistance > 0 && !faction.isSafeZone()
+				&& (!fme.isInOwnTerritory() || (fme.isInOwnTerritory() && !Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory)))
+		{
+			World w = loc.getWorld();
+			double x = loc.getX();
+			double y = loc.getY();
+			double z = loc.getZ();
+
+			for (Player p : Bukkit.getServer().getOnlinePlayers())
+			{
+				if (p == null || !p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
+					continue;
+
+				FPlayer fp = FPlayers.i.get(p);
+				if (fme.getRelationTo(fp) != Relation.ENEMY)
+					continue;
+
+				Location l = p.getLocation();
+				double dx = Math.abs(x - l.getX());
+				double dy = Math.abs(y - l.getY());
+				double dz = Math.abs(z - l.getZ());
+				double max = Conf.homesTeleportAllowedEnemyDistance;
+
+				// box-shaped distance check
+				if (dx > max || dy > max || dz > max)
+					continue;
+
+				fme.msg("<b>You cannot teleport while an enemy is within " + Conf.homesTeleportAllowedEnemyDistance + " blocks of you.");
+				return true;
+			}
 		}
 
 		return false;

@@ -134,7 +134,8 @@ public class Conf
 	public static boolean handleExploitInteractionSpam = false;
 	public static boolean handleExploitTNTWaterlog = false;
 
-	public static boolean homeBalanceOverride = false;
+	public static boolean playerHomesEnabled = true;
+	public static boolean playerHomesOverride = false;
 
 	public static boolean homesEnabled = true;
 	public static boolean homesMustBeInClaimedTerritory = true;
@@ -186,12 +187,10 @@ public class Conf
 
 	public static double actionDeniedPainAmount = 0;
 
-	// commands which will be prevented if the player is a member of a permanent
-	// faction
+	// commands which will be prevented if the player is a member of a permanent faction
 	public static Set<String> permanentFactionMemberDenyCommands = new LinkedHashSet<String>();
 
-	// commands which will be prevented when in claimed territory of another
-	// faction
+	// commands which will be prevented when in claimed territory of another faction
 	public static Set<String> territoryNeutralDenyCommands = new LinkedHashSet<String>();
 	public static Set<String> territoryEnemyDenyCommands = new LinkedHashSet<String>();
 
@@ -284,88 +283,6 @@ public class Conf
 
 	public static transient Set<EntityType> safeZoneNerfedCreatureTypes = EnumSet.noneOf(EntityType.class);
 
-	// Spout features
-	public static boolean spoutFactionTagsOverNames = false; // show faction
-																// tags over
-																// names over
-																// player heads
-	public static boolean spoutFactionTitlesOverNames = false; // whether to
-																// include
-																// player's
-																// title in that
-	public static boolean spoutFactionAdminCapes = false; // Show capes on
-															// faction admins,
-															// colored based on
-															// the viewer's
-															// relation to the
-															// target player
-	public static boolean spoutFactionModeratorCapes = false; // same, but for
-																// faction
-																// moderators
-	public static int spoutTerritoryDisplayPosition = 1; // permanent territory
-															// display, instead
-															// of by chat; 0 =
-															// disabled, 1 = top
-															// left, 2 = top
-															// center, 3+ = top
-															// right
-	public static float spoutTerritoryDisplaySize = 1.0f; // text scale (size)
-															// for territory
-															// display
-	public static boolean spoutTerritoryDisplayShowDescription = false; // whether
-																		// to
-																		// show
-																		// the
-																		// faction
-																		// description,
-																		// not
-																		// just
-																		// the
-																		// faction
-																		// tag
-	public static boolean spoutTerritoryOwnersShow = false; // show territory
-															// owner list as
-															// well
-	public static boolean spoutTerritoryNoticeShow = false; // show additional
-															// brief territory
-															// notice near
-															// center of screen,
-															// to be sure player
-															// notices
-															// transition
-	public static int spoutTerritoryNoticeTop = 40; // how far down the screen
-													// to place the additional
-													// notice
-	public static boolean spoutTerritoryNoticeShowDescription = false; // whether
-																		// to
-																		// show
-																		// the
-																		// faction
-																		// description
-																		// in
-																		// the
-																		// notice,
-																		// not
-																		// just
-																		// the
-																		// faction
-																		// tag
-	public static float spoutTerritoryNoticeSize = 1.5f; // text scale (size)
-															// for notice
-	public static float spoutTerritoryNoticeLeaveAfterSeconds = 2.00f; // how
-																		// many
-																		// seconds
-																		// before
-																		// the
-																		// notice
-																		// goes
-																		// away
-	public static String capeAlly = "https://github.com/MassiveCraft/Factions/raw/master/capes/ally.png";
-	public static String capeEnemy = "https://github.com/MassiveCraft/Factions/raw/master/capes/enemy.png";
-	public static String capeMember = "https://github.com/MassiveCraft/Factions/raw/master/capes/member.png";
-	public static String capeNeutral = "https://github.com/MassiveCraft/Factions/raw/master/capes/neutral.png";
-	public static String capePeaceful = "https://github.com/MassiveCraft/Factions/raw/master/capes/peaceful.png";
-
 	// Economy settings
 	public static boolean econEnabled = true;
 	public static String econUniverseAccount = "";
@@ -397,21 +314,11 @@ public class Conf
 	public static double econCostNeutral = 0.0;
 	public static double econCostNoBoom = 0.0;
 
-	// Faction banks, to pay for land claiming and other costs instead of
-	// individuals paying for them
+	// Faction banks, to pay for land claiming and other costs instead of individuals paying for them
 	public static boolean bankEnabled = true;
-	public static boolean bankMembersCanWithdraw = false; // Have to be at least
-															// moderator to
-															// withdraw or pay
-															// money to another
-															// faction
-	public static boolean bankFactionPaysCosts = true; // The faction pays for
-														// faction command
-														// costs, such as
-														// sethome
-	public static boolean bankFactionPaysLandCosts = true; // The faction pays
-															// for land claiming
-															// costs.
+	public static boolean bankMembersCanWithdraw = false; // Have to be at least moderator to withdraw or pay money to another faction
+	public static boolean bankFactionPaysCosts = true; // The faction pays for faction command costs, such as sethome
+	public static boolean bankFactionPaysLandCosts = true; // The faction pays for land claiming costs.
 
 	// mainly for other plugins/mods that use a fake player to take actions,
 	// which shouldn't be subject to our protections
