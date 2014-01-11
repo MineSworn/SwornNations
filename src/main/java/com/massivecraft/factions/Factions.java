@@ -163,10 +163,20 @@ public class Factions extends EntityCollection<Faction>
 		for (Faction faction : this.get())
 		{
 			if (faction.getComparisonTag().equals(compStr))
-			{
 				return faction;
-			}
 		}
+
+		return null;
+	}
+
+	public Faction getById(String str)
+	{
+		for (Faction faction : this.get())
+		{
+			if (faction.getId().equalsIgnoreCase(str))
+				return faction;
+		}
+
 		return null;
 	}
 

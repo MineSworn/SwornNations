@@ -290,6 +290,12 @@ public abstract class FCommand extends MCommand<P>
 				}
 			}
 
+			// Next we match id's
+			if (faction == null)
+			{
+				faction = Factions.i.getById(name);
+			}
+
 			if (faction != null)
 			{
 				ret = faction;

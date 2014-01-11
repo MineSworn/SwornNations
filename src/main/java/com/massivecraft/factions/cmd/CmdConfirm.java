@@ -62,6 +62,6 @@ public class CmdConfirm extends FCommand
 
 		you.msg("<i>Your invitation to <i>%s<i> has been confirmed!", fme.getFaction().describeTo(you));
 
-		fme.msg("<i>You have successfully confirmed <i>%s<i>s invitation!", you.describeTo(fme));
+		fme.msg("<i>You have successfully confirmed <i>%s<i>\'s invitation!", you.describeTo(fme));
 	}
 }

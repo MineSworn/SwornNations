@@ -1,7 +1,5 @@
 package com.massivecraft.factions.cmd;
 
-import org.bukkit.Bukkit;
-
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
@@ -39,13 +37,13 @@ public class CmdJoin extends FCommand
 		FPlayer fplayer = this.argAsBestFPlayerMatch(1, fme, false);
 		boolean samePlayer = fplayer == fme;
 
-		if (!samePlayer && !Permission.JOIN_OTHERS.has(sender, false))
+		if (! samePlayer && ! Permission.JOIN_OTHERS.has(sender, false))
 		{
 			msg("<b>You do not have permission to move other players into a faction.");
 			return;
 		}
 
-		if (!faction.isNormal())
+		if (! faction.isNormal())
 		{
 			msg("<b>Players may only join normal factions. This is a system faction.");
 			return;
@@ -53,38 +51,38 @@ public class CmdJoin extends FCommand
 
 		if (faction == fplayer.getFaction())
 		{
-			msg("<b>%s %s already a member of %s", fplayer.describeTo(fme, true), (samePlayer ? "are" : "is"), faction.getTag(fme));
+			msg("%s <b>%s already a member of %s", fplayer.describeTo(fme, true), (samePlayer ? "are" : "is"), faction.getTag(fme));
 			return;
 		}
 
 		if (Conf.factionMemberLimit > 0 && faction.getFPlayers().size() >= Conf.factionMemberLimit)
 		{
-			msg("<b>The faction %s <b>is at the limit of %d <b>members, so %s <b>annot currently join.", faction.getTag(fme),
+			msg("<b>The faction %s <b>is at the limit of %s <b>members, so %s <b>cannot currently join.", faction.getTag(fme),
 					Conf.factionMemberLimit, fplayer.describeTo(fme, false));
 			return;
 		}
 
 		if (fplayer.hasFaction())
 		{
-			msg("<b>%s must leave %s <b>current faction first.", fplayer.describeTo(fme, true), (samePlayer ? "your" : "their"));
+			msg("%s <b>must leave %s <b>current faction first.", fplayer.describeTo(fme, true), (samePlayer ? "your" : "their"));
 			return;
 		}
 
-		if (!Conf.canLeaveWithNegativePower && fplayer.getPower() < 0)
+		if (! Conf.canLeaveWithNegativePower && fplayer.getPower() < 0)
 		{
 			msg("%s <b>cannot join a faction with a negative power level.", fplayer.describeTo(fme, true));
 			return;
 		}
 
-		if (!(faction.getOpen() || faction.isInvited(fplayer) || fme.isAdminBypassing() || Permission.JOIN_ANY.has(sender, false)))
+		if (! (faction.getOpen() || faction.isInvited(fplayer) || fme.isAdminBypassing() || Permission.JOIN_ANY.has(sender, false)))
 		{
 			msg("<i>This faction requires invitation.");
 			if (samePlayer)
-				faction.msg("%s<i> tried to join your faction.", fplayer.describeTo(faction, true));
+				faction.msg("%s <i>tried to join your faction.", fplayer.describeTo(faction, true));
 			return;
 		}
 
-		if (!faction.isConfirmed(fme) && !fme.isAdminBypassing())
+		if (! faction.isConfirmed(fme) && ! fme.isAdminBypassing())
 		{
 			msg("<i>You must be confirmed to join this faction!");
 			msg("<i>Your leader must: " + p.cmdBase.cmdConfirm.getUseageTemplate(false));
@@ -93,22 +91,22 @@ public class CmdJoin extends FCommand
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make sure they can pay
-		if (samePlayer && !canAffordCommand(Conf.econCostJoin, "to join a faction"))
+		if (samePlayer && ! canAffordCommand(Conf.econCostJoin, "to join a faction"))
 			return;
 
 		// trigger the join event (cancellable)
 		FPlayerJoinEvent joinEvent = new FPlayerJoinEvent(fplayer, faction, FPlayerJoinEvent.PlayerJoinReason.COMMAND);
-		Bukkit.getServer().getPluginManager().callEvent(joinEvent);
+		p.getServer().getPluginManager().callEvent(joinEvent);
 		if (joinEvent.isCancelled())
 			return;
 
 		// then make 'em pay (if applicable)
-		if (samePlayer && !payForCommand(Conf.econCostJoin, "to join a faction", "for joining a faction"))
+		if (samePlayer && ! payForCommand(Conf.econCostJoin, "to join a faction", "for joining a faction"))
 			return;
 
 		fme.msg("%s <i>successfully joined %s<i>.", fplayer.describeTo(fme, true), faction.getTag(fme));
 
-		if (!samePlayer)
+		if (! samePlayer)
 		{
 			fplayer.msg("%s <i>moved you into the faction %s<i>.", fme.describeTo(fplayer, true), faction.getTag(fplayer));
 		}
@@ -116,7 +114,7 @@ public class CmdJoin extends FCommand
 
 		faction.join(fplayer);
 
-		if (samePlayer && !fme.isAdminBypassing())
+		if (samePlayer && ! fme.isAdminBypassing())
 		{
 			fplayer.setRole(Role.INITIATE);
 			faction.msg("%s<i> has been set to \"Initiate\". This rank does not allow the placing of TNT or access to public chests.",

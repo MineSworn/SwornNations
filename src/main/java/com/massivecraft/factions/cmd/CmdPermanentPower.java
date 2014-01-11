@@ -30,7 +30,7 @@ public class CmdPermanentPower extends FCommand
 		if (targetFaction == null)
 			return;
 
-		Integer targetPower = this.argAsInt(1);
+		int targetPower = this.argAsInt(1);
 
 		targetFaction.setPermanentPower(targetPower);
 
@@ -40,7 +40,10 @@ public class CmdPermanentPower extends FCommand
 			change = "added permanentpower status to";
 		}
 
-		msg("<i>You %s <h>%s<i>.", change, targetFaction.describeTo(fme));
+		if (fme == null || fme.getFaction() == targetFaction)
+		{
+			msg("<i>You %s <h>%s<i>.", change, targetFaction.describeTo(fme));
+		}
 
 		// Inform all players
 		for (FPlayer fplayer : targetFaction.getFPlayersWhereOnline(true))
