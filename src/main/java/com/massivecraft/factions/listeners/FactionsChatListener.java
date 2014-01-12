@@ -133,7 +133,7 @@ public class FactionsChatListener implements Listener
 
 		// Are we to insert the Faction tag into the format?
 		// If we are not to insert it - we are done.
-		if (!Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin)
+		if (! Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin)
 			return;
 
 		Player talkingPlayer = event.getPlayer();
@@ -142,7 +142,7 @@ public class FactionsChatListener implements Listener
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		int InsertIndex = 0;
 
-		if (!Conf.chatTagReplaceString.isEmpty() && eventFormat.contains(Conf.chatTagReplaceString))
+		if (! Conf.chatTagReplaceString.isEmpty() && eventFormat.contains(Conf.chatTagReplaceString))
 		{
 			// we're using the "replace" method of inserting the faction tags
 			// if they stuck "[FACTION_TITLE]" in there, go ahead and do it too
@@ -150,17 +150,18 @@ public class FactionsChatListener implements Listener
 			{
 				eventFormat = eventFormat.replace("[FACTION_TITLE]", me.getTitle());
 			}
+
 			InsertIndex = eventFormat.indexOf(Conf.chatTagReplaceString);
 			eventFormat = eventFormat.replace(Conf.chatTagReplaceString, "");
 			Conf.chatTagPadAfter = false;
 			Conf.chatTagPadBefore = false;
 		}
-		else if (!Conf.chatTagInsertAfterString.isEmpty() && eventFormat.contains(Conf.chatTagInsertAfterString))
+		else if (! Conf.chatTagInsertAfterString.isEmpty() && eventFormat.contains(Conf.chatTagInsertAfterString))
 		{
 			// we're using the "insert after string" method
 			InsertIndex = eventFormat.indexOf(Conf.chatTagInsertAfterString) + Conf.chatTagInsertAfterString.length();
 		}
-		else if (!Conf.chatTagInsertBeforeString.isEmpty() && eventFormat.contains(Conf.chatTagInsertBeforeString))
+		else if (! Conf.chatTagInsertBeforeString.isEmpty() && eventFormat.contains(Conf.chatTagInsertBeforeString))
 		{
 			// we're using the "insert before string" method
 			InsertIndex = eventFormat.indexOf(Conf.chatTagInsertBeforeString);
