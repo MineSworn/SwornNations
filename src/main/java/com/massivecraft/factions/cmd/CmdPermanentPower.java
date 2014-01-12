@@ -40,7 +40,7 @@ public class CmdPermanentPower extends FCommand
 			change = "added permanentpower status to";
 		}
 
-		if (fme == null || fme.getFaction() == targetFaction)
+		if (fme == null || fme.getFaction() != targetFaction)
 		{
 			msg("<i>You %s <h>%s<i>.", change, targetFaction.describeTo(fme));
 		}
