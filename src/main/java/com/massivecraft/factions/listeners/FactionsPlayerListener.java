@@ -694,6 +694,7 @@ public class FactionsPlayerListener implements Listener
 		if (message.startsWith("/home") && Conf.playerHomesEnabled)
 		{
 			event.setCancelled(true);
+			P.p.log(event.getPlayer().getName() + " issued server command: /home");
 
 			FPlayer fme = FPlayers.i.get(event.getPlayer());
 			if (! fme.hasHome())
@@ -736,6 +737,7 @@ public class FactionsPlayerListener implements Listener
 		else if (message.startsWith("/sethome") && Conf.playerHomesEnabled)
 		{
 			event.setCancelled(true);
+			P.p.log(event.getPlayer().getName() + " issued server command: /sethome");
 			
 			FPlayer fme = FPlayers.i.get(event.getPlayer());
 			if (! fme.hasFaction())
