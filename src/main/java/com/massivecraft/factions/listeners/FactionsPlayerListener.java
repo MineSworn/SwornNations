@@ -131,10 +131,16 @@ public class FactionsPlayerListener implements Listener
 		// Yes, continue
 		me.setLastStoodAt(to);
 
+		// Update map
+		if (me.isMapAutoUpdating())
+		{
+			me.sendMessage(Board.getMap(me.getFaction(), to, player.getLocation().getYaw()));
+		}
+
 		// Did we change "host" faction?
 		Faction factionFrom = Board.getFactionAt(from);
 		Faction factionTo = Board.getFactionAt(to);
-		boolean changedFaction = (factionFrom != factionTo);
+		boolean changedFaction = factionFrom != factionTo;
 
 		// Yes
 		if (changedFaction)
@@ -179,7 +185,7 @@ public class FactionsPlayerListener implements Listener
 						if (! Board.getFactionAt(to).isSafeZone())
 						{
 							Board.setFactionAt(Factions.i.getSafeZone(), to);
-							me.msg("<i>This land is now a safe zone.");
+							me.msg("<i>This land is now a <a>Safe Zone<i>.");
 						}
 					}
 				}
