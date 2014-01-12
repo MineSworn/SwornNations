@@ -32,31 +32,17 @@ public class Conf
 
 	public static ChatColor colorPeaceful = ChatColor.GOLD;
 	public static ChatColor colorWar = ChatColor.DARK_RED;
-	// public static ChatColor colorWilderness = ChatColor.DARK_GREEN;
 
 	// Power
 	public static double powerPlayerMax = 10.0;
 	public static double powerPlayerMin = -10.0;
 	public static double powerPlayerStarting = 0.0;
-	public static double powerPerMinute = 0.2; // Default health rate... it
-												// takes 5 min to heal one power
-	public static double powerPerDeath = 3.0; // A death makes you lose 4 power
-	public static boolean powerRegenOffline = false; // does player power
-														// regenerate even while
-														// they're offline?
-	public static double powerOfflineLossPerDay = 0.25; // players will lose
-														// this much power per
-														// day offline
-	public static double powerOfflineLossLimit = 0.0; // players will no longer
-														// lose power from being
-														// offline once their
-														// power drops to this
-														// amount or less
-	public static double powerFactionMax = 0.0; // if greater than 0, the cap on
-												// how much power a faction can
-												// have (additional power from
-												// players beyond that will act
-												// as a "buffer" of sorts)
+	public static double powerPerMinute = 0.2; // Default health rate... it takes 5 min to heal one power
+	public static double powerPerDeath = 3.0; // A death makes you lose 3 power
+	public static boolean powerRegenOffline = false; // does player power regenerate even while they're offline? players will lose this much power per day offline
+	public static double powerOfflineLossPerDay = 0.25; // players will lose this much power per day offline
+	public static double powerOfflineLossLimit = 0.0; // players will no longer lose power from being offline once their power drops to this  amount or less
+	public static double powerFactionMax = 0.0; // if greater than 0, the cap on how much power a faction can  have (additional power from players beyond that will act as a "buffer" of sorts)
 
 	public static String prefixAdmin = "**";
 	public static String prefixCoadmin = "~*";
@@ -348,6 +334,9 @@ public class Conf
 		addPerms();
 
 		bannedFactionNames.add("xivilai");
+		bannedFactionNames.add("bach");
+		bannedFactionNames.add("monk");
+
 		ownTerritoryOnlyCommands.add("tpa");
 
 		territoryEnemyDenyCommands.add("home");
@@ -390,6 +379,8 @@ public class Conf
 		territoryProtectedMaterials.add(new MyMaterial(Material.TRAPPED_CHEST));
 		territoryProtectedMaterials.add(new MyMaterial(Material.IRON_PLATE));
 		territoryProtectedMaterials.add(new MyMaterial(Material.GOLD_PLATE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.DROPPER));
+		territoryProtectedMaterials.add(new MyMaterial(Material.HOPPER));
 
 		territoryDenyUseageMaterials.add(new MyMaterial(Material.FLINT_AND_STEEL));
 		territoryDenyUseageMaterials.add(new MyMaterial(Material.BUCKET));
@@ -418,6 +409,8 @@ public class Conf
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.TRAPPED_CHEST));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.IRON_PLATE));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.GOLD_PLATE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.DROPPER));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.HOPPER));
 
 		territoryDenyUseageMaterialsWhenOffline.add(new MyMaterial(Material.FLINT_AND_STEEL));
 		territoryDenyUseageMaterialsWhenOffline.add(new MyMaterial(Material.BUCKET));

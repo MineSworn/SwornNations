@@ -3,6 +3,7 @@ package com.massivecraft.factions.cmd;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.P;
+import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdPowerBoost extends FCommand
@@ -34,7 +35,7 @@ public class CmdPowerBoost extends FCommand
 		{
 			doPlayer = false;
 		}
-		else if (!type.equals("p") && !type.equals("player"))
+		else if (! type.equals("p") && ! type.equals("player"))
 		{
 			msg("<b>You must specify \"p\" or \"player\" to target a player or \"f\" or \"faction\" to target a faction.");
 			msg("<b>ex. /f powerboost p SomePlayer 0.5  -or-  /f powerboost f SomeFaction -5");
@@ -48,7 +49,9 @@ public class CmdPowerBoost extends FCommand
 			return;
 		}
 
-		String target;
+		String action = targetPower > 0.0D ? "bonus" : "penalty";
+
+		RelationParticipator target;
 
 		if (doPlayer)
 		{
@@ -56,7 +59,7 @@ public class CmdPowerBoost extends FCommand
 			if (targetPlayer == null)
 				return;
 			targetPlayer.setPowerBoost(targetPower);
-			target = "Player \"" + targetPlayer.getName() + "\"";
+			target = targetPlayer;
 		}
 		else
 		{
@@ -64,11 +67,11 @@ public class CmdPowerBoost extends FCommand
 			if (targetFaction == null)
 				return;
 			targetFaction.setPowerBoost(targetPower);
-			target = "Faction \"" + targetFaction.getTag() + "\"";
+			target = targetFaction;
 		}
 
-		msg("<i>" + target + " now has a power bonus/penalty of " + targetPower + " to min and max power levels.");
-		if (!senderIsConsole)
-			P.p.log(fme.getName() + " has set the power bonus/penalty for " + target + " to " + targetPower + ".");
+		msg("%s <i>now has a %s of %s to min and max power levels.", target.describeTo(rme), action, targetPower);
+		if (! senderIsConsole)
+			P.p.log("%s has set the power %s for %s to %s", fme.getName(), action, target.describeTo(P.p.getConsole()), targetPower);
 	}
 }
