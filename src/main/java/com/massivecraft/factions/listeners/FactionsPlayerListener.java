@@ -372,7 +372,7 @@ public class FactionsPlayerListener implements Listener
 				return true; // This is not faction territory. Use whatever you like here.
 
 			if (! justCheck)
-				me.msg("<b>You can't use that in the wilderness.");
+				me.msg("<b>You can't use that in %s<b>.", Factions.i.getNone().getTag(me));
 
 			return false;
 		}
@@ -391,7 +391,7 @@ public class FactionsPlayerListener implements Listener
 			}
 
 			if (! justCheck)
-				me.msg("<b>You can't use that in %s<b>.", Factions.i.getSafeZone().describeTo(me));
+				me.msg("<b>You can't use that in %s<b>.", Factions.i.getSafeZone().getTag(me));
 
 			return false;
 		}
@@ -404,7 +404,7 @@ public class FactionsPlayerListener implements Listener
 				return true; // Clicking with air
 
 			if (! justCheck)
-				me.msg("<b>You can't use that in %s<b>.", Factions.i.getWarZone().describeTo(me));
+				me.msg("<b>You can't use that in %s<b>.", Factions.i.getWarZone().getTag(me));
 
 			return false;
 		}

@@ -22,6 +22,7 @@ import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
@@ -177,35 +178,34 @@ public class FactionsBlockListener implements Listener
 
 		if (otherFaction.isNone())
 		{
-			if (!Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName()))
+			if (! Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName()))
 			{
 				if (mat != Material.TNT || (mat == Material.TNT && absoluteFaction.isNone()))
-					return true; // This is not faction territory. Use whatever
-									// you like here.
+					return true; // This is not faction territory. Use whatever you like here.
 			}
 
-			if (!justCheck)
-				me.msg("<b>You can't " + action + " in the wilderness.");
+			if (! justCheck)
+				me.msg("<b>You can't %s in %s<b>", action, Factions.i.getNone().getTag(me));
 
 			return false;
 		}
 		else if (otherFaction.isSafeZone())
 		{
-			if (!Conf.safeZoneDenyBuild || Permission.MANAGE_SAFE_ZONE.has(player))
+			if (! Conf.safeZoneDenyBuild || Permission.MANAGE_SAFE_ZONE.has(player))
 				return true;
 
-			if (!justCheck)
-				me.msg("<b>You can't " + action + " in a safe zone.");
+			if (! justCheck)
+				me.msg("<b>You can't %s in %s<b>.", action, Factions.i.getSafeZone().getTag(me));
 
 			return false;
 		}
 		else if (otherFaction.isWarZone())
 		{
-			if (!Conf.warZoneDenyBuild || Permission.MANAGE_WAR_ZONE.has(player))
+			if (! Conf.warZoneDenyBuild || Permission.MANAGE_WAR_ZONE.has(player))
 				return true;
 
-			if (!justCheck)
-				me.msg("<b>You can't " + action + " in a war zone.");
+			if (! justCheck)
+				me.msg("<b>You can't %s in %s<b>.", action, Factions.i.getWarZone().getTag(me));
 
 			return false;
 		}
