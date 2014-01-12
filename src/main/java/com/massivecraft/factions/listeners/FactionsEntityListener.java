@@ -12,6 +12,7 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -624,5 +625,21 @@ public class FactionsEntityListener implements Listener
 		}
 
 		return false;
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onItemFrameDamage(EntityDamageByEntityEvent event)
+	{
+		if (event.getEntity() instanceof ItemFrame)
+		{
+			ItemFrame itemFrame = (ItemFrame) event.getEntity();
+			if (event.getDamager() instanceof Player)
+			{
+				Player player = (Player) event.getDamager();
+				if (! FactionsBlockListener.playerCanBuildDestroyBlock(player, itemFrame.getLocation(), "destroy", false, 
+						Material.ITEM_FRAME))
+					event.setCancelled(true);
+			}
+		}
 	}
 }
