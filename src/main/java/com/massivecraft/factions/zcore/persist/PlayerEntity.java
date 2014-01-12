@@ -13,6 +13,10 @@ public class PlayerEntity extends Entity
 		return P.p.getServer().getPlayer(this.getId());
 	}
 
+	// -------------------------------------------- //
+	// Visibility
+	// -------------------------------------------- //
+
 	public boolean isOnline()
 	{
 		Player player = getPlayer();
@@ -24,33 +28,32 @@ public class PlayerEntity extends Entity
 		return false;
 	}
 
-	// make sure target player should be able to detect that this player is
-	// online
-	public boolean isOnlineAndVisibleTo(Player player)
-	{
-		if (player != null)
-		{
-			Player p = getPlayer();
-			return p != null && player.canSee(p);
-		}
-
-		return true;
-	}
-
 	public boolean isOffline()
 	{
-		return !isOnline();
+		return ! isOnline();
+	}
+
+	public boolean isOnlineAndVisibleTo(Player player)
+	{
+		Player p = getPlayer();
+		if (p != null)
+		{
+			return player == null || player.canSee(p);
+		}
+
+		return false;
 	}
 
 	// -------------------------------------------- //
-	// Message Sending Helpers
+	// Message Sending
 	// -------------------------------------------- //
 
 	public void sendMessage(String msg)
 	{
-		Player player = this.getPlayer();
+		Player player = getPlayer();
 		if (player == null)
 			return;
+
 		player.sendMessage(msg);
 	}
 
