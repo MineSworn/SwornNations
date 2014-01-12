@@ -185,7 +185,7 @@ public class FactionsPlayerListener implements Listener
 						if (! Board.getFactionAt(to).isSafeZone())
 						{
 							Board.setFactionAt(Factions.i.getSafeZone(), to);
-							me.msg("<i>This land is now a <a>Safe Zone<i>.");
+							me.msg("<i>This land is now a %s<i>", Factions.i.getSafeZone().describeTo(me));
 						}
 					}
 				}
@@ -200,7 +200,7 @@ public class FactionsPlayerListener implements Listener
 						if (! Board.getFactionAt(to).isWarZone())
 						{
 							Board.setFactionAt(Factions.i.getWarZone(), to);
-							me.msg("<i>This land is now a war zone.");
+							me.msg("<i>This land is now a %s<i>", Factions.i.getWarZone().describeTo(me));
 						}
 					}
 				}
@@ -381,6 +381,9 @@ public class FactionsPlayerListener implements Listener
 			if (! Conf.safeZoneDenyUseage || Permission.MANAGE_SAFE_ZONE.has(player))
 				return true;
 
+			if (item == null)
+				return true; // Clicking with air
+
 			if (item != null)
 			{
 				if (! Conf.safeZoneDenyUseageMaterials.contains(new MyMaterial(item.getType())))
@@ -388,7 +391,7 @@ public class FactionsPlayerListener implements Listener
 			}
 
 			if (! justCheck)
-				me.msg("<b>You can't use that in a safe zone.");
+				me.msg("<b>You can't use that in %s<b>.", Factions.i.getSafeZone().describeTo(me));
 
 			return false;
 		}
@@ -397,8 +400,11 @@ public class FactionsPlayerListener implements Listener
 			if (! Conf.warZoneDenyUseage || Permission.MANAGE_WAR_ZONE.has(player))
 				return true;
 
+			if (item == null)
+				return true; // Clicking with air
+
 			if (! justCheck)
-				me.msg("<b>You can't use that in a war zone.");
+				me.msg("<b>You can't use that in %s<b>.", Factions.i.getWarZone().describeTo(me));
 
 			return false;
 		}
