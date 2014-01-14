@@ -10,7 +10,7 @@ public class PlayerEntity extends Entity
 {
 	public Player getPlayer()
 	{
-		return P.p.getServer().getPlayer(this.getId());
+		return P.p.getServer().getPlayer(getId());
 	}
 
 	// -------------------------------------------- //
@@ -20,12 +20,7 @@ public class PlayerEntity extends Entity
 	public boolean isOnline()
 	{
 		Player player = getPlayer();
-		if (player != null)
-		{
-			return player.isOnline();
-		}
-
-		return false;
+		return player != null && player.isOnline();
 	}
 
 	public boolean isOffline()
@@ -35,13 +30,7 @@ public class PlayerEntity extends Entity
 
 	public boolean isOnlineAndVisibleTo(Player player)
 	{
-		Player p = getPlayer();
-		if (p != null)
-		{
-			return player == null || player.canSee(p);
-		}
-
-		return false;
+		return isOnline() && (player == null || player.canSee(getPlayer()));
 	}
 
 	// -------------------------------------------- //
@@ -60,8 +49,6 @@ public class PlayerEntity extends Entity
 	public void sendMessage(List<String> msgs)
 	{
 		for (String msg : msgs)
-		{
-			this.sendMessage(msg);
-		}
+			sendMessage(msg);
 	}
 }

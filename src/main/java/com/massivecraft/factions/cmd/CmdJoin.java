@@ -118,7 +118,7 @@ public class CmdJoin extends FCommand
 		{
 			fplayer.setRole(Role.INITIATE);
 			faction.msg("%s<i> has been set to \"Initiate\". This rank does not allow the placing of TNT or access to public chests.",
-					fplayer.getName());
+					fplayer.describeTo(faction, true));
 			faction.msg("<i>This status can be removed using: " + P.p.cmdBase.cmdInitiate.getUseageTemplate(false) + "<i>.");
 		}
 
