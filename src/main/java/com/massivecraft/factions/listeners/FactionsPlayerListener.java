@@ -622,28 +622,46 @@ public class FactionsPlayerListener implements Listener
 					return true;
 				}
 
-				if (! me.getFaction().hasHome())
-				{
-					me.msg("<b>Please set a faction home first. "
-							+ (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
-					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
-					return true;
-				}
+//				if (! me.getFaction().hasHome())
+//				{
+//					me.msg("<b>Please set a faction home first. "
+//							+ (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
+//					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
+//					return true;
+//				}
 
 				if (args.length > 1)
 				{
-					FLocation fHome = new FLocation(me.getFaction().getHome());
 					FPlayer target = FPlayers.i.get(args[1]);
 					if (target != null && target.isOnline())
 					{
 						FLocation loc = new FLocation(target.getPlayer().getLocation());
-						if (loc != null)
+
+						boolean isCloseToHome = false;
+						boolean isCloseToOutpost = false;
+
+						if (me.getFaction().hasHome())
 						{
+							FLocation fHome = new FLocation(me.getFaction().getHome());
 							if (fHome.getDistanceTo(loc) > 40.0)
 							{
-								me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home.");
-								return true;
+								isCloseToHome = false;
 							}
+						}
+
+						if (me.getFaction().hasOutpost())
+						{
+							FLocation outpost = new FLocation(me.getFaction().getOutpost());
+							if (outpost.getDistanceTo(loc) > 40.0)
+							{
+								isCloseToHome = false;
+							}
+						}
+
+						if (! isCloseToHome && ! isCloseToOutpost)
+						{
+							me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home or outpost");
+							return true;
 						}
 					}
 					else
@@ -673,7 +691,7 @@ public class FactionsPlayerListener implements Listener
 			return true;
 		}
 
-		if (rel.isEnemy() && !Conf.territoryEnemyDenyCommands.isEmpty() && ! me.isAdminBypassing()
+		if (rel.isEnemy() && ! Conf.territoryEnemyDenyCommands.isEmpty() && ! me.isAdminBypassing()
 				&& isCommandInList(fullCmd, shortCmd, Conf.territoryEnemyDenyCommands))
 		{
 			me.msg("<b>You can't use the command \"" + fullCmd + "\" in enemy territory.");
@@ -706,7 +724,7 @@ public class FactionsPlayerListener implements Listener
 		if (message.startsWith("/home") && Conf.playerHomesEnabled)
 		{
 			event.setCancelled(true);
-			P.p.log(event.getPlayer().getName() + " issued server command: /home");
+			P.p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: /home");
 
 			FPlayer fme = FPlayers.i.get(event.getPlayer());
 			if (! fme.hasHome())
@@ -728,16 +746,41 @@ public class FactionsPlayerListener implements Listener
 				return;
 			}
 
+			if (Board.getFactionAt(new FLocation(fme)) != fme.getFaction())
+			{
+				fme.msg("<b>Your home is no longer in claimed territory and has been unset.");
+				fme.removeHome();
+				return;
+			}
+
+			boolean isCloseToHome = false;
+			boolean isCloseToOutpost = false;
+
 			if (fme.getFaction().hasHome())
 			{
 				FLocation fHome = new FLocation(fme.getFaction().getHome());
 				FLocation home = new FLocation(fme.getHome());
 				if (fHome.getDistanceTo(home) > 20.0 || Board.getAbsoluteFactionAt(home) != fme.getFaction())
 				{
-					fme.msg("You're home was set too far away from your faction home, or outside of your territory and has become unset.");
-					fme.removeHome();
-					return;
+					isCloseToHome = false;
 				}
+			}
+
+			if (fme.getFaction().hasOutpost())
+			{
+				FLocation outpost = new FLocation(fme.getFaction().getOutpost());
+				FLocation home = new FLocation(fme.getHome());
+				if (outpost.getDistanceTo(home) > 20.0 || Board.getAbsoluteFactionAt(home) != fme.getFaction())
+				{
+					isCloseToHome = false;
+				}
+			}
+
+			if (! isCloseToHome && ! isCloseToOutpost)
+			{
+				fme.msg("<b>Your home is far away from your faction home or outpost and has been unset.");
+				fme.removeHome();
+				return;
 			}
 
 			if (isEnemyNearby(fme, Board.getFactionAt(new FLocation(fme.getPlayer().getLocation())), fme.getPlayer().getLocation()))
@@ -749,8 +792,8 @@ public class FactionsPlayerListener implements Listener
 		else if (message.startsWith("/sethome") && Conf.playerHomesEnabled)
 		{
 			event.setCancelled(true);
-			P.p.log(event.getPlayer().getName() + " issued server command: /sethome");
-			
+			P.p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: /sethome");
+
 			FPlayer fme = FPlayers.i.get(event.getPlayer());
 			if (! fme.hasFaction())
 			{
@@ -768,25 +811,31 @@ public class FactionsPlayerListener implements Listener
 
 			if (Board.getFactionAt(new FLocation(fme)) != fme.getFaction())
 			{
-				fme.msg("<b>Sorry, your faction home can only be set inside your own claimed territory.");
+				fme.msg("<b>Sorry, your home can only be set inside your own claimed territory.");
 				return;
 			}
+
+			boolean isCloseToHome = false;
+			boolean isCloseToOutpost = false;
 
 			if (fme.getFaction().hasHome())
 			{
 				FLocation fHome = new FLocation(fme.getFaction().getHome());
-				FLocation loc = new FLocation(fme.getPlayer().getLocation());
-				if (fHome.getDistanceTo(loc) > 20.0 || Board.getAbsoluteFactionAt(loc) != fme.getFaction())
-				{
-					fme.msg("<b>You're too far away from your faction home to set you're home.");
-					return;
-				}
+				FLocation home = new FLocation(fme.getHome());
+				isCloseToHome = fHome.getDistanceTo(home) > 20.0D;
 			}
-			else
+
+			if (fme.getFaction().hasOutpost())
 			{
-				fme.msg("<b>Please set a faction home first. "
-						+ (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
-				fme.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
+				FLocation outpost = new FLocation(fme.getFaction().getOutpost());
+				FLocation home = new FLocation(fme.getHome());
+				isCloseToOutpost = outpost.getDistanceTo(home) > 20.0D;
+			}
+
+			if (! isCloseToHome && ! isCloseToOutpost)
+			{
+				fme.msg("<b>You're too far away from your faction home to set your home.");
+				fme.removeHome();
 				return;
 			}
 
