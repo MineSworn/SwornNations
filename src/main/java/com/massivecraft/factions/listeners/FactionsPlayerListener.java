@@ -815,14 +815,14 @@ public class FactionsPlayerListener implements Listener
 			if (fme.getFaction().hasHome())
 			{
 				FLocation fHome = new FLocation(fme.getFaction().getHome());
-				FLocation home = new FLocation(fme.getHome());
+				FLocation home = new FLocation(fme);
 				isCloseToHome = fHome.getDistanceTo(home) < 20.0D;
 			}
 
 			if (fme.getFaction().hasOutpost())
 			{
 				FLocation outpost = new FLocation(fme.getFaction().getOutpost());
-				FLocation home = new FLocation(fme.getHome());
+				FLocation home = new FLocation(fme);
 				isCloseToOutpost = outpost.getDistanceTo(home) < 20.0D;
 			}
 
