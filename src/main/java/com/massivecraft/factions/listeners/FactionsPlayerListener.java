@@ -622,13 +622,13 @@ public class FactionsPlayerListener implements Listener
 					return true;
 				}
 
-//				if (! me.getFaction().hasHome())
-//				{
-//					me.msg("<b>Please set a faction home first. "
-//							+ (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
-//					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
-//					return true;
-//				}
+				if (! me.getFaction().hasHome() && ! me.getFaction().hasOutpost())
+				{
+					me.msg("<b>Please set a faction home first. "
+							+ (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
+					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
+					return true;
+				}
 
 				if (args.length > 1)
 				{
@@ -643,19 +643,13 @@ public class FactionsPlayerListener implements Listener
 						if (me.getFaction().hasHome())
 						{
 							FLocation fHome = new FLocation(me.getFaction().getHome());
-							if (fHome.getDistanceTo(loc) > 40.0)
-							{
-								isCloseToHome = false;
-							}
+							isCloseToHome = fHome.getDistanceTo(loc) < 40.0D;
 						}
 
 						if (me.getFaction().hasOutpost())
 						{
 							FLocation outpost = new FLocation(me.getFaction().getOutpost());
-							if (outpost.getDistanceTo(loc) > 40.0)
-							{
-								isCloseToHome = false;
-							}
+							isCloseToOutpost = outpost.getDistanceTo(loc) < 40.0;
 						}
 
 						if (! isCloseToHome && ! isCloseToOutpost)
@@ -746,7 +740,7 @@ public class FactionsPlayerListener implements Listener
 				return;
 			}
 
-			if (Board.getFactionAt(new FLocation(fme)) != fme.getFaction())
+			if (Board.getFactionAt(new FLocation(fme.getHome())) != fme.getFaction())
 			{
 				fme.msg("<b>Your home is no longer in claimed territory and has been unset.");
 				fme.removeHome();
