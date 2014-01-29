@@ -1,8 +1,8 @@
 name: SwornNations
 main: com.massivecraft.factions.P
 version: ${project.version} (Build ${project.build.number})
-authors: [Olof Larsson, Brett Flannigan, dmulloy2, t7seven7t]
-softdepend: [PermissionsEx, Permissions, Essentials, EssentialsChat, HeroChat, iChat, LocalAreaChat, LWC, nChat, ChatManager, CAPI, AuthMe, Vault, Spout, WorldEdit, WorldGuard, AuthDB, CaptureThePoints, CombatTag]
+authors: [Olof Larsson, Brett Flannigan, dmulloy2]
+softdepend: [PermissionsEx, Essentials, EssentialsChat, SwornChat, LWC, Vault, WorldEdit, WorldGuard]
 commands:
   factions:
     description: Reference command for Factions.
