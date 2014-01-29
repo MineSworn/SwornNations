@@ -760,20 +760,14 @@ public class FactionsPlayerListener implements Listener
 			{
 				FLocation fHome = new FLocation(fme.getFaction().getHome());
 				FLocation home = new FLocation(fme.getHome());
-				if (fHome.getDistanceTo(home) > 20.0 || Board.getAbsoluteFactionAt(home) != fme.getFaction())
-				{
-					isCloseToHome = false;
-				}
+				isCloseToHome = fHome.getDistanceTo(home) < 20.0D;
 			}
 
 			if (fme.getFaction().hasOutpost())
 			{
 				FLocation outpost = new FLocation(fme.getFaction().getOutpost());
 				FLocation home = new FLocation(fme.getHome());
-				if (outpost.getDistanceTo(home) > 20.0 || Board.getAbsoluteFactionAt(home) != fme.getFaction())
-				{
-					isCloseToHome = false;
-				}
+				isCloseToOutpost = outpost.getDistanceTo(home) < 20.0D;
 			}
 
 			if (! isCloseToHome && ! isCloseToOutpost)
@@ -822,14 +816,14 @@ public class FactionsPlayerListener implements Listener
 			{
 				FLocation fHome = new FLocation(fme.getFaction().getHome());
 				FLocation home = new FLocation(fme.getHome());
-				isCloseToHome = fHome.getDistanceTo(home) > 20.0D;
+				isCloseToHome = fHome.getDistanceTo(home) < 20.0D;
 			}
 
 			if (fme.getFaction().hasOutpost())
 			{
 				FLocation outpost = new FLocation(fme.getFaction().getOutpost());
 				FLocation home = new FLocation(fme.getHome());
-				isCloseToOutpost = outpost.getDistanceTo(home) > 20.0D;
+				isCloseToOutpost = outpost.getDistanceTo(home) < 20.0D;
 			}
 
 			if (! isCloseToHome && ! isCloseToOutpost)
