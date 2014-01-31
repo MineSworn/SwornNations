@@ -37,6 +37,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
@@ -263,10 +264,12 @@ public class FactionsEntityListener implements Listener
 				break;
 			}
 		}
-		if (!badjuju)
-			return;
 
-		Entity thrower = event.getPotion().getShooter();
+		if (! badjuju) return;
+
+		@SuppressWarnings("deprecation") // Basically, this method isn't deprecated, but at the same time is...
+		ProjectileSource source = event.getPotion().getShooter();
+		LivingEntity thrower = (LivingEntity) source;
 
 		// scan through affected entities to make sure they're all valid targets
 		Iterator<LivingEntity> iter = event.getAffectedEntities().iterator();
@@ -274,11 +277,8 @@ public class FactionsEntityListener implements Listener
 		{
 			LivingEntity target = iter.next();
 			EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(thrower, target, EntityDamageEvent.DamageCause.CUSTOM, 0.0D);
-			if (!this.canDamagerHurtDamagee(sub, true))
-				event.setIntensity(target, 0.0); // affected entity list doesn't
-													// accept modification (so
-													// no iter.remove()), but
-													// this works
+			if (! canDamagerHurtDamagee(sub, true))
+				event.setIntensity(target, 0.0); // affected entity list doesn't accept modification (so no iter.remove()), but this works
 			sub = null;
 		}
 	}
@@ -321,14 +321,16 @@ public class FactionsEntityListener implements Listener
 		// for damage caused by projectiles, getDamager() returns the
 		// projectile... what we need to know is the source
 		if (damager instanceof Projectile)
-			damager = ((Projectile) damager).getShooter();
+		{
+			@SuppressWarnings("deprecation") // Basically, this method isn't deprecated, but at the same time is...
+			ProjectileSource source = ((Projectile) damager).getShooter();
+			damager = (LivingEntity) source;
+		}
 
-		if (damager == damagee) // ender pearl usage and other self-inflicted
-								// damage
+		if (damager == damagee) // ender pearl usage and other self-inflicted damage
 			return true;
 
-		// Players can not take attack damage in a SafeZone, or possibly
-		// peaceful territory
+		// Players can not take attack damage in a SafeZone, or possibly peaceful territory
 		if (defLocFaction.noPvPInTerritory())
 		{
 			if (damager instanceof Player)
