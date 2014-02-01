@@ -37,7 +37,6 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.projectiles.ProjectileSource;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
@@ -268,8 +267,7 @@ public class FactionsEntityListener implements Listener
 		if (! badjuju) return;
 
 		@SuppressWarnings("deprecation") // Basically, this method isn't deprecated, but at the same time is...
-		ProjectileSource source = event.getPotion().getShooter();
-		LivingEntity thrower = (LivingEntity) source;
+		LivingEntity thrower = (LivingEntity) event.getPotion().getShooter();
 
 		// scan through affected entities to make sure they're all valid targets
 		Iterator<LivingEntity> iter = event.getAffectedEntities().iterator();
@@ -301,6 +299,7 @@ public class FactionsEntityListener implements Listener
 		return canDamagerHurtDamagee(sub, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean canDamagerHurtDamagee(EntityDamageByEntityEvent sub, boolean notify)
 	{
 		Entity damager = sub.getDamager();
@@ -322,9 +321,8 @@ public class FactionsEntityListener implements Listener
 		// projectile... what we need to know is the source
 		if (damager instanceof Projectile)
 		{
-			@SuppressWarnings("deprecation") // Basically, this method isn't deprecated, but at the same time is...
-			ProjectileSource source = ((Projectile) damager).getShooter();
-			damager = (LivingEntity) source;
+			Projectile projectile = (Projectile) damager;
+			damager = (LivingEntity) projectile.getShooter();
 		}
 
 		if (damager == damagee) // ender pearl usage and other self-inflicted damage
