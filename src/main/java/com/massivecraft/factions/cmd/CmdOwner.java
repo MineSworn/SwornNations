@@ -29,8 +29,6 @@ public class CmdOwner extends FCommand
 		senderMustHaveNPermission = NPermission.OWNER;
 	}
 
-	// TODO: Fix colors!
-
 	@Override
 	public void perform()
 	{

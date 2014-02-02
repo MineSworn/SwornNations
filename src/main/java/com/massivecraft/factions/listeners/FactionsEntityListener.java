@@ -462,11 +462,7 @@ public class FactionsEntityListener implements Listener
 			// Send message
 			if (notify)
 			{
-				String perc = MessageFormat.format("{0,number,#%}", (Conf.territoryShieldFactor)); // TODO
-																									// does
-																									// this
-																									// display
-																									// correctly??
+				String perc = MessageFormat.format("{0,number,#%}", (Conf.territoryShieldFactor));
 				defender.msg("<i>Enemy damage reduced by <rose>%s<i>.", perc);
 			}
 		}

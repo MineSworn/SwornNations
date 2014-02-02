@@ -184,8 +184,7 @@ public class Factions extends EntityCollection<Faction>
 	{
 		Map<String, Faction> tag2faction = new HashMap<String, Faction>();
 
-		// TODO: Slow index building
-		for (Faction faction : this.get())
+		for (Faction faction : get())
 		{
 			tag2faction.put(ChatColor.stripColor(faction.getTag()), faction);
 		}
@@ -193,6 +192,7 @@ public class Factions extends EntityCollection<Faction>
 		String tag = TextUtil.getBestStartWithCI(tag2faction.keySet(), searchFor);
 		if (tag == null)
 			return null;
+
 		return tag2faction.get(tag);
 	}
 

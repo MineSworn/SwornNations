@@ -22,6 +22,7 @@ public class Conf
 	public static boolean allowNoSlashCommand = true;
 
 	public static boolean debug = false;
+	public static boolean opsBypassByDefault = true;
 
 	// Colors
 	public static ChatColor colorMember = ChatColor.GREEN;
@@ -305,6 +306,7 @@ public class Conf
 	public static boolean bankMembersCanWithdraw = false; // Have to be at least moderator to withdraw or pay money to another faction
 	public static boolean bankFactionPaysCosts = true; // The faction pays for faction command costs, such as sethome
 	public static boolean bankFactionPaysLandCosts = true; // The faction pays for land claiming costs.
+	public static boolean bankPayOutToDisbander = true;
 
 	// mainly for other plugins/mods that use a fake player to take actions,
 	// which shouldn't be subject to our protections

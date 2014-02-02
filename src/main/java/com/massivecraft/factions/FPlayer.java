@@ -128,7 +128,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.autoClaimFor = faction;
 		if (this.autoClaimFor != null)
 		{
-			// TODO: merge these into same autoclaim
 			this.autoSafeZoneEnabled = false;
 			this.autoWarZoneEnabled = false;
 		}
@@ -735,8 +734,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 		if (Conf.worldGuardChecking && WorldGuard.checkForRegionsInChunk(location))
 		{
-			// Checks for WorldGuard regions in the chunk attempting to be
-			// claimed
+			// Checks for WorldGuard regions in the chunk attempting to be claimed
 			error = P.p.txt.parse("<b>This land is protected");
 		}
 		else if (Conf.worldsNoClaiming.contains(flocation.getWorldName()))
@@ -772,14 +770,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			error = P.p.txt.parse("<b>Factions must have at least <h>%s<b> members to claim more than 1 land.",
 					Conf.claimsRequireMinFactionMembers);
 		}
-		// else if (forFaction.getFPlayers().size() <
-		// Conf.claimsRequireMinFactionMembers &&
-		// forFaction.getFPlayers().size() != 1)
-		// {
-		// error =
-		// P.p.txt.parse("Factions must have at least <h>%s<b> members to claim land.",
-		// Conf.claimsRequireMinFactionMembers);
-		// }
 		else if (currentFaction.isSafeZone())
 		{
 			error = P.p.txt.parse("<b>You can not claim a Safe Zone.");
@@ -804,15 +794,17 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		{
 			error = P.p.txt.parse("<b>You can't claim the land belonging to other states of your nation.");
 		}
-		else if (Conf.claimsMustBeConnected && !this.isAdminBypassing() && myFaction.getLandRoundedInWorld(flocation.getWorldName()) > 0
-				&& !Board.isConnectedLocation(flocation, myFaction)
-				&& (!Conf.claimsCanBeUnconnectedIfOwnedByOtherFaction || !currentFaction.isNormal()))
+		else if (Conf.claimsMustBeConnected && !isAdminBypassing() && myFaction.getLandRoundedInWorld(flocation.getWorldName()) > 0
+				&& ! Board.isConnectedLocation(flocation, myFaction)
+				&& (! Conf.claimsCanBeUnconnectedIfOwnedByOtherFaction || ! currentFaction.isNormal()))
 		{
+			error = "<b>You can only claim additional land which is connected to your first claim";
+
 			if (Conf.claimsCanBeUnconnectedIfOwnedByOtherFaction)
-				error = P.p.txt
-						.parse("<b>You can only claim additional land which is connected to your first claim or controlled by another faction!");
-			else
-				error = P.p.txt.parse("<b>You can only claim additional land which is connected to your first claim!");
+				error = error + " or controlled by another faction";
+
+			error = error + "!";
+			error = P.p.txt.parse(error);
 		}
 		else if (currentFaction.isNormal())
 		{
@@ -826,27 +818,29 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 				error = P.p.txt.parse("%s<i> owns this land, and is a peaceful faction. You cannot claim land from them.",
 						currentFaction.getTag(this));
 			}
-			else if (!currentFaction.hasLandInflation())
+			else if ( ! currentFaction.hasLandInflation())
 			{
-				// TODO more messages WARN current faction most importantly
 				error = P.p.txt.parse("%s<i> owns this land and is strong enough to keep it.", currentFaction.getTag(this));
+				currentFaction.msg("%s <b>tried to claim over your land!", describeTo(currentFaction));
 			}
-			else if (!Board.isBorderLocation(flocation))
+			else if ( ! Board.isBorderLocation(flocation))
 			{
 				error = P.p.txt.parse("<b>You must start claiming land at the border of the territory.");
 			}
-		}
-		else if (currentFaction.hasHome() && Conf.homesMustBeLastClaimed && new FLocation(currentFaction.getHome()).equals(flocation)
-				&& Board.getFactionCoordCount(currentFaction) > 1)
-		{
-			error = P.p.txt
-					.parse("<b>You cannot claim <h>%s<b>'s faction home while they have other land left.", currentFaction.getTag(this));
+			// TODO: Make sure this works
+			else if (currentFaction.hasHome() && Conf.homesMustBeLastClaimed && new FLocation(currentFaction.getHome()).equals(flocation)
+					&& Board.getFactionCoordCount(currentFaction) > 1)
+			{
+				error = P.p.txt.parse("<b>You cannot claim <h>%s<b>\'s faction home while they have other land left.", 
+						currentFaction.getTag(this));
+			}
 		}
 
 		if (notifyFailure && error != null)
 		{
 			msg(error);
 		}
+
 		return error == null;
 	}
 

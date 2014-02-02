@@ -36,8 +36,7 @@ public class CmdTag extends FCommand
 	{
 		String tag = this.argAsString(0);
 
-		// TODO does not first test cover selfcase?
-		if (Factions.i.isTagTaken(tag) && !MiscUtil.getComparisonString(tag).equals(myFaction.getComparisonTag()))
+		if (Factions.i.isTagTaken(tag) && ! MiscUtil.getComparisonString(tag).equals(myFaction.getComparisonTag()))
 		{
 			msg("<b>That tag is already taken");
 			return;

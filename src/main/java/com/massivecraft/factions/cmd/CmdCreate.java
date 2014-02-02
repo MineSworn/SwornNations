@@ -82,12 +82,10 @@ public class CmdCreate extends FCommand
 			return;
 
 		// then make 'em pay (if applicable)
-		if (!payForCommand(Conf.econCostCreate, "to create a new faction", "for creating a new faction"))
+		if (! payForCommand(Conf.econCostCreate, "to create a new faction", "for creating a new faction"))
 			return;
 
 		Faction faction = Factions.i.create();
-
-		// TODO: Why would this even happen??? Auto increment clash??
 		if (faction == null)
 		{
 			msg("<b>There was an internal error while trying to create your faction. Please try again.");

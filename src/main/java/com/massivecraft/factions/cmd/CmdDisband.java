@@ -9,6 +9,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent;
+import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 
@@ -93,22 +94,19 @@ public class CmdDisband extends FCommand
 			P.p.log("The faction " + faction.getTag() + " (" + faction.getId() + ") was disbanded by "
 					+ (senderIsConsole ? "console command" : fme.getName()) + ".");
 
-		// TODO: Bring this back?
-		// if (Econ.shouldBeUsed() && ! senderIsConsole)
-		// {
-		// //Give all the faction's money to the disbander
-		// double amount = Econ.getBalance(faction.getAccountId());
-		// Econ.transferMoney(fme, faction, fme, amount, false);
-		//
-		// if (amount > 0.0)
-		// {
-		// String amountString = Econ.moneyString(amount);
-		// msg("<i>You have been given the disbanded faction's bank, totaling %s.",
-		// amountString);
-		// P.p.log(fme.getName() +
-		// " has been given bank holdings of "+amountString+" from disbanding "+faction.getTag()+".");
-		// }
-		// }
+		if (Econ.shouldBeUsed() && ! senderIsConsole && Conf.bankPayOutToDisbander)
+		{
+			// Give all the faction's money to the disbander
+			double amount = Econ.getBalance(faction.getAccountId());
+			Econ.transferMoney(fme, faction, fme, amount, false);
+
+			if (amount > 0.0)
+			{
+				String amountString = Econ.moneyString(amount);
+				msg("<i>You have been given the disbanded faction's bank, totaling <h>%s<i>.", amountString);
+				P.p.log(fme.getName() + " has been given bank holdings of " + amountString + " from disbanding " + faction.getTag() + ".");
+			}
+		}
 
 		faction.detach();
 	}

@@ -82,11 +82,4 @@ public class SmokeUtil
 			spawnCloudRandom(location, thickness);
 		}
 	}
-
-	// -------------------------------------------- //
-	// Attach continuous effects to or locations
-	// -------------------------------------------- //
-
-	// TODO
-
 }

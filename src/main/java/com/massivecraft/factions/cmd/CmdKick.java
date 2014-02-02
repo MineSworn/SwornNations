@@ -61,8 +61,8 @@ public class CmdKick extends FCommand
 
 			if (you.getRole().value >= fme.getRole().value && you.getRole() != Role.NORMAL)
 			{
-				// TODO add more informative messages.
-				msg("<b>Your rank is too low to kick this player.");
+				msg("<b>%s<b>s cannot kick %s<s>s.", fme.getRole().nicename, you.getRole().nicename);
+				// msg("<b>Your rank is too low to kick this player.");
 				return;
 			}
 

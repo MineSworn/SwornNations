@@ -49,8 +49,14 @@ public class FactionsPlayerListener implements Listener
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		// Make sure that all online players do have a fplayer.
-		final Player player = event.getPlayer();
-		final FPlayer me = FPlayers.i.get(player);
+		Player player = event.getPlayer();
+		FPlayer me = FPlayers.i.get(player);
+
+		if (Conf.opsBypassByDefault && player.isOp())
+		{
+			me.setIsAdminBypassing(true);
+			me.setSpyingChat(true);
+		}
 
 		// Update the lastLoginTime for this fplayer
 		me.setLastLoginTime(System.currentTimeMillis());
@@ -204,6 +210,8 @@ public class FactionsPlayerListener implements Listener
 						}
 					}
 				}
+
+				// TODO: /f autounclaim ?
 			}
 		}
 
