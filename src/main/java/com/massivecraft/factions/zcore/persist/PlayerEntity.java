@@ -2,15 +2,15 @@ package com.massivecraft.factions.zcore.persist;
 
 import java.util.List;
 
-import org.bukkit.entity.Player;
+import net.dmulloy2.swornnations.SwornNations;
 
-import com.massivecraft.factions.P;
+import org.bukkit.entity.Player;
 
 public class PlayerEntity extends Entity
 {
 	public Player getPlayer()
 	{
-		return P.p.getServer().getPlayer(getId());
+		return SwornNations.get().getServer().getPlayer(getId());
 	}
 
 	// -------------------------------------------- //

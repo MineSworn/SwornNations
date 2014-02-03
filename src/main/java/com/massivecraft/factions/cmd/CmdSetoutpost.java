@@ -1,6 +1,6 @@
 package com.massivecraft.factions.cmd;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;

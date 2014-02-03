@@ -1,6 +1,6 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.P;
+import net.dmulloy2.swornnations.SwornNations;
 
 public class CmdMoney extends FCommand
 {
@@ -41,7 +41,7 @@ public class CmdMoney extends FCommand
 	public void perform()
 	{
 		this.commandChain.add(this);
-		P.p.cmdAutoHelp.execute(this.sender, this.args, this.commandChain);
+		SwornNations.get().cmdAutoHelp.execute(this.sender, this.args, this.commandChain);
 	}
 
 }

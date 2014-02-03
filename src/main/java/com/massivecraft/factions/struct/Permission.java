@@ -1,8 +1,8 @@
 package com.massivecraft.factions.struct;
 
-import org.bukkit.command.CommandSender;
+import net.dmulloy2.swornnations.SwornNations;
 
-import com.massivecraft.factions.P;
+import org.bukkit.command.CommandSender;
 
 public enum Permission
 {
@@ -94,7 +94,7 @@ public enum Permission
 
 	public boolean has(CommandSender sender, boolean informSenderIfNot)
 	{
-		return P.p.perm.has(sender, this.node, informSenderIfNot);
+		return SwornNations.get().perm.has(sender, this.node, informSenderIfNot);
 	}
 
 	public boolean has(CommandSender sender)

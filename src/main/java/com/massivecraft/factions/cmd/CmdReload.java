@@ -1,10 +1,11 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdReload extends FCommand
@@ -65,7 +66,7 @@ public class CmdReload extends FCommand
 		}
 		else
 		{
-			P.p.log("RELOAD CANCELLED - SPECIFIED FILE INVALID");
+			SwornNations.get().log("RELOAD CANCELLED - SPECIFIED FILE INVALID");
 			msg("<b>Invalid file specified. <i>Valid files: all, conf, board, factions, players");
 			return;
 		}

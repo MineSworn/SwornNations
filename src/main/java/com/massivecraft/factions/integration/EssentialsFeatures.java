@@ -2,6 +2,7 @@ package com.massivecraft.factions.integration;
 
 import java.util.logging.Level;
 
+import net.dmulloy2.swornnations.SwornNations;
 import net.ess3.api.IEssentials;
 
 import org.bukkit.Bukkit;
@@ -16,7 +17,6 @@ import com.earth2me.essentials.Teleport;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.P;
 
 /**
  * This interface handles Essentials Teleportation
@@ -38,11 +38,11 @@ public class EssentialsFeatures
 				Plugin essPlugin = pm.getPlugin("Essentials");
 				essentials = (IEssentials) essPlugin;
 
-				P.p.log("Essentials integration successful!");
+				SwornNations.get().log("Essentials integration successful!");
 			}
 			else
 			{
-				P.p.log("Essentials could not be found. Using backup Teleportation.");
+				SwornNations.get().log("Essentials could not be found. Using backup Teleportation.");
 			}
 		}
 	}
@@ -73,14 +73,14 @@ public class EssentialsFeatures
 		catch (Exception e)
 		{
 			player.sendMessage(ChatColor.RED + "Could not teleport using Essentials: " + e.getMessage());
-			P.p.log(Level.WARNING, "Could not teleport player %s using Essentials: %s", player.getName(), e);
+			SwornNations.get().log(Level.WARNING, "Could not teleport player %s using Essentials: %s", player.getName(), e);
 			if (Conf.debug)
 			{
 				e.printStackTrace();
 			}
 			else
 			{
-				P.p.log(Level.WARNING, "To see full stack trace, use \"f config debug true\"");
+				SwornNations.get().log(Level.WARNING, "To see full stack trace, use \"f config debug true\"");
 			}
 
 			return false;

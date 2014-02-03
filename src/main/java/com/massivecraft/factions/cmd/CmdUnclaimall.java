@@ -1,10 +1,11 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.LandUnclaimAllEvent;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Permission;
@@ -51,7 +52,7 @@ public class CmdUnclaimall extends FCommand
 		myFaction.msg("%s<i> unclaimed ALL of your faction's land.", fme.describeTo(myFaction, true));
 
 		if (Conf.logLandUnclaims)
-			P.p.log(fme.getName() + " unclaimed everything for the faction: " + myFaction.getTag());
+			SwornNations.get().log(fme.getName() + " unclaimed everything for the faction: " + myFaction.getTag());
 	}
 
 }

@@ -1,12 +1,13 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent;
 import com.massivecraft.factions.integration.Econ;
@@ -91,7 +92,7 @@ public class CmdDisband extends FCommand
 			}
 		}
 		if (Conf.logFactionDisband)
-			P.p.log("The faction " + faction.getTag() + " (" + faction.getId() + ") was disbanded by "
+			SwornNations.get().log("The faction " + faction.getTag() + " (" + faction.getId() + ") was disbanded by "
 					+ (senderIsConsole ? "console command" : fme.getName()) + ".");
 
 		if (Econ.shouldBeUsed() && ! senderIsConsole && Conf.bankPayOutToDisbander)
@@ -104,7 +105,7 @@ public class CmdDisband extends FCommand
 			{
 				String amountString = Econ.moneyString(amount);
 				msg("<i>You have been given the disbanded faction's bank, totaling <h>%s<i>.", amountString);
-				P.p.log(fme.getName() + " has been given bank holdings of " + amountString + " from disbanding " + faction.getTag() + ".");
+				SwornNations.get().log(fme.getName() + " has been given bank holdings of " + amountString + " from disbanding " + faction.getTag() + ".");
 			}
 		}
 

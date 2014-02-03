@@ -1,12 +1,12 @@
 package com.massivecraft.factions.cmd;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.LandUnclaimEvent;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Permission;
@@ -46,7 +46,7 @@ public class CmdUnclaim extends FCommand
 				msg("<i>Safe zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
+					SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
 							+ otherFaction.getTag());
 			}
 			else
@@ -63,7 +63,7 @@ public class CmdUnclaim extends FCommand
 				msg("<i>War zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
+					SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
 							+ otherFaction.getTag());
 			}
 			else
@@ -80,7 +80,7 @@ public class CmdUnclaim extends FCommand
 			msg("<i>You unclaimed this land.");
 
 			if (Conf.logLandUnclaims)
-				P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
+				SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 
 			return;
 		}
@@ -102,7 +102,7 @@ public class CmdUnclaim extends FCommand
 		}
 
 		LandUnclaimEvent unclaimEvent = new LandUnclaimEvent(flocation, otherFaction, fme);
-		P.p.getServer().getPluginManager().callEvent(unclaimEvent);
+		SwornNations.get().getServer().getPluginManager().callEvent(unclaimEvent);
 		if (unclaimEvent.isCancelled())
 			return;
 
@@ -126,7 +126,7 @@ public class CmdUnclaim extends FCommand
 		myFaction.msg("%s<i> unclaimed some land.", fme.describeTo(myFaction, true));
 
 		if (Conf.logLandUnclaims)
-			P.p.log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
+			SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 	}
 
 }

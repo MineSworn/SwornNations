@@ -7,8 +7,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import me.t7seven7t.factions.util.MyMaterial;
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.MyMaterial;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -441,7 +442,7 @@ public class Conf
 
 	public static void load()
 	{
-		P.p.persist.loadOrSaveDefault(i, Conf.class, "conf");
+		SwornNations.get().persist.loadOrSaveDefault(i, Conf.class, "conf");
 
 		if (Conf.resetAllPerms)
 		{
@@ -456,7 +457,7 @@ public class Conf
 
 	public static void save()
 	{
-		P.p.persist.save(i);
+		SwornNations.get().persist.save(i);
 	}
 
 	public static void addPerms()

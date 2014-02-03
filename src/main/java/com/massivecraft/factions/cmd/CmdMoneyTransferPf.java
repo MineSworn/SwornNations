@@ -1,9 +1,10 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.ChatColor;
 
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Permission;
@@ -43,7 +44,7 @@ public class CmdMoneyTransferPf extends FCommand
 		boolean success = Econ.transferMoney(fme, from, to, amount);
 
 		if (success && Conf.logMoneyTransactions)
-			P.p.log(ChatColor.stripColor(P.p.txt.parse("%s transferred %s from the player \"%s\" to the faction \"%s\"", fme.getName(),
+			SwornNations.get().log(ChatColor.stripColor(SwornNations.get().txt.parse("%s transferred %s from the player \"%s\" to the faction \"%s\"", fme.getName(),
 					Econ.moneyString(amount), from.describeTo(null), to.describeTo(null))));
 	}
 }

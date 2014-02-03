@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.ChatColor;
 
 import com.massivecraft.factions.integration.LWCFeatures;
@@ -189,10 +191,10 @@ public class Board
 			Faction faction = getAbsoluteFactionAt(entry.getKey());
 			if (faction.isNormal())
 			{
-				P.p.log("Faction is normal: " + faction.getTag());
+				SwornNations.get().log("Faction is normal: " + faction.getTag());
 				if (faction.hasHome() && faction.hasOutpost())
 				{
-					P.p.log("Faction has home and outpost");
+					SwornNations.get().log("Faction has home and outpost");
 					FLocation home = new FLocation(faction.getHome());
 					FLocation outpost = new FLocation(faction.getOutpost());
 					if ((home.getDistanceTo(entry.getKey()) > 20.0) && outpost.getDistanceTo(entry.getKey()) > 20.0)
@@ -204,7 +206,7 @@ public class Board
 
 				if (faction.hasHome() && !faction.hasOutpost())
 				{
-					P.p.log("Faction has home and no outpost");
+					SwornNations.get().log("Faction has home and no outpost");
 					FLocation home = new FLocation(faction.getHome());
 					if (home.getDistanceTo(entry.getKey()) > 20.0)
 					{
@@ -215,7 +217,7 @@ public class Board
 
 				if (!faction.hasHome() && faction.hasOutpost())
 				{
-					P.p.log("Faction has no home and an outpost");
+					SwornNations.get().log("Faction has no home and an outpost");
 					FLocation outpost = new FLocation(faction.getOutpost());
 					if (outpost.getDistanceTo(entry.getKey()) > 20.0)
 					{
@@ -244,7 +246,7 @@ public class Board
 				{
 					LWCFeatures.clearAllChests(entry.getKey());
 				}
-				P.p.log("Board cleaner removed " + entry.getValue() + " from " + entry.getKey());
+				SwornNations.get().log("Board cleaner removed " + entry.getValue() + " from " + entry.getKey());
 				iter.remove();
 			}
 		}
@@ -300,7 +302,7 @@ public class Board
 	{
 		ArrayList<String> ret = new ArrayList<String>();
 		Faction factionLoc = getAbsoluteFactionAt(flocation);
-		ret.add(P.p.txt.titleize("(" + flocation.getCoordString() + ") " + factionLoc.getTag(faction)));
+		ret.add(SwornNations.get().txt.titleize("(" + flocation.getCoordString() + ") " + factionLoc.getTag(faction)));
 
 		int halfWidth = Conf.mapWidth / 2;
 		int halfHeight = Conf.mapHeight / 2;
@@ -363,7 +365,7 @@ public class Board
 		}
 
 		// Get the compass
-		ArrayList<String> asciiCompass = AsciiCompass.getAsciiCompass(inDegrees, ChatColor.RED, P.p.txt.parse("<a>"));
+		ArrayList<String> asciiCompass = AsciiCompass.getAsciiCompass(inDegrees, ChatColor.RED, SwornNations.get().txt.parse("<a>"));
 
 		// Add the compass
 		ret.set(1, asciiCompass.get(0) + ret.get(1).substring(3 * 3));
@@ -433,7 +435,7 @@ public class Board
 			}
 			catch (NumberFormatException ex)
 			{
-				P.p.log("Could not load claim time data from board.json");
+				SwornNations.get().log("Could not load claim time data from board.json");
 			}
 		}
 
@@ -460,19 +462,19 @@ public class Board
 
 	public static boolean save()
 	{
-		P.p.log("Saving board to disk");
+		SwornNations.get().log("Saving board to disk");
 		dumpAsSaveFormat();
-		P.p.persist.save(i);
+		SwornNations.get().persist.save(i);
 
 		// try
 		// {
-		// DiscUtil.write(file, P.p.gson.toJson(dumpAsSaveFormat()));
-		// DiscUtil.write(file, P.p.gson.toJson(flocationClaimTimes));
+		// DiscUtil.write(file, SwornNations.get().gson.toJson(dumpAsSaveFormat()));
+		// DiscUtil.write(file, SwornNations.get().gson.toJson(flocationClaimTimes));
 		// }
 		// catch (Exception e)
 		// {
 		// e.printStackTrace();
-		// P.p.log("Failed to save the board to disk.");
+		// SwornNations.get().log("Failed to save the board to disk.");
 		// return false;
 		// }
 		//
@@ -482,15 +484,15 @@ public class Board
 
 	public static boolean load()
 	{
-		P.p.log("Loading board from disk");
+		SwornNations.get().log("Loading board from disk");
 
-		P.p.persist.loadOrSaveDefault(i, Board.class, "board");
+		SwornNations.get().persist.loadOrSaveDefault(i, Board.class, "board");
 		if (worldCoordIds != null && flocationClaimSaves != null)
 			loadFromSaveFormat(worldCoordIds, flocationClaimSaves);
 
 		// if ( ! file.exists())
 		// {
-		// P.p.log("No board to load from disk. Creating new file.");
+		// SwornNations.get().log("No board to load from disk. Creating new file.");
 		// save();
 		// return true;
 		// }
@@ -500,13 +502,13 @@ public class Board
 		// Type type = new
 		// TypeToken<Map<String,Map<String,String>>>(){}.getType();
 		// Map<String,Map<String,String>> worldCoordIds =
-		// P.p.gson.fromJson(DiscUtil.read(file), type);
+		// SwornNations.get().gson.fromJson(DiscUtil.read(file), type);
 		// loadFromSaveFormat(worldCoordIds, null);
 		// }
 		// catch (Exception e)
 		// {
 		// e.printStackTrace();
-		// P.p.log("Failed to load the board from disk.");
+		// SwornNations.get().log("Failed to load the board from disk.");
 		// return false;
 		// }
 

@@ -3,6 +3,8 @@ package com.massivecraft.factions.listeners;
 import java.util.UnknownFormatConversionException;
 import java.util.logging.Level;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,18 +16,11 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.ChatMode;
 import com.massivecraft.factions.struct.Relation;
 
 public class FactionsChatListener implements Listener
 {
-	private final P p;
-	public FactionsChatListener(final P p)
-	{
-		this.p = p;
-	}
-
 	// This is for handling slashless command usage and faction/alliance chat,
 	// set at lowest priority so Factions gets to them first
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -41,10 +36,10 @@ public class FactionsChatListener implements Listener
 
 		// Slashless factions commands need to be handled here if the user isn't
 		// in public chat mode
-		if (chat != ChatMode.PUBLIC && p.handleCommand(talkingPlayer, msg))
+		if (chat != ChatMode.PUBLIC && SwornNations.get().handleCommand(talkingPlayer, msg))
 		{
 			if (Conf.logPlayerCommands)
-				p.log(talkingPlayer.getName() + " issued command: " + msg);
+				SwornNations.get().log(talkingPlayer.getName() + " issued command: " + msg);
 			event.setCancelled(true);
 			return;
 		}
@@ -66,7 +61,7 @@ public class FactionsChatListener implements Listener
 					fplayer.sendMessage("[FCspy] " + myFaction.getTag() + ": " + message);
 			}
 
-			p.log(ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
+			SwornNations.get().log(ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
 
 			event.setCancelled(true);
 			return;
@@ -91,7 +86,7 @@ public class FactionsChatListener implements Listener
 					fplayer.sendMessage("[ACspy]: " + message);
 			}
 
-			p.log(ChatColor.stripColor("AllianceChat: " + message));
+			SwornNations.get().log(ChatColor.stripColor("AllianceChat: " + message));
 
 			event.setCancelled(true);
 			return;
@@ -116,7 +111,7 @@ public class FactionsChatListener implements Listener
 					fplayer.sendMessage("[NCspy]: " + message);
 			}
 
-			p.log(ChatColor.stripColor("NationChat: " + message));
+			SwornNations.get().log(ChatColor.stripColor("NationChat: " + message));
 
 			event.setCancelled(true);
 			return;
@@ -198,9 +193,9 @@ public class FactionsChatListener implements Listener
 				catch (UnknownFormatConversionException ex)
 				{
 					Conf.chatTagInsertIndex = 0;
-					P.p.log(Level.SEVERE, "Critical error in chat message formatting!");
-					P.p.log(Level.SEVERE, "NOTE: This has been automatically fixed right now by setting chatTagInsertIndex to 0.");
-					P.p.log(Level.SEVERE,
+					SwornNations.get().log(Level.SEVERE, "Critical error in chat message formatting!");
+					SwornNations.get().log(Level.SEVERE, "NOTE: This has been automatically fixed right now by setting chatTagInsertIndex to 0.");
+					SwornNations.get().log(Level.SEVERE,
 							"For a more proper fix, please read this regarding chat configuration: http://massivecraft.com/plugins/factions/config#Chat_configuration");
 					return;
 				}
@@ -208,7 +203,7 @@ public class FactionsChatListener implements Listener
 
 			// Write to the log... We will write the non colored message.
 			String nonColoredMsg = ChatColor.stripColor(String.format(nonColoredMsgFormat, talkingPlayer.getDisplayName(), msg));
-			p.getServer().getLogger().log(Level.INFO, nonColoredMsg);
+			SwornNations.get().getServer().getLogger().log(Level.INFO, nonColoredMsg);
 		}
 		else
 		{

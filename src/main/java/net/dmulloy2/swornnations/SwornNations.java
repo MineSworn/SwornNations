@@ -1,4 +1,4 @@
-package com.massivecraft.factions;
+package net.dmulloy2.swornnations;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -7,10 +7,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import me.t7seven7t.factions.util.MyMaterial;
-import me.t7seven7t.factions.util.MyMaterialTypeAdapter;
-import me.t7seven7t.factions.util.NPermissionManagerTypeAdapter;
-import me.t7seven7t.swornnations.npermissions.NPermissionManager;
+import net.dmulloy2.swornnations.adapters.MyMaterialTypeAdapter;
+import net.dmulloy2.swornnations.adapters.NPermissionManagerTypeAdapter;
+import net.dmulloy2.swornnations.types.MyMaterial;
+import net.dmulloy2.swornnations.types.NPermissionManager;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -23,6 +23,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.Conf;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.CmdAutoHelp;
 import com.massivecraft.factions.cmd.FCmdRoot;
 import com.massivecraft.factions.integration.Econ;
@@ -37,7 +44,6 @@ import com.massivecraft.factions.listeners.FactionsPlayerListener;
 import com.massivecraft.factions.struct.ChatMode;
 import com.massivecraft.factions.tasks.AutoCleanupTask;
 import com.massivecraft.factions.tasks.AutoLeaveTask;
-import com.massivecraft.factions.util.Console;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MapFLocToStringSetTypeAdapter;
 import com.massivecraft.factions.util.MyLocationTypeAdapter;
@@ -59,24 +65,18 @@ import com.massivecraft.factions.zcore.util.TextUtil;
  * </ul>
  */
 
-public class P extends MPlugin
+// TODO: Move from MPlugin dependency
+public class SwornNations extends MPlugin
 {
-	// Instance
-	public static P p;
-
+	private static SwornNations i;
+	public static SwornNations get() { return i; }
+	
 	// Listeners
 	public final FactionsPlayerListener playerListener;
 	public final FactionsChatListener chatListener;
 	public final FactionsEntityListener entityListener;
 	public final FactionsExploitListener exploitListener;
 	public final FactionsBlockListener blockListener;
-
-	public final Console console;
-
-	public Console getConsole()
-	{
-		return console;
-	}
 
 	// Persistance related
 	private boolean locked = false;
@@ -110,15 +110,14 @@ public class P extends MPlugin
 	public FCmdRoot cmdBase;
 	public CmdAutoHelp cmdAutoHelp;
 
-	public P()
+	public SwornNations()
 	{
-		p = this;
+		i = this;
 		this.playerListener = new FactionsPlayerListener();
-		this.chatListener = new FactionsChatListener(this);
+		this.chatListener = new FactionsChatListener();
 		this.entityListener = new FactionsEntityListener();
 		this.exploitListener = new FactionsExploitListener();
 		this.blockListener = new FactionsBlockListener();
-		this.console = Console.get();
 	}
 
 	@Override
@@ -179,9 +178,6 @@ public class P extends MPlugin
 		// Since some other plugins execute commands directly through this
 		// command interface, provide it
 		getCommand(refCommand).setExecutor(this);
-
-//		getCommand("home").setExecutor(new CmdHome());
-//		getCommand("sethome").setExecutor(new CmdSetHome());
 
 		postEnable();
 		this.loadSuccessful = true;

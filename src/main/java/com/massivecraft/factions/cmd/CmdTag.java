@@ -2,12 +2,12 @@ package com.massivecraft.factions.cmd;
 
 import java.util.ArrayList;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.FactionRenameEvent;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.MiscUtil;
@@ -69,7 +69,7 @@ public class CmdTag extends FCommand
 
 		// trigger the faction rename event (cancellable)
 		FactionRenameEvent renameEvent = new FactionRenameEvent(fme, tag);
-		P.p.getServer().getPluginManager().callEvent(renameEvent);
+		SwornNations.get().getServer().getPluginManager().callEvent(renameEvent);
 		if (renameEvent.isCancelled())
 			return;
 

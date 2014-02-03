@@ -1,4 +1,6 @@
-package com.massivecraft.factions.util;
+package net.dmulloy2.swornnations.util;
+
+import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.struct.Material;
 
@@ -10,6 +12,8 @@ import com.massivecraft.factions.struct.Material;
 
 public class MaterialUtil
 {
+	private MaterialUtil() { }
+
 	/**
 	 * Returns the {@link org.bukkit.Material} from a given string
 	 * 
@@ -19,14 +23,41 @@ public class MaterialUtil
 	 */
 	public static org.bukkit.Material getMaterial(String string)
 	{
-		if (MiscUtil.isInteger(string))
+		if (NumberUtil.isInt(string))
 		{
 			return getMaterial(Integer.parseInt(string));
 		}
 		else
 		{
-			return org.bukkit.Material.matchMaterial(string);
+			return matchMaterial(string);
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private static org.bukkit.Material matchMaterial(String string)
+	{
+		org.bukkit.Material material = null;
+
+		try
+		{
+			material = org.bukkit.Material.matchMaterial(string);
+		}
+		catch (Throwable ex)
+		{
+		}
+
+		if (material == null)
+		{
+			try
+			{
+				material = Bukkit.getUnsafe().getMaterialFromInternalName(string);
+			}
+			catch (Throwable ex)
+			{
+			}
+		}
+
+		return material;
 	}
 
 	/**

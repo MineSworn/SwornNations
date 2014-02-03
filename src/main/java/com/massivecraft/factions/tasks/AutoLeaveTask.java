@@ -1,10 +1,11 @@
 package com.massivecraft.factions.tasks;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.P;
 
 public class AutoLeaveTask extends BukkitRunnable
 {
@@ -22,6 +23,6 @@ public class AutoLeaveTask extends BukkitRunnable
 
 		// maybe setting has been changed? if so, restart task at new rate
 		if (this.rate != Conf.autoLeaveRoutineRunsEveryXMinutes)
-			P.p.startAutoLeaveTask(true);
+			SwornNations.get().startAutoLeaveTask(true);
 	}
 }

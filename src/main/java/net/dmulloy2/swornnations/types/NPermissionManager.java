@@ -1,4 +1,4 @@
-package me.t7seven7t.swornnations.npermissions;
+package net.dmulloy2.swornnations.types;
 
 import java.util.Collections;
 import java.util.HashMap;

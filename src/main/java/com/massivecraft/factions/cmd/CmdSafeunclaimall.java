@@ -1,9 +1,10 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdSafeunclaimall extends FCommand
@@ -35,7 +36,7 @@ public class CmdSafeunclaimall extends FCommand
 		msg("<i>You unclaimed ALL safe zone land.");
 
 		if (Conf.logLandUnclaims)
-			P.p.log(fme.getName() + " unclaimed all safe zones.");
+			SwornNations.get().log(fme.getName() + " unclaimed all safe zones.");
 	}
 
 }

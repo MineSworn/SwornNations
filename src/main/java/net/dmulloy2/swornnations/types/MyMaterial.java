@@ -1,4 +1,4 @@
-package me.t7seven7t.factions.util;
+package net.dmulloy2.swornnations.types;
 
 import org.bukkit.Material;
 

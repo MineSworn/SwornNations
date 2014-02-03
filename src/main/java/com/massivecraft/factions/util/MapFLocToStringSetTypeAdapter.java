@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonArray;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializationContext;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializer;
@@ -20,7 +22,6 @@ import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializationContext;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
 
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.P;
 
 public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLocation, Set<String>>>,
 		JsonSerializer<Map<FLocation, Set<String>>>
@@ -71,7 +72,7 @@ public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLoca
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-			P.p.log(Level.WARNING, "Error encountered while deserializing a Map of FLocations to String Sets.");
+			SwornNations.get().log(Level.WARNING, "Error encountered while deserializing a Map of FLocations to String Sets.");
 			return null;
 		}
 	}
@@ -125,7 +126,7 @@ public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLoca
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-			P.p.log(Level.WARNING, "Error encountered while serializing a Map of FLocations to String Sets.");
+			SwornNations.get().log(Level.WARNING, "Error encountered while serializing a Map of FLocations to String Sets.");
 			return obj;
 		}
 	}

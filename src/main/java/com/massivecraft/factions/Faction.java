@@ -10,8 +10,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
-import me.t7seven7t.swornnations.npermissions.NPermissionManager;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.NPermission;
+import net.dmulloy2.swornnations.types.NPermissionManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -670,7 +671,7 @@ public class Faction extends Entity implements EconomyParticipator
 		if (this.isPlayerFreeType())
 			return ret;
 
-		for (Player player : P.p.getServer().getOnlinePlayers())
+		for (Player player : SwornNations.get().getServer().getOnlinePlayers())
 		{
 			FPlayer fplayer = FPlayers.i.get(player);
 			if (fplayer.getFaction() == this)
@@ -690,7 +691,7 @@ public class Faction extends Entity implements EconomyParticipator
 		if (this.isPlayerFreeType())
 			return false;
 
-		for (Player player : P.p.getServer().getOnlinePlayers())
+		for (Player player : SwornNations.get().getServer().getOnlinePlayers())
 		{
 			FPlayer fplayer = FPlayers.i.get(player);
 			if (fplayer.getFaction() == this)
@@ -741,7 +742,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 			// no members left and faction isn't permanent, so disband it
 			if (Conf.logFactionDisband)
-				P.p.log("The faction " + this.getTag() + " (" + this.getId() + ") has been disbanded since it has no members left.");
+				SwornNations.get().log("The faction " + this.getTag() + " (" + this.getId() + ") has been disbanded since it has no members left.");
 
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
@@ -757,7 +758,7 @@ public class Faction extends Entity implements EconomyParticipator
 			replacements.get(0).setRole(Role.ADMIN);
 			this.msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.", oldLeader == null ? ""
 					: oldLeader.getName(), replacements.get(0).getName());
-			P.p.log("Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: "
+			SwornNations.get().log("Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: "
 					+ replacements.get(0).getName());
 		}
 	}
@@ -768,7 +769,7 @@ public class Faction extends Entity implements EconomyParticipator
 	@Override
 	public void msg(String message, Object... args)
 	{
-		message = P.p.txt.parse(message, args);
+		message = SwornNations.get().txt.parse(message, args);
 
 		for (FPlayer fplayer : this.getFPlayersWhereOnline(true))
 		{

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
+import net.dmulloy2.swornnations.SwornNations;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -13,7 +14,6 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
@@ -32,24 +32,24 @@ public class Econ
 
 		if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null)
 		{
-			P.p.log(integrationFail + "is not installed.");
+			SwornNations.get().log(integrationFail + "is not installed.");
 			return;
 		}
 
 		RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null)
 		{
-			P.p.log(integrationFail + "is not hooked into an economy plugin.");
+			SwornNations.get().log(integrationFail + "is not hooked into an economy plugin.");
 			return;
 		}
 		econ = rsp.getProvider();
 
-		P.p.log("Economy integration through %s!", econ.getName());
+		SwornNations.get().log("Economy integration through %s!", econ.getName());
 
 		if (!Conf.econEnabled)
-			P.p.log("NOTE: Economy is disabled. You can enable it with the command: f config econEnabled true");
+			SwornNations.get().log("NOTE: Economy is disabled. You can enable it with the command: f config econEnabled true");
 
-		P.p.cmdBase.cmdHelp.updateHelp();
+		SwornNations.get().cmdBase.cmdHelp.updateHelp();
 
 		oldMoneyDoTransfer();
 	}
@@ -83,7 +83,7 @@ public class Econ
 	{
 		if (!shouldBeUsed())
 		{
-			P.p.log(Level.WARNING, "Vault does not appear to be hooked into an economy plugin.");
+			SwornNations.get().log(Level.WARNING, "Vault does not appear to be hooked into an economy plugin.");
 			return;
 		}
 		to.msg("<a>%s's<i> balance is <h>%s<i>.", about.describeTo(to, true), Econ.moneyString(econ.getBalance(about.getAccountId())));

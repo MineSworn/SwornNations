@@ -1,8 +1,10 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.Console;
+
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.struct.Permission;
 
@@ -72,6 +74,6 @@ public class CmdPowerBoost extends FCommand
 
 		msg("%s <i>now has a %s of %s to min and max power levels.", target.describeTo(rme), action, targetPower);
 		if (! senderIsConsole)
-			P.p.log("%s has set the power %s for %s to %s", fme.getName(), action, target.describeTo(P.p.getConsole()), targetPower);
+			SwornNations.get().log("%s has set the power %s for %s to %s", fme.getName(), action, target.describeTo(Console.get()), targetPower);
 	}
 }

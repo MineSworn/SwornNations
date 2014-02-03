@@ -3,6 +3,8 @@ package com.massivecraft.factions.integration;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -19,7 +21,6 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 
 public class LWCFeatures
 {
@@ -32,7 +33,7 @@ public class LWCFeatures
 			return;
 
 		lwc = ((LWCPlugin) plugin).getLWC();
-		P.p.log("Successfully hooked into LWC!"
+		SwornNations.get().log("Successfully hooked into LWC!"
 				+ (Conf.lwcIntegration ? "" : " Integration is currently disabled, though (\"lwcIntegration\")."));
 	}
 

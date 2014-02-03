@@ -10,7 +10,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 
-import com.massivecraft.factions.P;
+import net.dmulloy2.swornnations.SwornNations;
 
 public class DiscUtil
 {
@@ -162,7 +162,7 @@ public class DiscUtil
 	public static boolean checkDiskSpace()
 	{
 		// Free space in folder
-		long freeSpace = P.p.getDataFolder().getFreeSpace();
+		long freeSpace = SwornNations.get().getDataFolder().getFreeSpace();
 
 		if (freeSpace == 0)
 		{
@@ -172,13 +172,13 @@ public class DiscUtil
 				lastWarn = now;
 
 				// Warn players
-				P.p.getServer().broadcastMessage(P.p.txt.parse("<b>[SEVERE] Factions has detected that disk space is low."));
-				P.p.getServer().broadcastMessage(P.p.txt.parse("<b>[SEVERE] Please make some space on your Disk!"));
-				P.p.getServer().broadcastMessage(P.p.txt.parse("<b>[SEVERE] This message will be displayed every 5 minutes."));
+				SwornNations.get().getServer().broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] Factions has detected that disk space is low."));
+				SwornNations.get().getServer().broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] Please make some space on your Disk!"));
+				SwornNations.get().getServer().broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] This message will be displayed every 5 minutes."));
 
 				// Lock the factions plugin
-				P.p.setLocked(true);
-				P.p.setLockReason("low disk space");
+				SwornNations.get().setLocked(true);
+				SwornNations.get().setLockReason("low disk space");
 				return true;
 			}
 		}

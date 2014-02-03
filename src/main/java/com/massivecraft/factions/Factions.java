@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 
@@ -20,14 +22,14 @@ import com.massivecraft.factions.zcore.util.TextUtil;
 public class Factions extends EntityCollection<Faction>
 {
 	public static Factions i = new Factions();
-	private final P p;
+	private final SwornNations p;
 
 	private Factions()
 	{
-		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(), new File(P.p.getDataFolder(),
-				"factions.json"), P.p.gson);
+		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(), new File(SwornNations.get().getDataFolder(),
+				"factions.json"), SwornNations.get().gson);
 
-		this.p = P.p;
+		this.p = SwornNations.get();
 	}
 
 	@Override
@@ -138,19 +140,19 @@ public class Factions extends EntityCollection<Faction>
 
 		if (MiscUtil.getComparisonString(str).length() < Conf.factionTagLengthMin)
 		{
-			errors.add(P.p.txt.parse("<i>The faction tag can't be shorter than <h>%s<i> chars.", Conf.factionTagLengthMin));
+			errors.add(SwornNations.get().txt.parse("<i>The faction tag can't be shorter than <h>%s<i> chars.", Conf.factionTagLengthMin));
 		}
 
 		if (str.length() > Conf.factionTagLengthMax)
 		{
-			errors.add(P.p.txt.parse("<i>The faction tag can't be longer than <h>%s<i> chars.", Conf.factionTagLengthMax));
+			errors.add(SwornNations.get().txt.parse("<i>The faction tag can't be longer than <h>%s<i> chars.", Conf.factionTagLengthMax));
 		}
 
 		for (char c : str.toCharArray())
 		{
 			if (!MiscUtil.substanceChars.contains(String.valueOf(c)))
 			{
-				errors.add(P.p.txt.parse("<i>Faction tag must be alphanumeric. \"<h>%s<i>\" is not allowed.", c));
+				errors.add(SwornNations.get().txt.parse("<i>Faction tag must be alphanumeric. \"<h>%s<i>\" is not allowed.", c));
 			}
 		}
 

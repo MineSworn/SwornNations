@@ -1,14 +1,15 @@
 /**
  * (c) 2013 dmulloy2
  */
-package com.massivecraft.factions.util;
+package net.dmulloy2.swornnations.types;
+
+import net.dmulloy2.swornnations.SwornNations;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.zcore.util.TextUtil;
@@ -107,7 +108,7 @@ public class Console implements RelationParticipator
 	@Override
 	public void msg(String str, Object... args)
 	{
-		sendMessage(P.p.txt.parse(str, args));
+		sendMessage(SwornNations.get().txt.parse(str, args));
 	}
 
 	@Override

@@ -2,7 +2,9 @@ package com.massivecraft.factions.cmd;
 
 import java.util.List;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.Console;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,14 +16,13 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.zcore.MCommand;
 
-public abstract class FCommand extends MCommand<P>
+public abstract class FCommand extends MCommand<SwornNations>
 {
 	public boolean disableOnLock;
 
@@ -39,7 +40,7 @@ public abstract class FCommand extends MCommand<P>
 
 	public FCommand()
 	{
-		super(P.p);
+		super(SwornNations.get());
 
 		// Due to safety reasons it defaults to disable on lock.
 		disableOnLock = true;
@@ -68,7 +69,7 @@ public abstract class FCommand extends MCommand<P>
 		{
 			this.fme = null;
 			this.myFaction = null;
-			this.rme = p.getConsole();
+			this.rme = Console.get();
 		}
 
 		super.execute(sender, args, commandChain);

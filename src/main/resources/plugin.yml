@@ -1,12 +1,12 @@
 name: SwornNations
-main: com.massivecraft.factions.P
+main: net.dmulloy2.swornnations.SwornNations
 version: ${project.version} (Build ${project.build.number})
-authors: [Olof Larsson, Brett Flannigan, dmulloy2]
+authors: [dmulloy2, Olof Larsson, Brett Flannigan]
 softdepend: [PermissionsEx, Essentials, EssentialsChat, SwornChat, PExChat, LWC, Vault, WorldEdit, WorldGuard]
 commands:
   factions:
     description: Reference command for Factions.
-    aliases: [f]
+    aliases: [f, nations]
 permissions:
   factions.kit.admin:
     description: All faction permissions.

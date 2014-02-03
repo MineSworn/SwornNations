@@ -3,6 +3,8 @@ package com.massivecraft.factions.util;
 import java.lang.reflect.Type;
 import java.util.logging.Level;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializationContext;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializer;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonElement;
@@ -10,8 +12,6 @@ import org.bukkit.craftbukkit.libs.com.google.gson.JsonObject;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonParseException;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializationContext;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
-
-import com.massivecraft.factions.P;
 
 public class MyLocationTypeAdapter implements JsonDeserializer<LazyLocation>, JsonSerializer<LazyLocation>
 {
@@ -42,7 +42,7 @@ public class MyLocationTypeAdapter implements JsonDeserializer<LazyLocation>, Js
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-			P.p.log(Level.WARNING, "Error encountered while deserializing a LazyLocation.");
+			SwornNations.get().log(Level.WARNING, "Error encountered while deserializing a LazyLocation.");
 			return null;
 		}
 	}
@@ -66,7 +66,7 @@ public class MyLocationTypeAdapter implements JsonDeserializer<LazyLocation>, Js
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-			P.p.log(Level.WARNING, "Error encountered while serializing a LazyLocation.");
+			SwornNations.get().log(Level.WARNING, "Error encountered while serializing a LazyLocation.");
 			return obj;
 		}
 	}

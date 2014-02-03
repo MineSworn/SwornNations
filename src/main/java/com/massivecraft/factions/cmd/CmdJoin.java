@@ -1,9 +1,10 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
@@ -119,15 +120,15 @@ public class CmdJoin extends FCommand
 			fplayer.setRole(Role.INITIATE);
 			faction.msg("%s<i> has been set to \"Initiate\". This rank does not allow the placing of TNT or access to public chests.",
 					fplayer.describeTo(faction, true));
-			faction.msg("<i>This status can be removed using: " + P.p.cmdBase.cmdInitiate.getUseageTemplate(false) + "<i>.");
+			faction.msg("<i>This status can be removed using: " + SwornNations.get().cmdBase.cmdInitiate.getUseageTemplate(false) + "<i>.");
 		}
 
 		if (Conf.logFactionJoin)
 		{
 			if (samePlayer)
-				P.p.log("%s joined the faction %s.", fplayer.getName(), faction.getTag());
+				SwornNations.get().log("%s joined the faction %s.", fplayer.getName(), faction.getTag());
 			else
-				P.p.log("%s moved the player %s into the faction %s.", fme.getName(), fplayer.getName(), faction.getTag());
+				SwornNations.get().log("%s moved the player %s into the faction %s.", fme.getName(), fplayer.getName(), faction.getTag());
 		}
 	}
 }

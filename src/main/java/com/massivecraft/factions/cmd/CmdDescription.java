@@ -1,6 +1,6 @@
 package com.massivecraft.factions.cmd;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
@@ -40,7 +40,7 @@ public class CmdDescription extends FCommand
 		// if
 		// (sender.hasPermission("pexchat.color")||sender.hasPermission("essentials.chat.color"))
 		// myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("&",
-		// "§")); // If player has permission for chat color, let 'em use it
+		// "ï¿½")); // If player has permission for chat color, let 'em use it
 		// else
 		myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("(&([a-f0-9]))", "")); // If
 																								// not,

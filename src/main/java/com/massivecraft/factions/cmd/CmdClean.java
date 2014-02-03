@@ -1,7 +1,8 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdClean extends FCommand
@@ -26,7 +27,7 @@ public class CmdClean extends FCommand
 	{
 		FPlayers.i.cleanWildernessPlayers();
 		fme.msg("<i>Cleaning all players that are in wilderness.");
-		P.p.log(fme.getName() + " has begun cleaning of all players who are in wilderness.");
+		SwornNations.get().log(fme.getName() + " has begun cleaning of all players who are in wilderness.");
 	}
 
 }

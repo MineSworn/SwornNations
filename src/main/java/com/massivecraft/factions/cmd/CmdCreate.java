@@ -2,6 +2,8 @@ package com.massivecraft.factions.cmd;
 
 import java.util.ArrayList;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.Bukkit;
 
 import com.massivecraft.factions.Conf;
@@ -9,7 +11,6 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.event.FactionCreateEvent;
 import com.massivecraft.factions.struct.Permission;
@@ -112,7 +113,7 @@ public class CmdCreate extends FCommand
 		msg("<i>You should now: %s", p.cmdBase.cmdDescription.getUseageTemplate());
 
 		if (Conf.logFactionCreate)
-			P.p.log(fme.getName() + " created a new faction: " + tag);
+			SwornNations.get().log(fme.getName() + " created a new faction: " + tag);
 	}
 
 }

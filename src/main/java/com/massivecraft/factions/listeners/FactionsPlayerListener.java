@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import me.t7seven7t.factions.util.MyMaterial;
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.MyMaterial;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -38,7 +39,6 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
@@ -634,7 +634,7 @@ public class FactionsPlayerListener implements Listener
 				{
 					me.msg("<b>Please set a faction home first. "
 							+ (me.getRole().value < Role.MODERATOR.value ? "<i>Ask your leader to:" : "<i>You should:"));
-					me.sendMessage(P.p.cmdBase.cmdSethome.getUseageTemplate());
+					me.sendMessage(SwornNations.get().cmdBase.cmdSethome.getUseageTemplate());
 					return true;
 				}
 
@@ -726,7 +726,7 @@ public class FactionsPlayerListener implements Listener
 		if (message.startsWith("/home") && Conf.playerHomesEnabled)
 		{
 			event.setCancelled(true);
-			P.p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: /home");
+			SwornNations.get().getServer().getLogger().info(event.getPlayer().getName() + " issued server command: /home");
 
 			FPlayer fme = FPlayers.i.get(event.getPlayer());
 			if (! fme.hasHome())
@@ -788,7 +788,7 @@ public class FactionsPlayerListener implements Listener
 		else if (message.startsWith("/sethome") && Conf.playerHomesEnabled)
 		{
 			event.setCancelled(true);
-			P.p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: /sethome");
+			SwornNations.get().getServer().getLogger().info(event.getPlayer().getName() + " issued server command: /sethome");
 
 			FPlayer fme = FPlayers.i.get(event.getPlayer());
 			if (! fme.hasFaction())

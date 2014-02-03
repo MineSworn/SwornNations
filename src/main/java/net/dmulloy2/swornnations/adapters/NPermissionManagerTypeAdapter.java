@@ -1,4 +1,4 @@
-package me.t7seven7t.factions.util;
+package net.dmulloy2.swornnations.adapters;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -7,8 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
-import me.t7seven7t.swornnations.npermissions.NPermissionManager;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.NPermission;
+import net.dmulloy2.swornnations.types.NPermissionManager;
 
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonArray;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializationContext;
@@ -21,7 +22,6 @@ import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Role;
 
 public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissionManager>, JsonSerializer<NPermissionManager>
@@ -75,7 +75,7 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-			P.p.log(Level.WARNING, "Error encountered while deserializing a NPermissionManager.");
+			SwornNations.get().log(Level.WARNING, "Error encountered while deserializing a NPermissionManager.");
 			return null;
 		}
 	}
@@ -118,7 +118,7 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-			P.p.log(Level.WARNING, "Error encountered while serializing NPermissionManager.");
+			SwornNations.get().log(Level.WARNING, "Error encountered while serializing NPermissionManager.");
 			return obj;
 		}
 	}

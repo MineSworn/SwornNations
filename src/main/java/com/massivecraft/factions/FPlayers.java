@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 
 import com.massivecraft.factions.struct.Role;
@@ -14,13 +16,12 @@ import com.massivecraft.factions.zcore.persist.PlayerEntityCollection;
 public class FPlayers extends PlayerEntityCollection<FPlayer>
 {
 	public static FPlayers i = new FPlayers();
-
-	P p = P.p;
+	private final SwornNations p = SwornNations.get();
 
 	private FPlayers()
 	{
 		super(FPlayer.class, new CopyOnWriteArrayList<FPlayer>(), new ConcurrentSkipListMap<String, FPlayer>(String.CASE_INSENSITIVE_ORDER),
-				new File(P.p.getDataFolder(), "players.json"), P.p.gson);
+				new File(SwornNations.get().getDataFolder(), "players.json"), SwornNations.get().gson);
 
 		this.setCreative(true);
 	}
@@ -60,7 +61,7 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 			if (fplayer.isOffline() && now - fplayer.getLastLoginTime() > toleranceMillis)
 			{
 				if (Conf.logFactionLeave || Conf.logFactionKick)
-					P.p.log("Player " + fplayer.getName() + " was auto-removed due to inactivity.");
+					SwornNations.get().log("Player " + fplayer.getName() + " was auto-removed due to inactivity.");
 
 				// if player is faction admin, sort out the faction since he's
 				// going away

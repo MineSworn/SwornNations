@@ -6,12 +6,13 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Set;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Permission;
 
 public class CmdConfig extends FCommand
@@ -273,7 +274,7 @@ public class CmdConfig extends FCommand
 			sendMessage(success);
 			if (sender instanceof Player)
 			{
-				P.p.log(success + " Command was run by " + fme.getName() + ".");
+				SwornNations.get().log(success + " Command was run by " + fme.getName() + ".");
 			}
 		}
 

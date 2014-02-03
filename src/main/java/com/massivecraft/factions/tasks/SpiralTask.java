@@ -2,12 +2,13 @@ package com.massivecraft.factions.tasks;
 
 import java.util.logging.Level;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.P;
 
 /*
  * reference diagram, task should move in this pattern out from chunk 0 in the center.
@@ -47,7 +48,7 @@ public abstract class SpiralTask implements Runnable
 		this.world = Bukkit.getWorld(fLocation.getWorldName());
 		if (this.world == null)
 		{
-			P.p.log(Level.WARNING, "[SpiralTask] A valid world must be specified!");
+			SwornNations.get().log(Level.WARNING, "[SpiralTask] A valid world must be specified!");
 			this.stop();
 			return;
 		}
@@ -58,7 +59,7 @@ public abstract class SpiralTask implements Runnable
 		this.readyToGo = true;
 
 		// get this party started
-		this.setTaskID(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(P.p, this, 2, 2));
+		this.setTaskID(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(SwornNations.get(), this, 2, 2));
 	}
 
 	/*
@@ -198,7 +199,7 @@ public abstract class SpiralTask implements Runnable
 	// for successful completion
 	public void finish()
 	{
-		// P.p.log("SpiralTask successfully completed!");
+		// SwornNations.get().log("SpiralTask successfully completed!");
 		this.stop();
 	}
 

@@ -3,7 +3,7 @@ package com.massivecraft.factions.cmd;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import org.bukkit.ChatColor;
 

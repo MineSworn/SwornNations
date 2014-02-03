@@ -3,7 +3,8 @@ package com.massivecraft.factions;
 import java.util.HashSet;
 import java.util.Set;
 
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -622,7 +623,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	public void sendFactionHereMessage()
 	{
 		Faction factionHere = Board.getFactionAt(this.getLastStoodAt());
-		String msg = P.p.txt.parse("<i>") + " ~ " + factionHere.getTag(this);
+		String msg = SwornNations.get().txt.parse("<i>") + " ~ " + factionHere.getTag(this);
 		if (factionHere.getDescription().length() > 0)
 		{
 			msg += " - " + factionHere.getDescription();
@@ -665,7 +666,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			return;
 
 		FPlayerLeaveEvent leaveEvent = new FPlayerLeaveEvent(this, myFaction, FPlayerLeaveEvent.PlayerLeaveReason.LEAVE);
-		P.p.getServer().getPluginManager().callEvent(leaveEvent);
+		SwornNations.get().getServer().getPluginManager().callEvent(leaveEvent);
 		if (leaveEvent.isCancelled())
 			return;
 
@@ -689,7 +690,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 			}
 
 			if (Conf.logFactionLeave)
-				P.p.log(this.getName() + " left the faction: " + myFaction.getTag());
+				SwornNations.get().log(this.getName() + " left the faction: " + myFaction.getTag());
 		}
 
 		this.resetFactionData();
@@ -704,7 +705,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 			myFaction.detach();
 			if (Conf.logFactionDisband)
-				P.p.log("The faction " + myFaction.getTag() + " (" + myFaction.getId() + ") was disbanded due to the last player ("
+				SwornNations.get().log("The faction " + myFaction.getTag() + " (" + myFaction.getId() + ") was disbanded due to the last player ("
 						+ this.getName() + ") leaving.");
 		}
 	}
@@ -735,11 +736,11 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		if (Conf.worldGuardChecking && WorldGuard.checkForRegionsInChunk(location))
 		{
 			// Checks for WorldGuard regions in the chunk attempting to be claimed
-			error = P.p.txt.parse("<b>This land is protected");
+			error = SwornNations.get().txt.parse("<b>This land is protected");
 		}
 		else if (Conf.worldsNoClaiming.contains(flocation.getWorldName()))
 		{
-			error = P.p.txt.parse("<b>Sorry, this world has land claiming disabled.");
+			error = SwornNations.get().txt.parse("<b>Sorry, this world has land claiming disabled.");
 		}
 		else if (this.isAdminBypassing())
 		{
@@ -755,44 +756,44 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		}
 		else if (myFaction != forFaction)
 		{
-			error = P.p.txt.parse("<b>You can't claim land for <h>%s<b>.", forFaction.describeTo(this));
+			error = SwornNations.get().txt.parse("<b>You can't claim land for <h>%s<b>.", forFaction.describeTo(this));
 		}
 		else if (forFaction == currentFaction)
 		{
-			error = P.p.txt.parse("%s<i> already owns this land.", forFaction.describeTo(this, true));
+			error = SwornNations.get().txt.parse("%s<i> already owns this land.", forFaction.describeTo(this, true));
 		}
 		else if (this.getRole().value < Role.MODERATOR.value)
 		{
-			error = P.p.txt.parse("<b>You must be <h>%s<b> to claim land.", Role.MODERATOR.toString());
+			error = SwornNations.get().txt.parse("<b>You must be <h>%s<b> to claim land.", Role.MODERATOR.toString());
 		}
 		else if (forFaction.getFPlayers().size() < Conf.claimsRequireMinFactionMembers && ownedLand >= 1)
 		{
-			error = P.p.txt.parse("<b>Factions must have at least <h>%s<b> members to claim more than 1 land.",
+			error = SwornNations.get().txt.parse("<b>Factions must have at least <h>%s<b> members to claim more than 1 land.",
 					Conf.claimsRequireMinFactionMembers);
 		}
 		else if (currentFaction.isSafeZone())
 		{
-			error = P.p.txt.parse("<b>You can not claim a Safe Zone.");
+			error = SwornNations.get().txt.parse("<b>You can not claim a Safe Zone.");
 		}
 		else if (currentFaction.isWarZone())
 		{
-			error = P.p.txt.parse("<b>You can not claim a War Zone.");
+			error = SwornNations.get().txt.parse("<b>You can not claim a War Zone.");
 		}
 		else if (ownedLand >= forFaction.getPowerRounded())
 		{
-			error = P.p.txt.parse("<b>You can't claim more land! You need more power!");
+			error = SwornNations.get().txt.parse("<b>You can't claim more land! You need more power!");
 		}
 		else if (Conf.claimedLandsMax != 0 && ownedLand >= Conf.claimedLandsMax && forFaction.isNormal())
 		{
-			error = P.p.txt.parse("<b>Limit reached. You can't claim more land!");
+			error = SwornNations.get().txt.parse("<b>Limit reached. You can't claim more land!");
 		}
 		else if (currentFaction.getRelationTo(forFaction) == Relation.ALLY)
 		{
-			error = P.p.txt.parse("<b>You can't claim the land of your allies.");
+			error = SwornNations.get().txt.parse("<b>You can't claim the land of your allies.");
 		}
 		else if (currentFaction.getRelationTo(forFaction) == Relation.NATION)
 		{
-			error = P.p.txt.parse("<b>You can't claim the land belonging to other states of your nation.");
+			error = SwornNations.get().txt.parse("<b>You can't claim the land belonging to other states of your nation.");
 		}
 		else if (Conf.claimsMustBeConnected && !isAdminBypassing() && myFaction.getLandRoundedInWorld(flocation.getWorldName()) > 0
 				&& ! Board.isConnectedLocation(flocation, myFaction)
@@ -804,34 +805,34 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 				error = error + " or controlled by another faction";
 
 			error = error + "!";
-			error = P.p.txt.parse(error);
+			error = SwornNations.get().txt.parse(error);
 		}
 		else if (currentFaction.isNormal())
 		{
 			if (myFaction.isPeaceful())
 			{
-				error = P.p.txt.parse("%s<i> owns this land. Your faction is peaceful, so you cannot claim land from other factions.",
+				error = SwornNations.get().txt.parse("%s<i> owns this land. Your faction is peaceful, so you cannot claim land from other factions.",
 						currentFaction.getTag(this));
 			}
 			else if (currentFaction.isPeaceful())
 			{
-				error = P.p.txt.parse("%s<i> owns this land, and is a peaceful faction. You cannot claim land from them.",
+				error = SwornNations.get().txt.parse("%s<i> owns this land, and is a peaceful faction. You cannot claim land from them.",
 						currentFaction.getTag(this));
 			}
 			else if ( ! currentFaction.hasLandInflation())
 			{
-				error = P.p.txt.parse("%s<i> owns this land and is strong enough to keep it.", currentFaction.getTag(this));
+				error = SwornNations.get().txt.parse("%s<i> owns this land and is strong enough to keep it.", currentFaction.getTag(this));
 				currentFaction.msg("%s <b>tried to claim over your land!", describeTo(currentFaction));
 			}
 			else if ( ! Board.isBorderLocation(flocation))
 			{
-				error = P.p.txt.parse("<b>You must start claiming land at the border of the territory.");
+				error = SwornNations.get().txt.parse("<b>You must start claiming land at the border of the territory.");
 			}
 			// TODO: Make sure this works
 			else if (currentFaction.hasHome() && Conf.homesMustBeLastClaimed && new FLocation(currentFaction.getHome()).equals(flocation)
 					&& Board.getFactionCoordCount(currentFaction) > 1)
 			{
-				error = P.p.txt.parse("<b>You cannot claim <h>%s<b>\'s faction home while they have other land left.", 
+				error = SwornNations.get().txt.parse("<b>You cannot claim <h>%s<b>\'s faction home while they have other land left.", 
 						currentFaction.getTag(this));
 			}
 		}
@@ -881,7 +882,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		}
 
 		LandClaimEvent claimEvent = new LandClaimEvent(flocation, forFaction, this);
-		P.p.getServer().getPluginManager().callEvent(claimEvent);
+		SwornNations.get().getServer().getPluginManager().callEvent(claimEvent);
 		if (claimEvent.isCancelled())
 			return false;
 
@@ -908,7 +909,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		forFaction.setPlayerAsOwner(getName(), flocation);
 
 		if (Conf.logLandClaims)
-			P.p.log(this.getName() + " claimed land at (" + flocation.getCoordString() + ") for the faction: " + forFaction.getTag());
+			SwornNations.get().log(this.getName() + " claimed land at (" + flocation.getCoordString() + ") for the faction: " + forFaction.getTag());
 
 		return true;
 	}
@@ -930,7 +931,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	@Override
 	public void msg(String str, Object... args)
 	{
-		this.sendMessage(P.p.txt.parse(str, args));
+		this.sendMessage(SwornNations.get().txt.parse(str, args));
 	}
 
 	private LazyLocation home;

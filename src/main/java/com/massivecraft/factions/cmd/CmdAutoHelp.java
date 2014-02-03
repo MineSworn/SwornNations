@@ -2,15 +2,16 @@ package com.massivecraft.factions.cmd;
 
 import java.util.ArrayList;
 
-import com.massivecraft.factions.P;
+import net.dmulloy2.swornnations.SwornNations;
+
 import com.massivecraft.factions.zcore.CommandVisibility;
 import com.massivecraft.factions.zcore.MCommand;
 
-public class CmdAutoHelp extends MCommand<P>
+public class CmdAutoHelp extends MCommand<SwornNations>
 {
 	public CmdAutoHelp()
 	{
-		super(P.p);
+		super(SwornNations.get());
 		this.aliases.add("?");
 		this.aliases.add("h");
 		this.aliases.add("help");

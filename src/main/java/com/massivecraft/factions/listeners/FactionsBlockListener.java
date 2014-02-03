@@ -1,7 +1,7 @@
 package com.massivecraft.factions.listeners;
 
-import me.t7seven7t.factions.util.MyMaterial;
-import me.t7seven7t.swornnations.npermissions.NPermission;
+import net.dmulloy2.swornnations.types.MyMaterial;
+import net.dmulloy2.swornnations.types.NPermission;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

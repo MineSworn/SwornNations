@@ -1,6 +1,9 @@
-package me.t7seven7t.factions.util;
+package net.dmulloy2.swornnations.adapters;
 
 import java.io.IOException;
+
+import net.dmulloy2.swornnations.types.MyMaterial;
+import net.dmulloy2.swornnations.util.MaterialUtil;
 
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.com.google.gson.TypeAdapter;
@@ -8,7 +11,6 @@ import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonToken;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
 
-import com.massivecraft.factions.util.MaterialUtil;
 
 public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 {

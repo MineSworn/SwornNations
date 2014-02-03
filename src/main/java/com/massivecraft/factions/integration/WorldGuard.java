@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.massivecraft.factions.P;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -39,13 +40,13 @@ public class WorldGuard
 		{
 			enabled = false;
 			wg = null;
-			P.p.log("Could not hook to WorldGuard. WorldGuard checks are disabled.");
+			SwornNations.get().log("Could not hook to WorldGuard. WorldGuard checks are disabled.");
 		}
 		else
 		{
 			wg = (WorldGuardPlugin) wgplug;
 			enabled = true;
-			P.p.log("Successfully hooked to WorldGuard.");
+			SwornNations.get().log("Successfully hooked to WorldGuard.");
 		}
 	}
 
