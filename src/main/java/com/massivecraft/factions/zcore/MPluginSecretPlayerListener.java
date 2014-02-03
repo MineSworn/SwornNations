@@ -20,12 +20,9 @@ public class MPluginSecretPlayerListener implements Listener
 		this.p = p;
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
 	{
-		if (event.isCancelled())
-			return;
-
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (p.logPlayerCommands())
@@ -34,12 +31,9 @@ public class MPluginSecretPlayerListener implements Listener
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
-		if (event.isCancelled())
-			return;
-
 		if (p.handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (p.logPlayerCommands())
@@ -49,7 +43,7 @@ public class MPluginSecretPlayerListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerPreLogin(PlayerLoginEvent event)
+	public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		for (EntityCollection<? extends Entity> ecoll : EM.class2Entities.values())
 		{
