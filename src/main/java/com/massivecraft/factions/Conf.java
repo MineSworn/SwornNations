@@ -465,6 +465,7 @@ public class Conf
 		defaultNationPermissions.add(NPermission.BUILD);
 		defaultNationPermissions.add(NPermission.BREAK);
 		defaultNationPermissions.add(NPermission.CHEST);
+		defaultNationPermissions.add(NPermission.OUTPOST);
 		defaultNationPermissions.add(NPermission.SWITCH);
 		defaultNationPermissions.add(NPermission.WARP);
 

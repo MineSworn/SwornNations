@@ -34,8 +34,9 @@ public class FactionsChatListener implements Listener
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		ChatMode chat = me.getChatMode();
 
-		// Slashless factions commands need to be handled here if the user isn't
-		// in public chat mode
+		// TODO: Get this back and working!
+		
+		// Slashless factions commands need to be handled here if the user isn't in public chat mode
 		if (chat != ChatMode.PUBLIC && SwornNations.get().handleCommand(talkingPlayer, msg))
 		{
 			if (Conf.logPlayerCommands)
@@ -43,6 +44,8 @@ public class FactionsChatListener implements Listener
 			event.setCancelled(true);
 			return;
 		}
+
+		// TODO: Rework faction chat to be compliant with /ignore and troll hell
 
 		// Is it a faction chat message?
 		if (chat == ChatMode.FACTION)

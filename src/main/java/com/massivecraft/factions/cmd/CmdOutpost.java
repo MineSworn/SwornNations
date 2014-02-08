@@ -3,6 +3,8 @@ package com.massivecraft.factions.cmd;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.swornnations.types.NPermission;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -31,6 +33,8 @@ public class CmdOutpost extends FCommand
 		senderMustBeMember = true;
 		senderMustBeModerator = false;
 		senderMustBeAdmin = false;
+
+		senderMustHaveNPermission = NPermission.OUTPOST;
 
 		this.setHelpShort("teleport to your faction outpost");
 	}

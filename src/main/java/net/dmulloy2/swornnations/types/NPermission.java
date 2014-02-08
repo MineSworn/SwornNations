@@ -2,7 +2,29 @@ package net.dmulloy2.swornnations.types;
 
 public enum NPermission
 {
-	ALLY, BUILD, BREAK, CHEST, CLAIM, DESCRIPTION, ENEMY, INVITE, KICK, MODERATOR, NATION, NEUTRAL, OFFICER, OWNER, PERM, SETHOME, SWITCH, TAG, TITLE, UNCLAIM, WARP, SETOUTPOST;
+	ALLY,
+	BUILD,
+	BREAK,
+	CHEST,
+	CLAIM,
+	DESCRIPTION,
+	ENEMY,
+	INVITE,
+	KICK,
+	MODERATOR,
+	NATION,
+	NEUTRAL,
+	OFFICER,
+	OWNER,
+	PERM,
+	SETHOME,
+	SWITCH,
+	TAG,
+	TITLE,
+	UNCLAIM,
+	WARP,
+	SETOUTPOST,
+	OUTPOST;
 
 	public static NPermission match(String s)
 	{
@@ -13,5 +35,4 @@ public enum NPermission
 		}
 		return null;
 	}
-
 }
