@@ -1,4 +1,4 @@
-package com.massivecraft.factions.types;
+package net.dmulloy2.swornnations.types;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;

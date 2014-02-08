@@ -4,9 +4,9 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.logging.Level;
 
-import com.massivecraft.factions.util.DiscUtil;
-
 import net.dmulloy2.swornnations.SwornNations;
+
+import com.massivecraft.factions.util.DiscUtil;
 
 public class Persist
 {
