@@ -1,4 +1,6 @@
-package com.massivecraft.factions.zcore;
+package com.massivecraft.factions.listeners;
+
+import net.dmulloy2.swornnations.SwornNations;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -7,26 +9,20 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-import com.massivecraft.factions.zcore.persist.EM;
-import com.massivecraft.factions.zcore.persist.Entity;
-import com.massivecraft.factions.zcore.persist.EntityCollection;
-import com.massivecraft.factions.zcore.persist.PlayerEntityCollection;
+import com.massivecraft.factions.persist.EM;
+import com.massivecraft.factions.persist.Entity;
+import com.massivecraft.factions.persist.EntityCollection;
+import com.massivecraft.factions.persist.PlayerEntityCollection;
 
-public class MPluginSecretPlayerListener implements Listener
+public class SecretPlayerListener implements Listener
 {
-	private MPlugin p;
-	public MPluginSecretPlayerListener(MPlugin p)
-	{
-		this.p = p;
-	}
-
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
 	{
-		if (p.handleCommand(event.getPlayer(), event.getMessage()))
+		if (SwornNations.get().handleCommand(event.getPlayer(), event.getMessage()))
 		{
-			if (p.logPlayerCommands())
-				p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
+			if (SwornNations.get().logPlayerCommands())
+				SwornNations.get().getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}
@@ -34,10 +30,10 @@ public class MPluginSecretPlayerListener implements Listener
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
-		if (p.handleCommand(event.getPlayer(), event.getMessage()))
+		if (SwornNations.get().handleCommand(event.getPlayer(), event.getMessage()))
 		{
-			if (p.logPlayerCommands())
-				p.getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
+			if (SwornNations.get().logPlayerCommands())
+				SwornNations.get().getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}

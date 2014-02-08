@@ -10,8 +10,8 @@ import org.bukkit.ChatColor;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.event.FactionRelationEvent;
-import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.types.Permission;
+import com.massivecraft.factions.types.Relation;
 
 public abstract class FRelationCommand extends FCommand
 {

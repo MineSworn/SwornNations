@@ -3,7 +3,7 @@ package com.massivecraft.factions.cmd;
 import net.dmulloy2.swornnations.types.NPermission;
 
 import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 public class CmdDeinvite extends FCommand
 {

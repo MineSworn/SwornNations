@@ -3,7 +3,7 @@ package com.massivecraft.factions.cmd;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 public class CmdPeaceful extends FCommand
 {

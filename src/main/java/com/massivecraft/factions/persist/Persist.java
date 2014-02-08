@@ -1,15 +1,17 @@
-package com.massivecraft.factions.zcore.util;
+package com.massivecraft.factions.persist;
 
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.logging.Level;
 
-import com.massivecraft.factions.zcore.MPlugin;
+import com.massivecraft.factions.util.DiscUtil;
+
+import net.dmulloy2.swornnations.SwornNations;
 
 public class Persist
 {
-	private MPlugin p;
-	public Persist(MPlugin p)
+	private SwornNations p;
+	public Persist(SwornNations p)
 	{
 		this.p = p;
 	}

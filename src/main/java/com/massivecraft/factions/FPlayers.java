@@ -10,8 +10,8 @@ import net.dmulloy2.swornnations.SwornNations;
 
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 
-import com.massivecraft.factions.struct.Role;
-import com.massivecraft.factions.zcore.persist.PlayerEntityCollection;
+import com.massivecraft.factions.persist.PlayerEntityCollection;
+import com.massivecraft.factions.types.Role;
 
 public class FPlayers extends PlayerEntityCollection<FPlayer>
 {

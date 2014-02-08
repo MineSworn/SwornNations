@@ -5,7 +5,7 @@ package com.massivecraft.factions.cmd;
 
 import net.dmulloy2.swornnations.types.NPermission;
 
-import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.types.Relation;
 
 /**
  * @author t7seven7t

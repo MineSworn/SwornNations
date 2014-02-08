@@ -8,7 +8,7 @@ import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.event.LandUnclaimAllEvent;
 import com.massivecraft.factions.integration.Econ;
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 public class CmdUnclaimall extends FCommand
 {

@@ -4,7 +4,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.types.Relation;
 
 public class FactionRelationEvent extends Event
 {

@@ -3,7 +3,7 @@ package net.dmulloy2.swornnations.handlers;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 /**
  * @author dmulloy2

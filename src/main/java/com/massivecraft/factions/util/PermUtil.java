@@ -1,23 +1,24 @@
-package com.massivecraft.factions.zcore.util;
+package com.massivecraft.factions.util;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
-import com.massivecraft.factions.zcore.Lang;
-import com.massivecraft.factions.zcore.MPlugin;
+import com.massivecraft.factions.types.Lang;
 
 public class PermUtil
 {
 	public Map<String, String> permissionDescriptions = new HashMap<String, String>();
 
-	protected MPlugin p;
+	protected SwornNations p;
 
-	public PermUtil(MPlugin p)
+	public PermUtil(SwornNations p)
 	{
 		this.p = p;
 		this.setup();

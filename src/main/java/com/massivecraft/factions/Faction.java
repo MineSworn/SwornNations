@@ -22,13 +22,13 @@ import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.LWCFeatures;
-import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.struct.Relation;
-import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.persist.Entity;
+import com.massivecraft.factions.types.Permission;
+import com.massivecraft.factions.types.Relation;
+import com.massivecraft.factions.types.Role;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MiscUtil;
 import com.massivecraft.factions.util.RelationUtil;
-import com.massivecraft.factions.zcore.persist.Entity;
 
 public class Faction extends Entity implements EconomyParticipator
 {

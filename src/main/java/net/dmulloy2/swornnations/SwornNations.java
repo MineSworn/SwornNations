@@ -2,10 +2,15 @@ package net.dmulloy2.swornnations;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.adapters.MyMaterialTypeAdapter;
 import net.dmulloy2.swornnations.adapters.NPermissionManagerTypeAdapter;
@@ -16,12 +21,14 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
@@ -32,6 +39,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.CmdAutoHelp;
 import com.massivecraft.factions.cmd.FCmdRoot;
+import com.massivecraft.factions.cmd.MCommand;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
@@ -41,14 +49,19 @@ import com.massivecraft.factions.listeners.FactionsChatListener;
 import com.massivecraft.factions.listeners.FactionsEntityListener;
 import com.massivecraft.factions.listeners.FactionsExploitListener;
 import com.massivecraft.factions.listeners.FactionsPlayerListener;
-import com.massivecraft.factions.struct.ChatMode;
+import com.massivecraft.factions.listeners.SecretPlayerListener;
+import com.massivecraft.factions.listeners.SecretServerListener;
+import com.massivecraft.factions.persist.EM;
+import com.massivecraft.factions.persist.Persist;
 import com.massivecraft.factions.tasks.AutoCleanupTask;
 import com.massivecraft.factions.tasks.AutoLeaveTask;
+import com.massivecraft.factions.tasks.SaveTask;
+import com.massivecraft.factions.types.ChatMode;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MapFLocToStringSetTypeAdapter;
 import com.massivecraft.factions.util.MyLocationTypeAdapter;
-import com.massivecraft.factions.zcore.MPlugin;
-import com.massivecraft.factions.zcore.util.TextUtil;
+import com.massivecraft.factions.util.PermUtil;
+import com.massivecraft.factions.util.TextUtil;
 
 /**
  * This plugin was forked from Olof Larsson and Brett Flannigan's original
@@ -66,7 +79,7 @@ import com.massivecraft.factions.zcore.util.TextUtil;
  */
 
 // TODO: Move from MPlugin dependency
-public class SwornNations extends MPlugin
+public class SwornNations extends JavaPlugin
 {
 	private static SwornNations i;
 	public static SwornNations get() { return i; }
@@ -104,6 +117,44 @@ public class SwornNations extends MPlugin
 		this.lockReason = val;
 	}
 
+	// MPlugin start
+
+	// Some utils
+	public Persist persist;
+	public TextUtil txt;
+	public PermUtil perm;
+
+	// Persist related
+	public Gson gson;
+	private Integer saveTask = null;
+	private boolean autoSave = true;
+	protected boolean loadSuccessful = false;
+
+	public boolean getAutoSave()
+	{
+		return this.autoSave;
+	}
+
+	public void setAutoSave(boolean val)
+	{
+		this.autoSave = val;
+	}
+
+	public String refCommand = "";
+
+	// Seeeecret Listeners
+	private SecretPlayerListener mPluginSecretPlayerListener;
+	private SecretServerListener mPluginSecretServerListener;
+
+	// Our stored base commands
+	private List<MCommand<?>> baseCommands = new ArrayList<MCommand<?>>();
+
+	public List<MCommand<?>> getBaseCommands()
+	{
+		return this.baseCommands;
+	}
+	// MPlugin end
+
 	private Integer AutoLeaveTask = null;
 
 	// Commands
@@ -123,10 +174,48 @@ public class SwornNations extends MPlugin
 	@Override
 	public void onEnable()
 	{
-		if (! preEnable())
-			return;
-
+		// MPlugin start
+		long start = System.currentTimeMillis();
 		this.loadSuccessful = false;
+
+		// Ensure basefolder exists!
+		getDataFolder().mkdirs();
+
+		// Create Utility Instances
+		this.perm = new PermUtil(this);
+		this.persist = new Persist(this);
+		this.gson = this.getGsonBuilder().create();
+
+		this.txt = new TextUtil();
+		initTXT();
+
+		// attempt to get first command defined in plugin.yml as reference
+		// command, if any commands are defined in there
+		// reference command will be used to prevent "unknown command" console
+		// messages
+		try
+		{
+			Map<String, Map<String, Object>> refCmd = this.getDescription().getCommands();
+			if (refCmd != null && !refCmd.isEmpty())
+				this.refCommand = (String) (refCmd.keySet().toArray()[0]);
+		}
+		catch (ClassCastException ex)
+		{
+		}
+
+		// Create and register listeners
+		this.mPluginSecretPlayerListener = new SecretPlayerListener();
+		this.mPluginSecretServerListener = new SecretServerListener();
+		getServer().getPluginManager().registerEvents(this.mPluginSecretPlayerListener, this);
+		getServer().getPluginManager().registerEvents(this.mPluginSecretServerListener, this);
+
+		// Register recurring tasks
+		long saveTicks = 20 * 60 * 30; // Approximately every 30 min
+		if (saveTask == null)
+		{
+			saveTask = new SaveTask(this).runTaskTimer(this, saveTicks, saveTicks).getTaskId();
+		}
+		// MPlugin end
 
 		// Load Conf from disk
 		Conf.load();
@@ -179,11 +268,10 @@ public class SwornNations extends MPlugin
 		// command interface, provide it
 		getCommand(refCommand).setExecutor(this);
 
-		postEnable();
+		log("%s has been enabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 		this.loadSuccessful = true;
 	}
 
-	@Override
 	public GsonBuilder getGsonBuilder()
 	{
 		Type mapFLocToStringSetType = new TypeToken<Map<FLocation, Set<String>>>(){}.getType();
@@ -198,6 +286,8 @@ public class SwornNations extends MPlugin
 	@Override
 	public void onDisable()
 	{
+		long start = System.currentTimeMillis();
+		
 		// Only save data if plugin actually completely loaded successfully
 		if (this.loadSuccessful)
 		{
@@ -211,8 +301,66 @@ public class SwornNations extends MPlugin
 			this.AutoLeaveTask = null;
 		}
 
-		super.onDisable();
+		if (saveTask != null)
+		{
+			getServer().getScheduler().cancelTask(saveTask);
+			saveTask = null;
+		}
+		
+		// only save data if plugin actually loaded successfully
+		if (loadSuccessful)
+			EM.saveAllToDisc();
+
+		log("%s has been disabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
+
+	// MPlugin Start
+	// -------------------------------------------- //
+	// LANG AND TAGS
+	// -------------------------------------------- //
+
+	// These are not supposed to be used directly.
+	// They are loaded and used through the TextUtil instance for the plugin.
+	public Map<String, String> rawTags = new LinkedHashMap<String, String>();
+
+	public void addRawTags()
+	{
+		this.rawTags.put("l", "<green>"); // logo
+		this.rawTags.put("a", "<gold>"); // art
+		this.rawTags.put("n", "<silver>"); // notice
+		this.rawTags.put("i", "<yellow>"); // info
+		this.rawTags.put("g", "<lime>"); // good
+		this.rawTags.put("b", "<rose>"); // bad
+		this.rawTags.put("h", "<pink>"); // highligh
+		this.rawTags.put("c", "<aqua>"); // command
+		this.rawTags.put("p", "<teal>"); // parameter
+	}
+
+	public void initTXT()
+	{
+		this.addRawTags();
+
+		Type type = new TypeToken<Map<String, String>>()
+		{
+		}.getType();
+
+		Map<String, String> tagsFromFile = this.persist.load(type, "tags");
+		if (tagsFromFile != null)
+			this.rawTags.putAll(tagsFromFile);
+		this.persist.save(this.rawTags, "tags");
+
+		for (Entry<String, String> rawTag : this.rawTags.entrySet())
+		{
+			this.txt.tags.put(rawTag.getKey(), TextUtil.parseColor(rawTag.getValue()));
+		}
+	}
+
+	public void suicide()
+	{
+		log("Now I suicide!");
+		this.getServer().getPluginManager().disablePlugin(this);
+	}
+	// MPlugin end
 
 	public void startAutoLeaveTask(boolean restartIfRunning)
 	{
@@ -240,26 +388,58 @@ public class SwornNations extends MPlugin
 		}
 	}
 
-	@Override
 	public void postAutoSave()
 	{
 		Board.save();
 		Conf.save();
 	}
 
-	@Override
 	public boolean logPlayerCommands()
 	{
 		return Conf.logPlayerCommands;
 	}
 
-	@Override
 	public boolean handleCommand(CommandSender sender, String commandString, boolean testOnly)
 	{
 		if (sender instanceof Player && FactionsPlayerListener.preventCommand(commandString, (Player) sender))
 			return true;
 
-		return super.handleCommand(sender, commandString, testOnly);
+		boolean noSlash = true;
+		if (commandString.startsWith("/"))
+		{
+			noSlash = false;
+			commandString = commandString.substring(1);
+		}
+
+		for (MCommand<?> command : this.getBaseCommands())
+		{
+			if (noSlash && !command.allowNoSlashAccess)
+				continue;
+
+			for (String alias : command.aliases)
+			{
+				// disallow double-space after alias, so specific commands can
+				// be prevented (preventing "f home" won't prevent "f  home")
+				if (commandString.startsWith(alias + "  "))
+					return false;
+
+				if (commandString.startsWith(alias + " ") || commandString.equalsIgnoreCase(alias))
+				{
+					List<String> args = new ArrayList<String>(Arrays.asList(commandString.split("\\s+")));
+					args.remove(0);
+					if (testOnly)
+						return true;
+					command.execute(sender, args);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean handleCommand(CommandSender sender, String commandString)
+	{
+		return this.handleCommand(sender, commandString, false);
 	}
 
 	@Override
@@ -454,5 +634,28 @@ public class SwornNations extends MPlugin
 	public boolean isPlayerAllowedToUseThisHere(Player player, Location location, ItemStack item)
 	{
 		return FactionsPlayerListener.playerCanUseItemHere(player, location, item, true);
+	}
+
+	// -------------------------------------------- //
+	// LOGGING
+	// -------------------------------------------- //
+	public void log(String msg)
+	{
+		log(Level.INFO, msg);
+	}
+
+	public void log(String str, Object... args)
+	{
+		log(Level.INFO, this.txt.parse(str, args));
+	}
+
+	public void log(Level level, String str, Object... args)
+	{
+		log(level, this.txt.parse(str, args));
+	}
+
+	public void log(Level level, String msg)
+	{
+		getLogger().log(level, msg);
 	}
 }

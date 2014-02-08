@@ -1,4 +1,4 @@
-package com.massivecraft.factions.zcore;
+package com.massivecraft.factions.types;
 
 public class Lang
 {

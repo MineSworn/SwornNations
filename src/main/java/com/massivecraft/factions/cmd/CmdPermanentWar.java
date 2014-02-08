@@ -8,7 +8,7 @@ import net.dmulloy2.swornnations.SwornNations;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 /**
  * @author t7seven7t

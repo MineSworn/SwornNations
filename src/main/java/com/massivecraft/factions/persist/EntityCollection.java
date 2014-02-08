@@ -1,4 +1,4 @@
-package com.massivecraft.factions.zcore.persist;
+package com.massivecraft.factions.persist;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 
-import com.massivecraft.factions.zcore.util.DiscUtil;
-import com.massivecraft.factions.zcore.util.TextUtil;
+import com.massivecraft.factions.util.DiscUtil;
+import com.massivecraft.factions.util.TextUtil;
 
 public abstract class EntityCollection<E extends Entity>
 {

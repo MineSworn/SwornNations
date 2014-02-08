@@ -1,4 +1,4 @@
-package com.massivecraft.factions.zcore.persist;
+package com.massivecraft.factions.persist;
 
 import java.io.File;
 import java.util.Collection;

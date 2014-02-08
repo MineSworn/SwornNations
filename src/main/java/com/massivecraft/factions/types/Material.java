@@ -1,4 +1,4 @@
-package com.massivecraft.factions.struct;
+package com.massivecraft.factions.types;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;

@@ -18,13 +18,13 @@ import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
 import com.massivecraft.factions.integration.WorldGuard;
-import com.massivecraft.factions.struct.ChatMode;
-import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.struct.Relation;
-import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.persist.PlayerEntity;
+import com.massivecraft.factions.types.ChatMode;
+import com.massivecraft.factions.types.Permission;
+import com.massivecraft.factions.types.Relation;
+import com.massivecraft.factions.types.Role;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.RelationUtil;
-import com.massivecraft.factions.zcore.persist.PlayerEntity;
 
 /**
  * Logged in players always have exactly one FPlayer instance. Logged out

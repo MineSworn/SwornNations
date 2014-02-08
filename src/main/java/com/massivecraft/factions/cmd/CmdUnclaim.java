@@ -9,8 +9,8 @@ import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.event.LandUnclaimEvent;
 import com.massivecraft.factions.integration.Econ;
-import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.types.Permission;
+import com.massivecraft.factions.types.Role;
 
 public class CmdUnclaim extends FCommand
 {

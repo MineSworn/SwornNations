@@ -6,7 +6,7 @@ import net.dmulloy2.swornnations.types.Console;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.iface.RelationParticipator;
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 public class CmdPowerBoost extends FCommand
 {

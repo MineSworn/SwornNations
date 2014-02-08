@@ -22,7 +22,7 @@ import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.types.Role;
 
 public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissionManager>, JsonSerializer<NPermissionManager>
 {

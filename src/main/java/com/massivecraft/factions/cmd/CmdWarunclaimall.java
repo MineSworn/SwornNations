@@ -5,7 +5,7 @@ import net.dmulloy2.swornnations.SwornNations;
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 public class CmdWarunclaimall extends FCommand
 {

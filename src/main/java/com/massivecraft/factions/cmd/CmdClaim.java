@@ -5,8 +5,8 @@ import net.dmulloy2.swornnations.types.NPermission;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.tasks.SpiralTask;
+import com.massivecraft.factions.types.Permission;
 
 public class CmdClaim extends FCommand
 {

@@ -2,7 +2,7 @@ package com.massivecraft.factions.cmd;
 
 import net.dmulloy2.swornnations.SwornNations;
 
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 
 public class CmdBypass extends FCommand
 {

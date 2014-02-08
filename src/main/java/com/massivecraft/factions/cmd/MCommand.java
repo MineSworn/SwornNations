@@ -1,23 +1,27 @@
-package com.massivecraft.factions.zcore;
+package com.massivecraft.factions.cmd;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.massivecraft.factions.zcore.util.TextUtil;
+import com.massivecraft.factions.types.CommandVisibility;
+import com.massivecraft.factions.types.Lang;
+import com.massivecraft.factions.util.TextUtil;
 
-public abstract class MCommand<T extends MPlugin>
+public abstract class MCommand<T extends SwornNations>
 {
 	public T p;
 
 	// The sub-commands to this command
-	public List<MCommand<?>> subCommands;
+	public List<MCommand<T>> subCommands;
 
-	public void addSubCommand(MCommand<?> subCommand)
+	public void addSubCommand(MCommand<T> subCommand)
 	{
 		subCommand.commandChain.addAll(this.commandChain);
 		subCommand.commandChain.add(this);
@@ -89,7 +93,7 @@ public abstract class MCommand<T extends MPlugin>
 
 		this.allowNoSlashAccess = false;
 
-		this.subCommands = new ArrayList<MCommand<?>>();
+		this.subCommands = new ArrayList<MCommand<T>>();
 		this.aliases = new ArrayList<String>();
 
 		this.requiredArgs = new ArrayList<String>();

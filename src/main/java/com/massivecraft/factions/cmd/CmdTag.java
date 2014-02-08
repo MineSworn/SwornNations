@@ -9,7 +9,7 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.event.FactionRenameEvent;
-import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.types.Permission;
 import com.massivecraft.factions.util.MiscUtil;
 
 public class CmdTag extends FCommand

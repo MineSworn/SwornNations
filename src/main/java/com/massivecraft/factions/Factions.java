@@ -14,10 +14,10 @@ import net.dmulloy2.swornnations.SwornNations;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 
+import com.massivecraft.factions.persist.EntityCollection;
+import com.massivecraft.factions.util.DiscUtil;
 import com.massivecraft.factions.util.MiscUtil;
-import com.massivecraft.factions.zcore.persist.EntityCollection;
-import com.massivecraft.factions.zcore.util.DiscUtil;
-import com.massivecraft.factions.zcore.util.TextUtil;
+import com.massivecraft.factions.util.TextUtil;
 
 public class Factions extends EntityCollection<Faction>
 {

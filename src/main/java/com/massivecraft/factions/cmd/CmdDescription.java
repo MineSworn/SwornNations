@@ -5,8 +5,8 @@ import net.dmulloy2.swornnations.types.NPermission;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.zcore.util.TextUtil;
+import com.massivecraft.factions.types.Permission;
+import com.massivecraft.factions.util.TextUtil;
 
 public class CmdDescription extends FCommand
 {

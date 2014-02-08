@@ -2,7 +2,7 @@ package net.dmulloy2.swornnations.util;
 
 import org.bukkit.Bukkit;
 
-import com.massivecraft.factions.struct.Material;
+import com.massivecraft.factions.types.Material;
 
 /**
  * Util dealing with the loss of item id's

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 import net.dmulloy2.swornnations.SwornNations;
 
-import com.massivecraft.factions.zcore.CommandVisibility;
-import com.massivecraft.factions.zcore.MCommand;
+import com.massivecraft.factions.types.CommandVisibility;
 
 public class CmdAutoHelp extends MCommand<SwornNations>
 {

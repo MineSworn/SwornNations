@@ -1,7 +1,7 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.struct.Permission;
-import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.types.Permission;
+import com.massivecraft.factions.types.Role;
 
 public class CmdShowRoles extends FCommand
 {

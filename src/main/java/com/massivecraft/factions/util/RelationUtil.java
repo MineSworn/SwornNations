@@ -6,8 +6,7 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.iface.RelationParticipator;
-import com.massivecraft.factions.struct.Relation;
-import com.massivecraft.factions.zcore.util.TextUtil;
+import com.massivecraft.factions.types.Relation;
 
 public class RelationUtil
 {
