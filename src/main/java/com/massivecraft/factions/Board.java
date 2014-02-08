@@ -3,6 +3,7 @@ package com.massivecraft.factions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -295,12 +296,23 @@ public class Board
 	// ----------------------------------------------//
 
 	/**
+	 * Alias for {@link Board#getMap(FPlayer, FLocation, double)}
+	 */
+	public static List<String> getMap(FPlayer fplayer)
+	{
+		FLocation flocation = new FLocation(fplayer);
+		double inDegrees = fplayer.getPlayer().getLocation().getYaw();
+		return getMap(fplayer, flocation, inDegrees);
+	}
+
+	/**
 	 * The map is relative to a coord and a faction north is in the direction of
 	 * decreasing x east is in the direction of decreasing z
 	 */
-	public static ArrayList<String> getMap(Faction faction, FLocation flocation, double inDegrees)
+	public static List<String> getMap(FPlayer fplayer, FLocation flocation, double inDegrees)
 	{
-		ArrayList<String> ret = new ArrayList<String>();
+		Faction faction = fplayer.getFaction();
+		List<String> ret = new ArrayList<String>();
 		Faction factionLoc = getAbsoluteFactionAt(flocation);
 		ret.add(SwornNations.get().txt.titleize("(" + flocation.getCoordString() + ") " + factionLoc.getTag(faction)));
 
@@ -348,10 +360,12 @@ public class Board
 					}
 					else if (factionHere == faction || factionHere == factionLoc || relation.isAtLeast(Relation.ALLY)
 							|| (Conf.showNeutralFactionsOnMap && relation.equals(Relation.NEUTRAL))
-							|| (Conf.showEnemyFactionsOnMap && relation.equals(Relation.ENEMY)))
+							|| (Conf.showEnemyFactionsOnMap && relation.equals(Relation.ENEMY))
+							|| fplayer.isAdminBypassing())
 					{
-						if (!fList.containsKey(factionHere.getTag()))
+						if (! fList.containsKey(factionHere.getTag()))
 							fList.put(factionHere.getTag(), Conf.mapKeyChrs[chrIdx++]);
+
 						char tag = fList.get(factionHere.getTag());
 						row += factionHere.getColorTo(faction) + "" + tag;
 					}
@@ -361,11 +375,12 @@ public class Board
 					}
 				}
 			}
+
 			ret.add(row);
 		}
 
 		// Get the compass
-		ArrayList<String> asciiCompass = AsciiCompass.getAsciiCompass(inDegrees, ChatColor.RED, SwornNations.get().txt.parse("<a>"));
+		List<String> asciiCompass = AsciiCompass.getAsciiCompass(inDegrees, ChatColor.RED, SwornNations.get().txt.parse("<a>"));
 
 		// Add the compass
 		ret.set(1, asciiCompass.get(0) + ret.get(1).substring(3 * 3));
@@ -384,6 +399,7 @@ public class Board
 		}
 
 		return ret;
+	
 	}
 
 	// -------------------------------------------- //
@@ -465,20 +481,6 @@ public class Board
 		SwornNations.get().log("Saving board to disk");
 		dumpAsSaveFormat();
 		SwornNations.get().persist.save(i);
-
-		// try
-		// {
-		// DiscUtil.write(file, SwornNations.get().gson.toJson(dumpAsSaveFormat()));
-		// DiscUtil.write(file, SwornNations.get().gson.toJson(flocationClaimTimes));
-		// }
-		// catch (Exception e)
-		// {
-		// e.printStackTrace();
-		// SwornNations.get().log("Failed to save the board to disk.");
-		// return false;
-		// }
-		//
-		// return true;
 		return true;
 	}
 
@@ -489,28 +491,6 @@ public class Board
 		SwornNations.get().persist.loadOrSaveDefault(i, Board.class, "board");
 		if (worldCoordIds != null && flocationClaimSaves != null)
 			loadFromSaveFormat(worldCoordIds, flocationClaimSaves);
-
-		// if ( ! file.exists())
-		// {
-		// SwornNations.get().log("No board to load from disk. Creating new file.");
-		// save();
-		// return true;
-		// }
-		//
-		// try
-		// {
-		// Type type = new
-		// TypeToken<Map<String,Map<String,String>>>(){}.getType();
-		// Map<String,Map<String,String>> worldCoordIds =
-		// SwornNations.get().gson.fromJson(DiscUtil.read(file), type);
-		// loadFromSaveFormat(worldCoordIds, null);
-		// }
-		// catch (Exception e)
-		// {
-		// e.printStackTrace();
-		// SwornNations.get().log("Failed to load the board from disk.");
-		// return false;
-		// }
 
 		return true;
 	}

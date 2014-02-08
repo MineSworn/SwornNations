@@ -140,7 +140,7 @@ public class FactionsPlayerListener implements Listener
 		// Update map
 		if (me.isMapAutoUpdating())
 		{
-			me.sendMessage(Board.getMap(me.getFaction(), to, player.getLocation().getYaw()));
+			me.sendMessage(Board.getMap(me, to, player.getLocation().getYaw()));
 		}
 
 		// Did we change "host" faction?
@@ -153,10 +153,10 @@ public class FactionsPlayerListener implements Listener
 		{
 			me.sendFactionHereMessage();
 
-			// Map update
+			// Update map
 			if (me.isMapAutoUpdating())
 			{
-				me.sendMessage(Board.getMap(me.getFaction(), to, player.getLocation().getYaw()));
+				me.sendMessage(Board.getMap(me, to, player.getLocation().getYaw()));
 			}
 
 			if (! moveEvent)
