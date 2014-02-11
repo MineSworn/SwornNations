@@ -21,9 +21,9 @@ import com.massivecraft.factions.types.Relation;
 
 public class FactionsChatListener implements Listener
 {
-	// This is for handling slashless command usage and faction/alliance chat,
+	// This is for handling slashless command usage
 	// set at lowest priority so Factions gets to them first
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerEarlyChat(AsyncPlayerChatEvent event)
 	{
 		if (event.isCancelled())
@@ -33,8 +33,6 @@ public class FactionsChatListener implements Listener
 		String msg = event.getMessage();
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		ChatMode chat = me.getChatMode();
-
-		// TODO: Get this back and working!
 		
 		// Slashless factions commands need to be handled here if the user isn't in public chat mode
 		if (chat != ChatMode.PUBLIC && SwornNations.get().handleCommand(talkingPlayer, msg))
@@ -44,18 +42,40 @@ public class FactionsChatListener implements Listener
 			event.setCancelled(true);
 			return;
 		}
+	}
 
-		// TODO: Rework faction chat to be compliant with /ignore and troll hell
+	// This is for handling insertion of the player's faction tag and faction chat,
+	// set at highest priority to give other plugins a chance to modify chat first
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerChat(AsyncPlayerChatEvent event)
+	{
+		if (event.isCancelled())
+			return;
+
+		Player talkingPlayer = event.getPlayer();
+		String msg = event.getMessage();
+		String eventFormat = event.getFormat();
+		FPlayer me = FPlayers.i.get(talkingPlayer);
+		ChatMode chat = me.getChatMode();
 
 		// Is it a faction chat message?
 		if (chat == ChatMode.FACTION)
 		{
 			Faction myFaction = me.getFaction();
-
 			String message = String.format(Conf.factionChatFormat, me.describeTo(myFaction), msg);
 
+			// Send message to all applicable players
+			for (Player listeningPlayer : event.getRecipients())
+			{
+				FPlayer you = FPlayers.i.get(listeningPlayer);
+				if (you.getFaction() == myFaction)
+				{
+					you.sendMessage(message);
+				}
+			}
+
 			// Send message to our own faction
-			myFaction.sendMessage(message);
+			// myFaction.sendMessage(message);
 
 			// Send to any players who are spying chat
 			for (FPlayer fplayer : FPlayers.i.getOnline())
@@ -64,7 +84,8 @@ public class FactionsChatListener implements Listener
 					fplayer.sendMessage("[FCspy] " + myFaction.getTag() + ": " + message);
 			}
 
-			SwornNations.get().log(ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
+			SwornNations.get().getServer().getLogger().info(ChatColor.stripColor("[Faction Chat] " + myFaction.getTag() + ": " + message));
+			// SwornNations.get().log(ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
 
 			event.setCancelled(true);
 			return;
@@ -72,24 +93,34 @@ public class FactionsChatListener implements Listener
 		else if (chat == ChatMode.ALLIANCE)
 		{
 			Faction myFaction = me.getFaction();
-
 			String message = String.format(Conf.allianceChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
 
-			// Send message to our own faction
-			myFaction.sendMessage(message);
-
-			// Send to all our allies
-			for (FPlayer fplayer : FPlayers.i.getOnline())
+			// Send message to all applicable players
+			for (Player listeningPlayer : event.getRecipients())
 			{
-				if (myFaction.getRelationTo(fplayer) == Relation.ALLY || myFaction.getRelationTo(fplayer) == Relation.NATION)
-					fplayer.sendMessage(message);
-
-				// Send to any players who are spying chat
-				else if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
-					fplayer.sendMessage("[ACspy]: " + message);
+				FPlayer you = FPlayers.i.get(listeningPlayer);
+				if (you.getFaction() == myFaction || myFaction.getRelationTo(you) == Relation.ALLY
+						|| myFaction.getRelationTo(you) == Relation.NATION)
+				{
+					you.sendMessage(message);
+				}
 			}
 
-			SwornNations.get().log(ChatColor.stripColor("AllianceChat: " + message));
+			// Send message to our own faction
+			// myFaction.sendMessage(message);
+
+			// Send mesage to anyone spying chat
+			for (FPlayer fplayer : FPlayers.i.getOnline())
+			{
+				// if (myFaction.getRelationTo(fplayer) == Relation.ALLY || myFaction.getRelationTo(fplayer) == Relation.NATION)
+				//	fplayer.sendMessage(message);
+
+				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
+					fplayer.sendMessage("[ACspy] " + message);
+			}
+
+			SwornNations.get().getServer().getLogger().info(ChatColor.stripColor("[Alliance Chat] " + message));
+			// SwornNations.get().log(ChatColor.stripColor("AllianceChat: " + message));
 
 			event.setCancelled(true);
 			return;
@@ -97,47 +128,43 @@ public class FactionsChatListener implements Listener
 		else if (chat == ChatMode.NATION)
 		{
 			Faction myFaction = me.getFaction();
-
 			String message = String.format(Conf.nationChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
 
 			// Send message to our own faction
-			myFaction.sendMessage(message);
+			// myFaction.sendMessage(message);
 
-			// Send to all our nation
-			for (FPlayer fplayer : FPlayers.i.getOnline())
+			// Send message to all applicable players
+			for (Player listeningPlayer : event.getRecipients())
 			{
-				if (myFaction.getRelationTo(fplayer) == Relation.NATION)
-					fplayer.sendMessage(message);
-
-				// Send to any players who are spying chat
-				else if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
-					fplayer.sendMessage("[NCspy]: " + message);
+				FPlayer you = FPlayers.i.get(listeningPlayer);
+				if (you.getFaction() == myFaction || myFaction.getRelationTo(you) == Relation.NATION)
+				{
+					you.sendMessage(message);
+				}
 			}
 
-			SwornNations.get().log(ChatColor.stripColor("NationChat: " + message));
+			// Send to chat spys
+			for (FPlayer fplayer : FPlayers.i.getOnline())
+			{
+				// if (myFaction.getRelationTo(fplayer) == Relation.NATION)
+				//	fplayer.sendMessage(message);
+
+				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
+					fplayer.sendMessage("[NCspy] " + message);
+			}
+
+			SwornNations.get().getServer().getLogger().info(ChatColor.stripColor("[Nation Chat] " + message));
+			// SwornNations.get().log(ChatColor.stripColor("NationChat: " + message));
 
 			event.setCancelled(true);
 			return;
 		}
-	}
-
-	// This is for handling insertion of the player's faction tag, set at
-	// highest priority to give other plugins a chance to modify chat first
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerChat(AsyncPlayerChatEvent event)
-	{
-		if (event.isCancelled())
-			return;
 
 		// Are we to insert the Faction tag into the format?
 		// If we are not to insert it - we are done.
 		if (! Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin)
 			return;
 
-		Player talkingPlayer = event.getPlayer();
-		String msg = event.getMessage();
-		String eventFormat = event.getFormat();
-		FPlayer me = FPlayers.i.get(talkingPlayer);
 		int InsertIndex = 0;
 
 		if (! Conf.chatTagReplaceString.isEmpty() && eventFormat.contains(Conf.chatTagReplaceString))

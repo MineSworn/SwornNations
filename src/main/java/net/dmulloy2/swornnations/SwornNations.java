@@ -78,9 +78,9 @@ import com.massivecraft.factions.util.TextUtil;
  * </ul>
  */
 
-// TODO: Move from MPlugin dependency
 public class SwornNations extends JavaPlugin
 {
+	// TODO: I hate static
 	private static SwornNations i;
 	public static SwornNations get() { return i; }
 	
