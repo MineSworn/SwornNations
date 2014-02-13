@@ -88,7 +88,7 @@ public class CmdDisband extends FCommand
 			}
 			else
 			{
-				fplayer.msg("<h>%s<i> disbanded the faction %s.", who, faction.getTag(fplayer));
+				fplayer.msg("<h>%s<i> disbanded the faction %s<i>.", who, faction.getTag(fplayer));
 			}
 		}
 		if (Conf.logFactionDisband)
