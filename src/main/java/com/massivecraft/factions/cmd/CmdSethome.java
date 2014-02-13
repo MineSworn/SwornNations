@@ -43,7 +43,7 @@ public class CmdSethome extends FCommand
 		// Can the player set the home for this faction?
 		if (faction != myFaction)
 		{
-			if (Permission.SETHOME_ANY.has(sender, true))
+			if (! Permission.SETHOME_ANY.has(sender, true))
 				return;
 		}
 

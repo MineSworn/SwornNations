@@ -45,7 +45,7 @@ public class CmdSetoutpost extends FCommand
 		// Can the player set the home for this faction?
 		if (faction != myFaction)
 		{
-			if (Permission.OUTPOST_SET_ANY.has(sender, true))
+			if (! Permission.OUTPOST_SET_ANY.has(sender, true))
 				return;
 		}
 
@@ -56,9 +56,15 @@ public class CmdSetoutpost extends FCommand
 			return;
 		}
 
-		if (!fme.isAdminBypassing() && Conf.homesMustBeGreaterThan > 0 && me.getLocation().getBlockY() < Conf.homesMustBeGreaterThan)
+		if (! fme.isAdminBypassing() && Conf.homesMustBeGreaterThan > 0 && me.getLocation().getBlockY() < Conf.homesMustBeGreaterThan)
 		{
 			fme.msg("<b>Sorry, your faction outpost can only be set above ground.");
+			return;
+		}
+
+		if (! faction.hasHome())
+		{
+			fme.msg("<b>You must have a faction home set first!");
 			return;
 		}
 
