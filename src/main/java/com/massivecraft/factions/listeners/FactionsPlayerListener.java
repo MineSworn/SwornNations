@@ -641,28 +641,36 @@ public class FactionsPlayerListener implements Listener
 				if (args.length > 1)
 				{
 					FPlayer target = FPlayers.i.get(args[1]);
-					if (target != null && target.isOnline())
+					if (target != null)
 					{
-						FLocation loc = new FLocation(target.getPlayer().getLocation());
-
-						boolean isCloseToHome = false;
-						boolean isCloseToOutpost = false;
-
-						if (me.getFaction().hasHome())
+						if (target.isOnlineAndVisibleTo(player))
 						{
-							FLocation fHome = new FLocation(me.getFaction().getHome());
-							isCloseToHome = fHome.getDistanceTo(loc) < 40.0D;
+							FLocation loc = new FLocation(target);
+
+							boolean isCloseToHome = false;
+							boolean isCloseToOutpost = false;
+
+							if (me.getFaction().hasHome())
+							{
+								FLocation fHome = new FLocation(me.getFaction().getHome());
+								isCloseToHome = fHome.getDistanceTo(loc) < 40.0D;
+							}
+
+							if (me.getFaction().hasOutpost())
+							{
+								FLocation outpost = new FLocation(me.getFaction().getOutpost());
+								isCloseToOutpost = outpost.getDistanceTo(loc) < 40.0;
+							}
+
+							if (! isCloseToHome && ! isCloseToOutpost)
+							{
+								me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home or outpost");
+								return true;
+							}
 						}
-
-						if (me.getFaction().hasOutpost())
+						else
 						{
-							FLocation outpost = new FLocation(me.getFaction().getOutpost());
-							isCloseToOutpost = outpost.getDistanceTo(loc) < 40.0;
-						}
-
-						if (! isCloseToHome && ! isCloseToOutpost)
-						{
-							me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home or outpost");
+							me.msg("<b>Player <b>%s<b> not found", args[1]);
 							return true;
 						}
 					}
