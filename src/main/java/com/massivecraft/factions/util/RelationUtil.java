@@ -106,7 +106,7 @@ public class RelationUtil
 		{
 			return Relation.ENEMY;
 		}
-		else if (fme.isGold() || fthat.isGold())
+		else if (fme.isGold() || fthat.isGold() && fthat.getRelationWish(fme) != Relation.ENEMY)
 		{
 			return Relation.NEUTRAL;
 		}
