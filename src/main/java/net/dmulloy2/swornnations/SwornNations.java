@@ -250,7 +250,7 @@ public class SwornNations extends JavaPlugin
 					{
 						if (relation.getValue() == Relation.ENEMY)
 						{
-							f.getRelationWishes().remove(relation.getKey());
+							f.removeRelationWish(relation.getKey());
 						}
 					}
 				}

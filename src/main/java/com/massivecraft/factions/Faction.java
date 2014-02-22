@@ -510,7 +510,12 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public Map<String, Relation> getRelationWishes()
 	{
-		return relationWish;
+		return new HashMap<String, Relation>(relationWish);
+	}
+
+	public void removeRelationWish(String key)
+	{
+		relationWish.remove(key);
 	}
 
 	public void setRelationWish(Faction otherFaction, Relation relation)
