@@ -102,6 +102,15 @@ public class RelationUtil
 			return Relation.NEUTRAL;
 		}
 
+		if (fme.isGold() && fthat.isGold())
+		{
+			return Relation.ENEMY;
+		}
+		else if (fme.isGold() || fthat.isGold())
+		{
+			return Relation.NEUTRAL;
+		}
+
 		if (fthat.getRelationWish(fme) == Relation.NATION || fme.getRelationWish(fme) == Relation.NATION)
 		{
 			return Relation.NATION;
@@ -141,10 +150,10 @@ public class RelationUtil
 				return Conf.colorPeaceful;
 			}
 
-			// if (thatFaction.isPermanentWar() && thatFaction !=
-			// getFaction(me)) {
-			// return Conf.colorWar;
-			// }
+			if (thatFaction.isGold() && thatFaction != getFaction(me))
+			{
+				return ChatColor.GOLD;
+			}
 
 			if (thatFaction.isSafeZone() && thatFaction != getFaction(me))
 			{

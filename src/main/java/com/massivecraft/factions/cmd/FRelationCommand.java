@@ -68,6 +68,12 @@ public abstract class FRelationCommand extends FCommand
 			return;
 		}
 
+		if (myFaction.isGold())
+		{
+			msg("<b>Gold factions cannot declare relations!");
+			return;
+		}
+
 		// Economy
 		if (! payForCommand(targetRelation.getRelationCost(), "to change a relation wish", "for changing a relation wish"))
 			return;

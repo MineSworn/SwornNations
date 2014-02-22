@@ -49,6 +49,7 @@ public enum Permission
 	OPEN("open"), 
 	OWNER("owner"), 
 	OWNERLIST("ownerlist"),
+	SET_GOLD("setgold"),
 	SET_PEACEFUL("setpeaceful"),
 	SET_PERMANENT("setpermanent"), 
 	SET_PERMANENTWAR("setpermanentwar"), 

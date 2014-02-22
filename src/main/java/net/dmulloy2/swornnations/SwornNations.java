@@ -17,6 +17,7 @@ import net.dmulloy2.swornnations.adapters.NPermissionManagerTypeAdapter;
 import net.dmulloy2.swornnations.types.MyMaterial;
 import net.dmulloy2.swornnations.types.NPermissionManager;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -57,6 +58,7 @@ import com.massivecraft.factions.tasks.AutoCleanupTask;
 import com.massivecraft.factions.tasks.AutoLeaveTask;
 import com.massivecraft.factions.tasks.SaveTask;
 import com.massivecraft.factions.types.ChatMode;
+import com.massivecraft.factions.types.Relation;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.MapFLocToStringSetTypeAdapter;
 import com.massivecraft.factions.util.MyLocationTypeAdapter;
@@ -80,7 +82,6 @@ import com.massivecraft.factions.util.TextUtil;
 
 public class SwornNations extends JavaPlugin
 {
-	// TODO: I hate static
 	private static SwornNations i;
 	public static SwornNations get() { return i; }
 	
@@ -231,6 +232,31 @@ public class SwornNations extends JavaPlugin
 			}
 
 			Conf.resetAllPerms = false;
+			Factions.i.saveToDisc();
+			Conf.save();
+		}
+
+		// Standardizes gold factions' enemies and tag
+		if (Conf.convertGoldFactions)
+		{
+			for (Faction f : Factions.i.get())
+			{
+				if (f.getTag().startsWith(ChatColor.GOLD.toString()))
+				{
+					f.setGold(true);
+					f.setTag(ChatColor.stripColor(f.getTag()));
+
+					for (Entry<String, Relation> relation : f.getRelationWishes().entrySet())
+					{
+						if (relation.getValue() == Relation.ENEMY)
+						{
+							f.getRelationWishes().remove(relation.getKey());
+						}
+					}
+				}
+			}
+
+			Conf.convertGoldFactions = false;
 			Factions.i.saveToDisc();
 			Conf.save();
 		}

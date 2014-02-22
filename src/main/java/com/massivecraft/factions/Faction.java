@@ -162,6 +162,18 @@ public class Faction extends Entity implements EconomyParticipator
 		this.permawar = isPermanentWar;
 	}
 
+	private boolean gold;
+
+	public boolean isGold()
+	{
+		return this.gold;
+	}
+
+	public void setGold(boolean isGold)
+	{
+		this.gold = isGold;
+	}
+
 	// FIELD: peacefulExplosionsEnabled
 	private boolean peacefulExplosionsEnabled;
 
@@ -494,6 +506,11 @@ public class Faction extends Entity implements EconomyParticipator
 			return this.relationWish.get(otherFaction.getId());
 		}
 		return Relation.NEUTRAL;
+	}
+
+	public Map<String, Relation> getRelationWishes()
+	{
+		return relationWish;
 	}
 
 	public void setRelationWish(Faction otherFaction, Relation relation)
@@ -1045,4 +1062,5 @@ public class Faction extends Entity implements EconomyParticipator
 		// Clean the fplayers
 		FPlayers.i.clean();
 	}
+
 }

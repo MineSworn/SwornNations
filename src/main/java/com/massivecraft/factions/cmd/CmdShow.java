@@ -2,6 +2,8 @@ package com.massivecraft.factions.cmd;
 
 import java.util.Collection;
 
+import org.bukkit.ChatColor;
+
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
@@ -80,6 +82,11 @@ public class CmdShow extends FCommand
 		if (faction.isPermanentWar())
 		{
 			peaceStatus = "     " + Conf.colorWar + "This faction is permanently at war with other permanent war factions.";
+		}
+
+		if (faction.isGold())
+		{
+			peaceStatus = "     " + ChatColor.GOLD + "This faction is currently at war with other gold factions."; 
 		}
 
 		msg("<a>Joining: <i>" + (faction.getOpen() ? "no invitation is needed" : "invitation is required") + peaceStatus);

@@ -24,6 +24,7 @@ public class Conf
 
 	public static boolean debug = false;
 	public static boolean opsBypassByDefault = true;
+	public static boolean convertGoldFactions = true;
 
 	// Colors
 	public static ChatColor colorMember = ChatColor.GREEN;
