@@ -67,16 +67,13 @@ public class FCmdRoot extends FCommand
 	public CmdInitiate cmdInitiate = new CmdInitiate();
 	public CmdOutpost cmdOutpost = new CmdOutpost();
 	public CmdSetoutpost cmdSetoutpost = new CmdSetoutpost();
+	public CmdGold cmdGold = new CmdGold();
 
 	public FCmdRoot()
 	{
 		super();
 		this.aliases.addAll(Conf.baseCommandAliases);
-		this.aliases.removeAll(Collections.singletonList(null)); // remove any
-																	// nulls
-																	// from
-																	// extra
-																	// commas
+		this.aliases.removeAll(Collections.singletonList(null)); // remove any nulls from extra commas
 		this.allowNoSlashAccess = Conf.allowNoSlashCommand;
 
 		// this.requiredArgs.add("");
@@ -155,6 +152,7 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdInitiate);
 		this.addSubCommand(this.cmdOutpost);
 		this.addSubCommand(this.cmdSetoutpost);
+		this.addSubCommand(this.cmdGold);
 	}
 
 	@Override
