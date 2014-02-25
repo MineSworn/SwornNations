@@ -119,7 +119,7 @@ public class CmdOwner extends FCommand
 		if ( ! payForCommand(Conf.econCostOwner, "to set ownership of claimed land", "for setting ownership of claimed land"))
 			return;
 
-		myFaction.setPlayerAsOwner(playerName, flocation);
+		myFaction.setPlayerAsOwner(target.getName(), flocation);
 
 		fme.msg("<i>You have added %s<i> to the owner list for this claimed land.", playerName);
 	}

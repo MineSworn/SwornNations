@@ -969,6 +969,27 @@ public class Faction extends Entity implements EconomyParticipator
 		return ownerList;
 	}
 
+	public void cleanOwnerList()
+	{
+		String nameRegex = "^[a-zA-Z_0-9]";
+		for (Entry<FLocation, Set<String>> entry : new HashMap<FLocation, Set<String>>(claimOwnership).entrySet())
+		{
+			Set<String> names = new HashSet<String>(entry.getValue());
+			for (String name : names)
+			{
+				if (! name.matches(nameRegex))
+					names.remove(name);
+			}
+
+			// We made changes
+			if (names != entry.getValue())
+			{
+				claimOwnership.remove(entry.getKey());
+				claimOwnership.put(entry.getKey(), names);
+			}
+		}
+	}
+
 	public boolean playerHasOwnershipRights(FPlayer fplayer, FLocation loc)
 	{
 		// in own faction, with sufficient role or permission to bypass

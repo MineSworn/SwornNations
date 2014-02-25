@@ -282,6 +282,10 @@ public class SwornNations extends JavaPlugin
 		// start up task which runs the autoLeaveAfterDaysOfInactivity routine
 		startAutoLeaveTask(false);
 
+		// Clean owner lists, if applicable
+		if (Conf.cleanOwnerLists)
+			cleanOwnerLists();
+
 		// Register Listeners
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
@@ -332,6 +336,9 @@ public class SwornNations extends JavaPlugin
 			getServer().getScheduler().cancelTask(saveTask);
 			saveTask = null;
 		}
+
+		// Cancel any other tasks
+		getServer().getScheduler().cancelTasks(this);
 		
 		// only save data if plugin actually loaded successfully
 		if (loadSuccessful)
@@ -411,6 +418,14 @@ public class SwornNations extends JavaPlugin
 		{
 			long ticks = (long) (20 * 60 * Conf.autoCleanupClaimsRunsEveryXMinutes);
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoCleanupTask(), ticks, ticks);
+		}
+	}
+
+	public void cleanOwnerLists()
+	{
+		for (Faction faction : Factions.i.get())
+		{
+			faction.cleanOwnerList();
 		}
 	}
 
