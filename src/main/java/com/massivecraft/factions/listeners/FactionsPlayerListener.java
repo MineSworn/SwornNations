@@ -683,16 +683,24 @@ public class FactionsPlayerListener implements Listener
 			}
 		}
 
-		if (! me.isInOthersTerritory())
+		// A NullPointerException is intermittently thrown here, something about a null FLocation
+
+		try
+		{
+			if (me == null || me.getPlayer() == null || new FLocation(me) == null)
+				return false;
+		}
+		catch (Exception e)
 		{
 			return false;
 		}
 
+		if (! me.isInOthersTerritory())
+			return false;
+
 		Relation rel = me.getRelationToLocation();
 		if (rel.isAtLeast(Relation.ALLY))
-		{
 			return false;
-		}
 
 		if (rel.isNeutral() && ! Conf.territoryNeutralDenyCommands.isEmpty() && ! me.isAdminBypassing()
 				&& isCommandInList(fullCmd, shortCmd, Conf.territoryNeutralDenyCommands))
