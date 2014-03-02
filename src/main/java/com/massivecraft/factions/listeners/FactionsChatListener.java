@@ -69,24 +69,12 @@ public class FactionsChatListener implements Listener
 			{
 				FPlayer you = FPlayers.i.get(listeningPlayer);
 				if (you.getFaction() == myFaction)
-				{
 					you.sendMessage(message);
-				}
-			}
-
-			// Send message to our own faction
-			// myFaction.sendMessage(message);
-
-			// Send to any players who are spying chat
-			for (FPlayer fplayer : FPlayers.i.getOnline())
-			{
-				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
-					fplayer.sendMessage("[FCspy] " + myFaction.getTag() + ": " + message);
+				else if (you.isSpyingChat())
+					you.sendMessage("[FCspy] " + myFaction.getTag() + ": " + message);
 			}
 
 			SwornNations.get().getServer().getLogger().info(ChatColor.stripColor("[Faction Chat] " + myFaction.getTag() + ": " + message));
-			// SwornNations.get().log(ChatColor.stripColor("FactionChat " + myFaction.getTag() + ": " + message));
-
 			event.setCancelled(true);
 			return;
 		}
@@ -101,27 +89,12 @@ public class FactionsChatListener implements Listener
 				FPlayer you = FPlayers.i.get(listeningPlayer);
 				if (you.getFaction() == myFaction || myFaction.getRelationTo(you) == Relation.ALLY
 						|| myFaction.getRelationTo(you) == Relation.NATION)
-				{
 					you.sendMessage(message);
-				}
-			}
-
-			// Send message to our own faction
-			// myFaction.sendMessage(message);
-
-			// Send mesage to anyone spying chat
-			for (FPlayer fplayer : FPlayers.i.getOnline())
-			{
-				// if (myFaction.getRelationTo(fplayer) == Relation.ALLY || myFaction.getRelationTo(fplayer) == Relation.NATION)
-				//	fplayer.sendMessage(message);
-
-				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
-					fplayer.sendMessage("[ACspy] " + message);
+				else if (you.isSpyingChat())
+					you.sendMessage("[ACspy] " + message);
 			}
 
 			SwornNations.get().getServer().getLogger().info(ChatColor.stripColor("[Alliance Chat] " + message));
-			// SwornNations.get().log(ChatColor.stripColor("AllianceChat: " + message));
-
 			event.setCancelled(true);
 			return;
 		}
@@ -130,32 +103,17 @@ public class FactionsChatListener implements Listener
 			Faction myFaction = me.getFaction();
 			String message = String.format(Conf.nationChatFormat, ChatColor.stripColor(me.getNameAndTag()), msg);
 
-			// Send message to our own faction
-			// myFaction.sendMessage(message);
-
 			// Send message to all applicable players
 			for (Player listeningPlayer : event.getRecipients())
 			{
 				FPlayer you = FPlayers.i.get(listeningPlayer);
 				if (you.getFaction() == myFaction || myFaction.getRelationTo(you) == Relation.NATION)
-				{
 					you.sendMessage(message);
-				}
-			}
-
-			// Send to chat spys
-			for (FPlayer fplayer : FPlayers.i.getOnline())
-			{
-				// if (myFaction.getRelationTo(fplayer) == Relation.NATION)
-				//	fplayer.sendMessage(message);
-
-				if (fplayer.isSpyingChat() && fplayer.getFaction() != myFaction)
-					fplayer.sendMessage("[NCspy] " + message);
+				else if (you.isSpyingChat())
+					you.sendMessage("[NCspy] " + message);
 			}
 
 			SwornNations.get().getServer().getLogger().info(ChatColor.stripColor("[Nation Chat] " + message));
-			// SwornNations.get().log(ChatColor.stripColor("NationChat: " + message));
-
 			event.setCancelled(true);
 			return;
 		}
