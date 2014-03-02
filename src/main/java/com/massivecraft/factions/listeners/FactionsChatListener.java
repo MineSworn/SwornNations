@@ -87,8 +87,7 @@ public class FactionsChatListener implements Listener
 			for (Player listeningPlayer : event.getRecipients())
 			{
 				FPlayer you = FPlayers.i.get(listeningPlayer);
-				if (you.getFaction() == myFaction || myFaction.getRelationTo(you) == Relation.ALLY
-						|| myFaction.getRelationTo(you) == Relation.NATION)
+				if (you.getFaction() == myFaction || myFaction.getRelationTo(you).isAtLeast(Relation.ALLY))
 					you.sendMessage(message);
 				else if (you.isSpyingChat())
 					you.sendMessage("[ACspy] " + message);
