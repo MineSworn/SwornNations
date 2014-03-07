@@ -1,4 +1,4 @@
-Factions - Guilding and user-controlled antigrief plugin for Minecraft
+SwornNations - Guilding and user-controlled antigrief plugin for Minecraft. Modified for MineSworn
 ====================
 This plugin will allow the players on the server to create factions/guilds. The factions can claim territory that will be protected from non-members. Factions can forge alliances and declare themselves enemies with others. Land may be taken from other factions through war.
 
@@ -8,9 +8,13 @@ The goals of this plugin:
  * Inspire politics and intrigues on your server.
  * Guilding and team spirit! :)
 
+SwornNations:
+The goal of the SwornFactions fork is to add extra functionality to the
+original plugin and continue support of the 1.6 branch of Factions for future
+Minecraft updates.
+
 Usage
 ---------
-<b>Read the full userguide here: [http://massivecraft.com/dev/factions](http://massivecraft.com/dev/factions)</b>
 
 The chat console command is:
 
@@ -33,12 +37,6 @@ You may also read the documentation ingame as the plugin ships with an ingame he
 Note that you may optionally skip the slash and just write
 
 * `f`
-
-Installing
-----------
-1. Download the latest release: [https://github.com/MassiveCraft/Factions/downloads](https://github.com/MassiveCraft/Factions/downloads)<br>
-1. Put Factions.jar in the plugins folder.
-1. [Download gson.jar to your lib folder](http://massivecraft.com/plugins/libraries)
 
 A default config file will be created on the first run.
 
