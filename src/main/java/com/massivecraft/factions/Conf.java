@@ -79,7 +79,7 @@ public class Conf
 	public static boolean factionOnlyChat = true; // Faction chat
 
 	public static boolean chatTagEnabled = true;
-	public static boolean chatTagHandledByAnotherPlugin = false;
+	public static transient boolean chatTagHandledByAnotherPlugin = false;
 	public static boolean chatTagRelationColored = true;
 
 	public static String chatTagReplaceString = "[FACTION]";

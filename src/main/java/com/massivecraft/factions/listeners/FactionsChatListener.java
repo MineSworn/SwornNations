@@ -22,7 +22,7 @@ import com.massivecraft.factions.types.Relation;
 
 public class FactionsChatListener implements Listener
 {
-	// This is for handling slashless command usage
+	// This is for handling slashless commands
 	// set at lowest priority so Factions gets to them first
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerEarlyChat(AsyncPlayerChatEvent event)
