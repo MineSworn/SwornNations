@@ -1,5 +1,6 @@
-SwornNations - Guilding and user-controlled antigrief plugin for Minecraft. Modified for MineSworn
+SwornNations 
 ====================
+Guilding and user-controlled antigrief plugin for Minecraft. Modified for MineSworn.
 This plugin will allow the players on the server to create factions/guilds. The factions can claim territory that will be protected from non-members. Factions can forge alliances and declare themselves enemies with others. Land may be taken from other factions through war.
 
 The goals of this plugin:
