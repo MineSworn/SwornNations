@@ -75,18 +75,16 @@ public class Conf
 	// Disallow joining/leaving/kicking while power is negative
 	public static boolean canLeaveWithNegativePower = true;
 
-	// Configuration for faction-only chat
-	public static boolean factionOnlyChat = true;
-	// Configuration on the Faction tag in chat messages.
+	// Chat options
+	public static boolean factionOnlyChat = true; // Faction chat
+
 	public static boolean chatTagEnabled = true;
-	public static transient boolean chatTagHandledByAnotherPlugin = false;
+	public static boolean chatTagHandledByAnotherPlugin = false;
 	public static boolean chatTagRelationColored = true;
+
 	public static String chatTagReplaceString = "[FACTION]";
-	public static String chatTagInsertAfterString = "";
-	public static String chatTagInsertBeforeString = "";
-	public static int chatTagInsertIndex = 1;
-	public static boolean chatTagPadBefore = false;
-	public static boolean chatTagPadAfter = false;
+	public static String chatTagPrefix = "";
+	public static String chatTagSuffix = "";
 	public static String chatTagFormat = "%s" + ChatColor.WHITE;
 	public static String factionChatFormat = "%s:" + ChatColor.WHITE + " %s";
 	public static String allianceChatFormat = ChatColor.LIGHT_PURPLE + "%s:" + ChatColor.WHITE + " %s";

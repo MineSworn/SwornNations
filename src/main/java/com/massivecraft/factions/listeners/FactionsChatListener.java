@@ -4,6 +4,7 @@ import java.util.UnknownFormatConversionException;
 import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -125,9 +126,9 @@ public class FactionsChatListener implements Listener
 		if (Conf.chatTagReplaceString.isEmpty() || ! eventFormat.contains(Conf.chatTagReplaceString))
 			return;
 
-		String before = ! me.getChatTag().isEmpty() ? Conf.chatTagInsertBeforeString : "";
+		String before = ! me.getChatTag().isEmpty() ? Conf.chatTagPrefix : "";
 		String key = Conf.chatTagReplaceString;
-		String after = ! me.getChatTag().isEmpty() ? Conf.chatTagInsertAfterString : "";
+		String after = ! me.getChatTag().isEmpty() ? Conf.chatTagSuffix : "";
 		
 		String nonColoredMsgFormat = eventFormat.replace(key, before + me.getChatTag().trim() + after);
 
@@ -149,12 +150,7 @@ public class FactionsChatListener implements Listener
 				}
 				catch (UnknownFormatConversionException ex)
 				{
-					Conf.chatTagInsertIndex = 0;
-					SwornNations.get().log(Level.SEVERE, "Critical error in chat message formatting!");
-					SwornNations.get().log(Level.SEVERE, "NOTE: This has been automatically fixed right now by setting chatTagInsertIndex to 0.");
-					SwornNations.get().log(Level.SEVERE,
-							"For a more proper fix, please read this regarding chat configuration: http://massivecraft.com/plugins/factions/config#Chat_configuration");
-					return;
+					SwornNations.get().log(Level.SEVERE, Util.getUsefulStack(ex, "handling chat message"));
 				}
 			}
 
