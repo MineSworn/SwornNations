@@ -971,21 +971,22 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public void cleanOwnerList()
 	{
+		if (claimOwnership.isEmpty())
+			return;
+
 		String nameRegex = "^[a-zA-Z_0-9]";
 		for (Entry<FLocation, Set<String>> entry : new HashMap<FLocation, Set<String>>(claimOwnership).entrySet())
 		{
-			Set<String> names = new HashSet<String>(entry.getValue());
+			if (entry.getValue().isEmpty())
+				continue;
+
+			// Fun little concurrency hack
+			String[] names = entry.getValue().toArray(new String[0]);
+
 			for (String name : names)
 			{
 				if (! name.matches(nameRegex))
-					names.remove(name);
-			}
-
-			// We made changes
-			if (names != entry.getValue())
-			{
-				claimOwnership.remove(entry.getKey());
-				claimOwnership.put(entry.getKey(), names);
+					entry.getValue().remove(name);
 			}
 		}
 	}

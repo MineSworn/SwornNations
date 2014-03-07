@@ -37,19 +37,7 @@ public class CmdDescription extends FCommand
 		if (!payForCommand(Conf.econCostDesc, "to change faction description", "for changing faction description"))
 			return;
 
-		// if
-		// (sender.hasPermission("pexchat.color")||sender.hasPermission("essentials.chat.color"))
-		// myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("&",
-		// "�")); // If player has permission for chat color, let 'em use it
-		// else
-		myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("(&([a-f0-9]))", "")); // If
-																								// not,
-																								// replace
-																								// the
-																								// color
-																								// tags
-																								// with
-																								// ""
+		myFaction.setDescription(TextUtil.implode(args, " ").replaceAll("(&([a-f0-9]))", ""));
 
 		// Broadcast the description to everyone
 		for (FPlayer fplayer : FPlayers.i.getOnline())

@@ -122,44 +122,14 @@ public class FactionsChatListener implements Listener
 		if (! Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin)
 			return;
 
-		int InsertIndex = 0;
+		if (Conf.chatTagReplaceString.isEmpty() || ! eventFormat.contains(Conf.chatTagReplaceString))
+			return;
 
-		if (! Conf.chatTagReplaceString.isEmpty() && eventFormat.contains(Conf.chatTagReplaceString))
-		{
-			// we're using the "replace" method of inserting the faction tags
-			// if they stuck "[FACTION_TITLE]" in there, go ahead and do it too
-			if (eventFormat.contains("[FACTION_TITLE]"))
-			{
-				eventFormat = eventFormat.replace("[FACTION_TITLE]", me.getTitle());
-			}
-
-			InsertIndex = eventFormat.indexOf(Conf.chatTagReplaceString);
-			eventFormat = eventFormat.replace(Conf.chatTagReplaceString, "");
-			Conf.chatTagPadAfter = false;
-			Conf.chatTagPadBefore = false;
-		}
-		else if (! Conf.chatTagInsertAfterString.isEmpty() && eventFormat.contains(Conf.chatTagInsertAfterString))
-		{
-			// we're using the "insert after string" method
-			InsertIndex = eventFormat.indexOf(Conf.chatTagInsertAfterString) + Conf.chatTagInsertAfterString.length();
-		}
-		else if (! Conf.chatTagInsertBeforeString.isEmpty() && eventFormat.contains(Conf.chatTagInsertBeforeString))
-		{
-			// we're using the "insert before string" method
-			InsertIndex = eventFormat.indexOf(Conf.chatTagInsertBeforeString);
-		}
-		else
-		{
-			// we'll fall back to using the index place method
-			InsertIndex = Conf.chatTagInsertIndex;
-			if (InsertIndex > eventFormat.length())
-				return;
-		}
-
-		String formatStart = eventFormat.substring(0, InsertIndex) + ((Conf.chatTagPadBefore && !me.getChatTag().isEmpty()) ? " " : "");
-		String formatEnd = ((Conf.chatTagPadAfter && !me.getChatTag().isEmpty()) ? " " : "") + eventFormat.substring(InsertIndex);
-
-		String nonColoredMsgFormat = formatStart + me.getChatTag().trim() + formatEnd;
+		String before = ! me.getChatTag().isEmpty() ? Conf.chatTagInsertBeforeString : "";
+		String key = Conf.chatTagReplaceString;
+		String after = ! me.getChatTag().isEmpty() ? Conf.chatTagInsertAfterString : "";
+		
+		String nonColoredMsgFormat = eventFormat.replace(key, before + me.getChatTag().trim() + after);
 
 		// Relation Colored?
 		if (Conf.chatTagRelationColored)
@@ -172,7 +142,7 @@ public class FactionsChatListener implements Listener
 			for (Player listeningPlayer : event.getRecipients())
 			{
 				FPlayer you = FPlayers.i.get(listeningPlayer);
-				String yourFormat = formatStart + me.getChatTag(you).trim() + formatEnd;
+				String yourFormat = eventFormat.replace(key, before + me.getChatTag(you).trim() + after);
 				try
 				{
 					listeningPlayer.sendMessage(String.format(yourFormat, talkingPlayer.getDisplayName(), msg));
