@@ -80,8 +80,6 @@ public class CmdHelp extends FCommand
 		pageLines.add(p.txt.parse("<i>You might want to close it and use invitations:"));
 		pageLines.add(p.cmdBase.cmdOpen.getUseageTemplate(true));
 		pageLines.add(p.cmdBase.cmdInvite.getUseageTemplate(true));
-		pageLines.add(p.cmdBase.cmdConfirm.getUseageTemplate(true));
-		pageLines.add(p.cmdBase.cmdDeny.getUseageTemplate(true));
 		pageLines.add(p.cmdBase.cmdDeinvite.getUseageTemplate(true));
 		pageLines.add(p.txt.parse("<i>And don't forget to set your home:"));
 		pageLines.add(p.cmdBase.cmdSethome.getUseageTemplate(true));

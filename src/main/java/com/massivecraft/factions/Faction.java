@@ -46,81 +46,10 @@ public class Faction extends Entity implements EconomyParticipator
 
 	// FIELD: invites
 	// Where string is a lowercase player name
-	// Players must be confirmed before they can join a faction
-	private Set<String> unconfirmedInvites;
-
-	public void invite(FPlayer fplayer)
-	{
-		unconfirmedInvites.add(fplayer.getName().toLowerCase());
-	}
-
-	public void deinvite(FPlayer fplayer)
-	{
-		String name = fplayer.getName().toLowerCase();
-		if (unconfirmedInvites.contains(name))
-		{
-			unconfirmedInvites.remove(name);
-		}
-
-		if (confirmedInvites.contains(name))
-		{
-			confirmedInvites.remove(name);
-		}
-	}
-
-	public boolean isInvited(FPlayer fplayer)
-	{
-		String name = fplayer.getName().toLowerCase();
-		return unconfirmedInvites.contains(name) || confirmedInvites.contains(name);
-	}
-
-	private Set<String> confirmedInvites;
-
-	public void confirm(FPlayer fplayer)
-	{
-		String name = fplayer.getName().toLowerCase();
-		if (unconfirmedInvites.contains(name))
-		{
-			confirmedInvites.add(name);
-			unconfirmedInvites.remove(name);
-		}
-	}
-
-	public void deny(FPlayer fplayer)
-	{
-		String name = fplayer.getName().toLowerCase();
-		if (unconfirmedInvites.contains(name))
-		{
-			unconfirmedInvites.remove(name);
-		}
-
-		if (confirmedInvites.contains(name))
-		{
-			confirmedInvites.remove(name);
-		}
-	}
-
-	public void join(FPlayer fplayer)
-	{
-		String name = fplayer.getName().toLowerCase();
-		if (confirmedInvites.contains(name))
-		{
-			confirmedInvites.remove(name);
-		}
-
-		if (unconfirmedInvites.contains(name))
-		{
-			unconfirmedInvites.remove(name);
-		}
-
-		fplayer.resetFactionData();
-		fplayer.setFaction(this);
-	}
-
-	public boolean isConfirmed(FPlayer fplayer)
-	{
-		return confirmedInvites.contains(fplayer.getName().toLowerCase());
-	}
+	private Set<String> invites; 
+	public void invite(FPlayer fplayer) { this.invites.add(fplayer.getName().toLowerCase()); }
+	public void deinvite(FPlayer fplayer) { this.invites.remove(fplayer.getName().toLowerCase()); }
+	public boolean isInvited(FPlayer fplayer) { return this.invites.contains(fplayer.getName().toLowerCase()); }
 
 	// FIELD: open
 	private boolean open;
@@ -405,8 +334,7 @@ public class Faction extends Entity implements EconomyParticipator
 	public Faction()
 	{
 		this.relationWish = new HashMap<String, Relation>();
-		this.unconfirmedInvites = new HashSet<String>();
-		this.confirmedInvites = new HashSet<String>();
+		this.invites = new HashSet<String>();
 		this.open = Conf.newFactionsDefaultOpen;
 		this.tag = "???";
 		this.description = "Default faction description :(";

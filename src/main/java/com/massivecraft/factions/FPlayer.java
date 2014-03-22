@@ -906,7 +906,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		}
 
 		Board.setFactionAt(forFaction, flocation);
-		forFaction.setPlayerAsOwner(getName(), flocation);
 
 		if (Conf.logLandClaims)
 			SwornNations.get().log(this.getName() + " claimed land at (" + flocation.getCoordString() + ") for the faction: " + forFaction.getTag());
