@@ -352,7 +352,7 @@ public class Board
 					}
 					else if (factionHere.isSafeZone())
 					{
-						row += Conf.colorPeaceful + "+";
+						row += ChatColor.GOLD + "+";
 					}
 					else if (factionHere.isWarZone())
 					{

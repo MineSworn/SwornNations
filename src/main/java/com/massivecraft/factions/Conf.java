@@ -31,11 +31,8 @@ public class Conf
 	public static ChatColor colorMember = ChatColor.GREEN;
 	public static ChatColor colorNation = ChatColor.DARK_PURPLE;
 	public static ChatColor colorAlly = ChatColor.LIGHT_PURPLE;
-	public static ChatColor colorNeutral = ChatColor.WHITE;
 	public static ChatColor colorEnemy = ChatColor.RED;
-
-	public static ChatColor colorPeaceful = ChatColor.GOLD;
-	public static ChatColor colorWar = ChatColor.DARK_RED;
+	public static ChatColor colorNeutral = ChatColor.WHITE;
 
 	// Power
 	public static double powerPlayerMax = 10.0;

@@ -2,7 +2,6 @@ package com.massivecraft.factions.util;
 
 import org.bukkit.ChatColor;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.iface.RelationParticipator;
@@ -147,7 +146,7 @@ public class RelationUtil
 		{
 			if (thatFaction.isPeaceful() && thatFaction != getFaction(me))
 			{
-				return Conf.colorPeaceful;
+				return ChatColor.GOLD;
 			}
 
 			if (thatFaction.isGold() && thatFaction != getFaction(me))
@@ -157,12 +156,12 @@ public class RelationUtil
 
 			if (thatFaction.isSafeZone() && thatFaction != getFaction(me))
 			{
-				return Conf.colorPeaceful;
+				return ChatColor.GOLD;
 			}
 
 			if (thatFaction.isWarZone() && thatFaction != getFaction(me))
 			{
-				return Conf.colorWar;
+				return ChatColor.DARK_RED;
 			}
 		}
 

@@ -4,7 +4,6 @@ import net.dmulloy2.swornnations.types.Material;
 
 import org.bukkit.Bukkit;
 
-
 /**
  * Util dealing with the loss of item id's
  * 

@@ -1,6 +1,5 @@
 package net.dmulloy2.swornnations.util;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,15 +23,16 @@ public class Util
 	private Util() { }
 
 	/**
-	 * Gets the OfflinePlayer from a given string
+	 * Gets the Player from a given name
 	 * 
-	 * @param pl
-	 *        - String to match with a player
-	 * @return Player from the given string, null if none exists
+	 * @param name
+	 *        - Player name or partial name
+	 * @return Player from the given name, null if none exists
+	 * @see {@link org.bukkit.Server#matchPlayer(String)}
 	 */
-	public static Player matchPlayer(String pl)
+	public static Player matchPlayer(String name)
 	{
-		List<Player> players = Bukkit.matchPlayer(pl);
+		List<Player> players = Bukkit.matchPlayer(name);
 
 		if (players.size() >= 1)
 			return players.get(0);
@@ -41,20 +41,21 @@ public class Util
 	}
 
 	/**
-	 * Gets the OfflinePlayer from a given string
+	 * Gets the OfflinePlayer from a given name
 	 * 
-	 * @param pl
-	 *        - String to match with a player
-	 * @return Player from the given string, null if none exists
+	 * @param name
+	 *        - Player name or partial name
+	 * @return OfflinePlayer from the given name, null if none exists
 	 */
-	public static OfflinePlayer matchOfflinePlayer(String pl)
+	public static OfflinePlayer matchOfflinePlayer(String name)
 	{
-		if (matchPlayer(pl) != null)
-			return matchPlayer(pl);
+		Player player = matchPlayer(name);
+		if (player != null)
+			return player;
 
 		for (OfflinePlayer o : Bukkit.getOfflinePlayers())
 		{
-			if (o.getName().equalsIgnoreCase(pl))
+			if (o.getName().equalsIgnoreCase(name))
 				return o;
 		}
 
@@ -84,7 +85,7 @@ public class Util
 	{
 		for (OfflinePlayer banned : Bukkit.getBannedPlayers())
 		{
-			if (p.equalsIgnoreCase(banned.getName()))
+			if (banned.getName().equalsIgnoreCase(p))
 				return true;
 		}
 
@@ -105,33 +106,22 @@ public class Util
 	}
 
 	/**
-	 * Returns how far two locations are from each other
+	 * Plays an effect to all online players
 	 * 
-	 * @param loc1
-	 *        - First location to compare
-	 * @param loc2
-	 *        - Second location to compare
-	 * @return Integer value of how far away they are
+	 * @param effect
+	 *        - Effect type to play
+	 * @param loc
+	 *        - Location where the effect should be played
+	 * @param data
+	 *        - Data
+	 * @see {@link Player#playEffect(Location, Effect, Object)}
 	 */
-	public static int pointDistance(Location loc1, Location loc2)
+	public static <T> void playEffect(Effect effect, Location loc, T data)
 	{
-		int p1x = (int) loc1.getX();
-		int p1y = (int) loc1.getY();
-		int p1z = (int) loc1.getZ();
-
-		int p2x = (int) loc2.getX();
-		int p2y = (int) loc2.getY();
-		int p2z = (int) loc2.getZ();
-
-		return (int) magnitude(p1x, p1y, p1z, p2x, p2y, p2z);
-	}
-
-	public static double magnitude(int x1, int y1, int z1, int x2, int y2, int z2)
-	{
-		int xdist = x1 - x2;
-		int ydist = y1 - y2;
-		int zdist = z1 - z2;
-		return Math.sqrt(xdist * xdist + ydist * ydist + zdist * zdist);
+		for (Player player : Bukkit.getOnlinePlayers())
+		{
+			player.playEffect(loc, effect, data);
+		}
 	}
 
 	/**
@@ -145,8 +135,10 @@ public class Util
 	 */
 	public static boolean checkLocation(Location loc, Location loc2)
 	{
-		return (loc.getBlockX() == loc2.getBlockX() && loc.getBlockY() == loc2.getBlockY() && loc.getBlockZ() == loc2.getBlockZ() && loc
-				.getWorld().getUID() == loc2.getWorld().getUID());
+		return loc.getBlockX() == loc2.getBlockX() 
+				&& loc.getBlockY() == loc2.getBlockY() 
+				&& loc.getBlockZ() == loc2.getBlockZ()
+				&& loc.getWorld().equals(loc2.getWorld());
 	}
 
 	/**
@@ -183,8 +175,8 @@ public class Util
 
 		for (StackTraceElement ste : e.getStackTrace())
 		{
-			if (ste.getClassName().contains("com.massivecraft.factions") || 
-					ste.getClassName().contains("net.dmulloy2.swornnations"))
+			if (ste.getClassName().contains("com.massivecraft.factions") 
+					|| ste.getClassName().contains("net.dmulloy2.swornnations"))
 				ret.append('\t' + ste.toString() + '\n');
 		}
 
@@ -230,31 +222,6 @@ public class Util
 		}
 
 		return ret;
-	}
-
-	/**
-	 * Plays an effect to all online players
-	 * 
-	 * @param effect
-	 *        - Effect type to play
-	 * @param loc
-	 *        - Location where the effect should be played
-	 * @param data
-	 *        - Data
-	 */
-	@SuppressWarnings("deprecation") // TODO: Is there a replacement for this?
-	public static void playEffect(Effect effect, Location loc, int data)
-	{
-		for (Player player : Bukkit.getOnlinePlayers())
-		{
-			player.playEffect(loc, effect, data);
-		}
-	}
-
-	public static String trimFileExtension(File file, String extension)
-	{
-		int index = file.getName().lastIndexOf(extension);
-		return index > 0 ? file.getName().substring(0, index) : file.getName();
 	}
 
 	@SuppressWarnings("deprecation")

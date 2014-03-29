@@ -76,12 +76,12 @@ public class CmdShow extends FCommand
 		String peaceStatus = "";
 		if (faction.isPeaceful())
 		{
-			peaceStatus = "     " + Conf.colorNeutral + "This faction is Peaceful";
+			peaceStatus = "     " + ChatColor.GOLD + "This faction is Peaceful";
 		}
 
 		if (faction.isPermanentWar())
 		{
-			peaceStatus = "     " + Conf.colorWar + "This faction is permanently at war with other permanent war factions.";
+			peaceStatus = "     " + ChatColor.DARK_RED + "This faction is permanently at war with other permanent war factions.";
 		}
 
 		if (faction.isGold())
