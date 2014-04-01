@@ -17,6 +17,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
@@ -253,9 +254,11 @@ public class FactionsEntityListener implements Listener
 		if (event.isCancelled())
 			return;
 
+		ThrownPotion potion = event.getPotion();
+
 		// see if the potion has a harmful effect
 		boolean badjuju = false;
-		for (PotionEffect effect : event.getPotion().getEffects())
+		for (PotionEffect effect : potion.getEffects())
 		{
 			if (badPotionEffects.contains(effect.getType()))
 			{
@@ -266,18 +269,20 @@ public class FactionsEntityListener implements Listener
 
 		if (! badjuju) return;
 
-		@SuppressWarnings("deprecation") // Basically, this method isn't deprecated, but at the same time is...
-		LivingEntity thrower = (LivingEntity) event.getPotion().getShooter();
-
-		// scan through affected entities to make sure they're all valid targets
-		Iterator<LivingEntity> iter = event.getAffectedEntities().iterator();
-		while (iter.hasNext())
+		if (potion.getShooter() instanceof LivingEntity)
 		{
-			LivingEntity target = iter.next();
-			EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(thrower, target, EntityDamageEvent.DamageCause.CUSTOM, 0.0D);
-			if (! canDamagerHurtDamagee(sub, true))
-				event.setIntensity(target, 0.0); // affected entity list doesn't accept modification (so no iter.remove()), but this works
-			sub = null;
+			LivingEntity thrower = (LivingEntity) potion.getShooter();
+
+			// scan through affected entities to make sure they're all valid targets
+			Iterator<LivingEntity> iter = event.getAffectedEntities().iterator();
+			while (iter.hasNext())
+			{
+				LivingEntity target = iter.next();
+				EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(thrower, target, EntityDamageEvent.DamageCause.CUSTOM, 0.0D);
+				if (! canDamagerHurtDamagee(sub, true))
+					event.setIntensity(target, 0.0); // affected entity list doesn't accept modification (so no iter.remove()), but this works
+				sub = null;
+			}
 		}
 	}
 
@@ -299,7 +304,6 @@ public class FactionsEntityListener implements Listener
 		return canDamagerHurtDamagee(sub, true);
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean canDamagerHurtDamagee(EntityDamageByEntityEvent sub, boolean notify)
 	{
 		Entity damager = sub.getDamager();
@@ -322,8 +326,12 @@ public class FactionsEntityListener implements Listener
 		if (damager instanceof Projectile)
 		{
 			Projectile projectile = (Projectile) damager;
-			damager = (LivingEntity) projectile.getShooter();
+			if (projectile.getShooter() instanceof LivingEntity)
+				damager = (LivingEntity) projectile.getShooter();
 		}
+
+		if (damager == null)
+			return true;
 
 		if (damager == damagee) // ender pearl usage and other self-inflicted damage
 			return true;
