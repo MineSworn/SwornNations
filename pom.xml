@@ -18,7 +18,7 @@
     </repository>
     <repository>
       <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/repositories/snapshots/</url>
+      <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
     <repository>
  	  <id>vault-repo</id>
@@ -120,7 +120,7 @@
             <groupId>*</groupId>
             <artifactId>*</artifactId>
         </exclusion>
-    </exclusions>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>net.milkbowl.vault</groupId>
@@ -142,7 +142,7 @@
             <groupId>*</groupId>
             <artifactId>*</artifactId>
         </exclusion>
-    </exclusions>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.sk89q</groupId>
@@ -153,7 +153,7 @@
             <groupId>*</groupId>
             <artifactId>*</artifactId>
         </exclusion>
-    </exclusions>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.griefcraft</groupId>
@@ -164,7 +164,7 @@
             <groupId>*</groupId>
             <artifactId>*</artifactId>
         </exclusion>
-    </exclusions>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>
