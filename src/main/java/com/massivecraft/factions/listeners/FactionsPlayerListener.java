@@ -42,6 +42,7 @@ import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.types.Permission;
 import com.massivecraft.factions.types.Relation;
 import com.massivecraft.factions.types.Role;
+import com.massivecraft.factions.util.VisualizeUtil;
 
 public class FactionsPlayerListener implements Listener
 {
@@ -964,5 +965,21 @@ public class FactionsPlayerListener implements Listener
 			return true;
 
 		return (both ? (fac == pl.getFaction() || fac.isNone()) : (fac == pl.getFaction()));
+	}
+
+	// -------------------------------------------- //
+	// VisualizeUtil
+	// -------------------------------------------- //
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerMoveClearVisualizations(PlayerMoveEvent event)
+	{
+		if (event.isCancelled()) return;
+
+		Block blockFrom = event.getFrom().getBlock();
+		Block blockTo = event.getTo().getBlock();
+		if (blockFrom.equals(blockTo)) return;
+
+		VisualizeUtil.clear(event.getPlayer());
 	}
 }

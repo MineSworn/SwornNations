@@ -49,6 +49,7 @@ public class FCmdRoot extends FCommand
 	public CmdReload cmdReload = new CmdReload();
 	public CmdSafeunclaimall cmdSafeunclaimall = new CmdSafeunclaimall();
 	public CmdSaveAll cmdSaveAll = new CmdSaveAll();
+	public CmdSeeChunk cmdSeeChunk = new CmdSeeChunk();
 	public CmdSethome cmdSethome = new CmdSethome();
 	public CmdSetwarp cmdSetwarp = new CmdSetwarp();
 	public CmdShow cmdShow = new CmdShow();
@@ -132,6 +133,7 @@ public class FCmdRoot extends FCommand
 		this.addSubCommand(this.cmdReload);
 		this.addSubCommand(this.cmdSafeunclaimall);
 		this.addSubCommand(this.cmdSaveAll);
+		this.addSubCommand(this.cmdSeeChunk);
 		this.addSubCommand(this.cmdSethome);
 		this.addSubCommand(this.cmdSetwarp);
 		this.addSubCommand(this.cmdShow);

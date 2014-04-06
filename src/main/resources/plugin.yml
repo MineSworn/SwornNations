@@ -90,6 +90,7 @@ permissions:
       factions.relation.enemy: true
       factions.relation.ally: true
       factions.relation.nation: true
+      factions.seechunk: true
       factions.sethome: true
       factions.show: true
       factions.tag: true
@@ -234,6 +235,8 @@ permissions:
     description: reload data file(s) from disk
   factions.save:
     description: save all data to disk
+  factions.seechunk:
+    description: see the chunk you are standing in
   factions.sethome:
     description: set the faction home
   factions.sethome.any:
