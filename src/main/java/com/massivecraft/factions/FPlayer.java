@@ -1,7 +1,10 @@
 package com.massivecraft.factions;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
@@ -73,6 +76,26 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		faction.addFPlayer(this);
 		this.factionId = faction.getId();
 	}
+
+	// UUID Stuff
+	private String uniqueID;
+	private List<String> knownBy = new ArrayList<String>();
+
+	public void updateUniqueID()
+	{
+		Player player = getPlayer();
+		if (player == null)
+			return;
+
+		uniqueID = player.getUniqueId().toString();
+		if (! knownBy.contains(player.getName()))
+			knownBy.add(player.getName());
+	}
+
+	public String getUniqueID() { return uniqueID; }
+	public UUID getUUID() { return UUID.fromString(uniqueID); }
+	public List<String> getKnownBy() { return knownBy; }
+	public boolean knownBy(String name) { return knownBy.contains(name); }
 
 	// FIELD: role
 	private Role role;

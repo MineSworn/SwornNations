@@ -59,6 +59,9 @@ public class FactionsPlayerListener implements Listener
 			me.setSpyingChat(true);
 		}
 
+		// UUID Stuff
+		me.updateUniqueID();
+
 		// Update the lastLoginTime for this fplayer
 		me.setLastLoginTime(System.currentTimeMillis());
 
