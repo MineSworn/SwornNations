@@ -78,7 +78,9 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	}
 
 	// UUID Stuff
+	// TODO: Sort and convert this stuff
 	private String uniqueID;
+	private String lastKnownBy;
 	private List<String> knownBy = new ArrayList<String>();
 
 	public void updateUniqueID()
@@ -87,6 +89,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		if (player == null)
 			return;
 
+		lastKnownBy = player.getName();
 		uniqueID = player.getUniqueId().toString();
 		if (! knownBy.contains(player.getName()))
 			knownBy.add(player.getName());
@@ -94,6 +97,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 	public String getUniqueID() { return uniqueID; }
 	public UUID getUUID() { return UUID.fromString(uniqueID); }
+	public String getLastKnownBy() { return lastKnownBy; }
 	public List<String> getKnownBy() { return knownBy; }
 	public boolean knownBy(String name) { return knownBy.contains(name); }
 
