@@ -30,8 +30,7 @@ public class CmdPermanentPower extends FCommand
 		if (targetFaction == null)
 			return;
 
-		int targetPower = this.argAsInt(1);
-
+		Integer targetPower = this.argAsInt(1);
 		targetFaction.setPermanentPower(targetPower);
 
 		String change = "removed permanentpower status from";
