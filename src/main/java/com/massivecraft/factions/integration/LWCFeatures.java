@@ -33,8 +33,9 @@ public class LWCFeatures
 			return;
 
 		lwc = ((LWCPlugin) plugin).getLWC();
-		SwornNations.get().log("Successfully hooked into LWC!"
-				+ (Conf.lwcIntegration ? "" : " Integration is currently disabled, though (\"lwcIntegration\")."));
+		SwornNations.get().log(
+				"Successfully hooked into LWC!"
+						+ (Conf.lwcIntegration ? "" : " Integration is currently disabled, though (\"lwcIntegration\")."));
 	}
 
 	public static boolean isEnabled()
@@ -46,7 +47,8 @@ public class LWCFeatures
 	{
 		World world = Bukkit.getWorld(flocation.getWorldName());
 		if (world == null)
-			return; // world not loaded or something? cancel out to prevent error
+			return; // world not loaded or something? cancel out to prevent
+					// error
 
 		Location location = new Location(world, flocation.getX() * 16, 5, flocation.getZ() * 16);
 		Chunk chunk = location.getChunk();
@@ -74,7 +76,8 @@ public class LWCFeatures
 	{
 		World world = Bukkit.getWorld(flocation.getWorldName());
 		if (world == null)
-			return; // world not loaded or something? cancel out to prevent error
+			return; // world not loaded or something? cancel out to prevent
+					// error
 
 		Location location = new Location(world, flocation.getX() * 16, 5, flocation.getZ() * 16);
 		Chunk chunk = location.getChunk();

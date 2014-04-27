@@ -33,28 +33,28 @@ public class CmdOwner extends FCommand
 	public void perform()
 	{
 		boolean hasBypass = fme.isAdminBypassing();
-		if ( ! hasBypass && ! assertHasFaction())
+		if (! hasBypass && ! assertHasFaction())
 			return;
 
-		if ( ! Conf.ownedAreasEnabled)
+		if (! Conf.ownedAreasEnabled)
 		{
 			fme.msg("<b>Sorry, but owned areas are disabled on this server.");
 			return;
 		}
 
-		if ( ! hasBypass && Conf.ownedAreasLimitPerFaction > 0 && myFaction.getCountOfClaimsWithOwners() >= Conf.ownedAreasLimitPerFaction)
+		if (! hasBypass && Conf.ownedAreasLimitPerFaction > 0 && myFaction.getCountOfClaimsWithOwners() >= Conf.ownedAreasLimitPerFaction)
 		{
 			fme.msg("<b>Sorry, but you have reached the server's <h>limit of %d <b>owned areas per faction.", Conf.ownedAreasLimitPerFaction);
 			return;
 		}
 
-		if ( ! hasBypass && Conf.ownedAreasLimitPerPlayer > 0 && myFaction.getCountOfClaimsWithOwner(fme) >= Conf.ownedAreasLimitPerPlayer)
+		if (! hasBypass && Conf.ownedAreasLimitPerPlayer > 0 && myFaction.getCountOfClaimsWithOwner(fme) >= Conf.ownedAreasLimitPerPlayer)
 		{
 			fme.msg("<b>Sorry, but you have reached the server's <h>limit of %d <b>owned areas per player.", Conf.ownedAreasLimitPerPlayer);
 			return;
 		}
 
-		if ( ! hasBypass && ! assertMinRole(Conf.ownedAreasModeratorsCanSet ? Role.MODERATOR : Role.ADMIN))
+		if (! hasBypass && ! assertMinRole(Conf.ownedAreasModeratorsCanSet ? Role.MODERATOR : Role.ADMIN))
 			return;
 
 		FLocation flocation = new FLocation(fme);
@@ -62,13 +62,13 @@ public class CmdOwner extends FCommand
 		Faction factionHere = Board.getFactionAt(flocation);
 		if (factionHere != myFaction)
 		{
-			if ( ! hasBypass)
+			if (! hasBypass)
 			{
 				fme.msg("<b>This land is not claimed by your faction, so you can't set ownership of it.");
 				return;
 			}
 
-			if ( ! factionHere.isNormal())
+			if (! factionHere.isNormal())
 			{
 				fme.msg("<b>This land is not claimed by a faction. Ownership is not possible.");
 				return;
@@ -87,7 +87,7 @@ public class CmdOwner extends FCommand
 			return;
 		}
 
-		if (Conf.ownedAreasPlayersCanOnlyClaimOwn && !target.getName().equals(fme.getName()) && !fme.isAdminBypassing())
+		if (Conf.ownedAreasPlayersCanOnlyClaimOwn && ! target.getName().equals(fme.getName()) && ! fme.isAdminBypassing())
 		{
 			fme.msg("<i>You can't change ownership for other players.");
 			return;
@@ -100,7 +100,8 @@ public class CmdOwner extends FCommand
 			return;
 		}
 
-		// if no player name was passed, and this claim does already have owners set, clear them
+		// if no player name was passed, and this claim does already have owners
+		// set, clear them
 		if (args.isEmpty() && myFaction.doesLocationHaveOwnersSet(flocation))
 		{
 			myFaction.clearClaimOwnership(flocation);
@@ -115,8 +116,9 @@ public class CmdOwner extends FCommand
 			return;
 		}
 
-		// if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-		if ( ! payForCommand(Conf.econCostOwner, "to set ownership of claimed land", "for setting ownership of claimed land"))
+		// if economy is enabled, they're not on the bypass list, and this
+		// command has a cost set, make 'em pay
+		if (! payForCommand(Conf.econCostOwner, "to set ownership of claimed land", "for setting ownership of claimed land"))
 			return;
 
 		myFaction.setPlayerAsOwner(target.getName(), flocation);

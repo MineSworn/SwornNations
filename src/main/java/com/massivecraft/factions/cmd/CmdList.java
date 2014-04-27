@@ -35,7 +35,7 @@ public class CmdList extends FCommand
 	{
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.econCostList, "to list the factions", "for listing the factions"))
+		if (! payForCommand(Conf.econCostList, "to list the factions", "for listing the factions"))
 			return;
 
 		ArrayList<Faction> factionList = new ArrayList<Faction>(Factions.i.get());
@@ -54,7 +54,7 @@ public class CmdList extends FCommand
 				if (f1Size < f2Size)
 					return 1;
 				else if (f1Size > f2Size)
-					return -1;
+					return - 1;
 				return 0;
 			}
 		});
@@ -70,7 +70,7 @@ public class CmdList extends FCommand
 				if (f1Size < f2Size)
 					return 1;
 				else if (f1Size > f2Size)
-					return -1;
+					return - 1;
 				return 0;
 			}
 		});
@@ -84,7 +84,6 @@ public class CmdList extends FCommand
 		 * faction.getTag(fme), faction.getFPlayersWhereOnline(true).size(),
 		 * faction.getFPlayers().size(), faction.getLandRounded(),
 		 * faction.getPowerRounded(), faction.getPowerMaxRounded()) ); }
-		 * 
 		 * sendMessage(p.txt.getPage(lines, this.argAsInt(0, 1),
 		 * "Faction List"));
 		 */

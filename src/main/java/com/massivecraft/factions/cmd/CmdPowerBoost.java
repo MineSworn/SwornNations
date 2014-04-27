@@ -74,6 +74,7 @@ public class CmdPowerBoost extends FCommand
 
 		msg("%s <i>now has a %s of %s to min and max power levels.", target.describeTo(rme), action, targetPower);
 		if (! senderIsConsole)
-			SwornNations.get().log("%s has set the power %s for %s to %s", fme.getName(), action, target.describeTo(Console.get()), targetPower);
+			SwornNations.get().log("%s has set the power %s for %s to %s", fme.getName(), action, target.describeTo(Console.get()),
+					targetPower);
 	}
 }

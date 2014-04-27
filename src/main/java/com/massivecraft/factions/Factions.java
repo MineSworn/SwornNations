@@ -26,8 +26,8 @@ public class Factions extends EntityCollection<Faction>
 
 	private Factions()
 	{
-		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(), new File(SwornNations.get().getDataFolder(),
-				"factions.json"), SwornNations.get().gson);
+		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(), new File(SwornNations.get()
+				.getDataFolder(), "factions.json"), SwornNations.get().gson);
 
 		this.p = SwornNations.get();
 	}
@@ -47,7 +47,7 @@ public class Factions extends EntityCollection<Faction>
 			return false;
 
 		// Make sure the default neutral faction exists
-		if (!this.exists("0"))
+		if (! this.exists("0"))
 		{
 			Faction faction = this.create("0");
 			faction.setTag(ChatColor.DARK_GREEN + "Wilderness");
@@ -55,7 +55,7 @@ public class Factions extends EntityCollection<Faction>
 		}
 
 		// Make sure the safe zone faction exists
-		if (!this.exists("-1"))
+		if (! this.exists("-1"))
 		{
 			Faction faction = this.create("-1");
 			faction.setTag("SafeZone");
@@ -71,7 +71,7 @@ public class Factions extends EntityCollection<Faction>
 		}
 
 		// Make sure the war zone faction exists
-		if (!this.exists("-2"))
+		if (! this.exists("-2"))
 		{
 			Faction faction = this.create("-2");
 			faction.setTag("WarZone");
@@ -150,7 +150,7 @@ public class Factions extends EntityCollection<Faction>
 
 		for (char c : str.toCharArray())
 		{
-			if (!MiscUtil.substanceChars.contains(String.valueOf(c)))
+			if (! MiscUtil.substanceChars.contains(String.valueOf(c)))
 			{
 				errors.add(SwornNations.get().txt.parse("<i>Faction tag must be alphanumeric. \"<h>%s<i>\" is not allowed.", c));
 			}

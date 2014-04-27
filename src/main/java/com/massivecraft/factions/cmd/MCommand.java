@@ -138,10 +138,10 @@ public abstract class MCommand<T extends SwornNations>
 			}
 		}
 
-		if (!validCall(this.sender, this.args))
+		if (! validCall(this.sender, this.args))
 			return;
 
-		if (!this.isEnabled())
+		if (! this.isEnabled())
 			return;
 
 		perform();
@@ -166,17 +166,17 @@ public abstract class MCommand<T extends SwornNations>
 	// TODO: There should be a boolean for silence
 	public boolean validCall(CommandSender sender, List<String> args)
 	{
-		if (!validSenderType(sender, true))
+		if (! validSenderType(sender, true))
 		{
 			return false;
 		}
 
-		if (!validSenderPermissions(sender, true))
+		if (! validSenderPermissions(sender, true))
 		{
 			return false;
 		}
 
-		if (!validArgs(args, sender))
+		if (! validArgs(args, sender))
 		{
 			return false;
 		}
@@ -191,7 +191,7 @@ public abstract class MCommand<T extends SwornNations>
 
 	public boolean validSenderType(CommandSender sender, boolean informSenderIfNot)
 	{
-		if (this.senderMustBePlayer && !(sender instanceof Player))
+		if (this.senderMustBePlayer && ! (sender instanceof Player))
 		{
 			if (informSenderIfNot)
 			{

@@ -44,7 +44,8 @@ public class CmdMoneyTransferFf extends FCommand
 		boolean success = Econ.transferMoney(fme, from, to, amount);
 
 		if (success && Conf.logMoneyTransactions)
-			SwornNations.get().log(ChatColor.stripColor(SwornNations.get().txt.parse("%s transferred %s from the faction \"%s\" to the faction \"%s\"", fme.getName(),
-					Econ.moneyString(amount), from.describeTo(null), to.describeTo(null))));
+			SwornNations.get().log(
+					ChatColor.stripColor(SwornNations.get().txt.parse("%s transferred %s from the faction \"%s\" to the faction \"%s\"",
+							fme.getName(), Econ.moneyString(amount), from.describeTo(null), to.describeTo(null))));
 	}
 }

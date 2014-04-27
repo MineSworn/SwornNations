@@ -36,13 +36,13 @@ public class CmdOfficer extends FCommand
 		boolean permAny = Permission.OFFICER_ANY.has(sender, false);
 		Faction targetFaction = you.getFaction();
 
-		if (targetFaction != myFaction && !permAny)
+		if (targetFaction != myFaction && ! permAny)
 		{
 			msg("%s<b> is not a member in your faction.", you.describeTo(fme, true));
 			return;
 		}
 
-		if (you == fme && !permAny)
+		if (you == fme && ! permAny)
 		{
 			msg("<b>The target player musn't be yourself.");
 			return;

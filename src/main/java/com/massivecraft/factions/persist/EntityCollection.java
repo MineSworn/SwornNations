@@ -147,7 +147,7 @@ public abstract class EntityCollection<E extends Entity>
 
 	public synchronized E create(String id)
 	{
-		if (!this.isIdFree(id))
+		if (! this.isIdFree(id))
 			return null;
 
 		E e = null;
@@ -203,7 +203,7 @@ public abstract class EntityCollection<E extends Entity>
 
 	public boolean detached(E entity)
 	{
-		return !this.attached(entity);
+		return ! this.attached(entity);
 	}
 
 	// -------------------------------------------- //
@@ -244,7 +244,7 @@ public abstract class EntityCollection<E extends Entity>
 
 	private Map<String, E> loadCore()
 	{
-		if (!this.file.exists())
+		if (! this.file.exists())
 		{
 			return new HashMap<String, E>();
 		}
@@ -265,7 +265,7 @@ public abstract class EntityCollection<E extends Entity>
 
 	public String getNextId()
 	{
-		while (!isIdFree(this.nextId))
+		while (! isIdFree(this.nextId))
 		{
 			this.nextId += 1;
 		}
@@ -274,7 +274,7 @@ public abstract class EntityCollection<E extends Entity>
 
 	public boolean isIdFree(String id)
 	{
-		return !this.id2entity.containsKey(id);
+		return ! this.id2entity.containsKey(id);
 	}
 
 	public boolean isIdFree(int id)

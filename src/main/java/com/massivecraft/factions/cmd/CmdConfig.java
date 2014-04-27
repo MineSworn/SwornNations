@@ -269,7 +269,7 @@ public class CmdConfig extends FCommand
 			return;
 		}
 
-		if (!success.isEmpty())
+		if (! success.isEmpty())
 		{
 			sendMessage(success);
 			if (sender instanceof Player)

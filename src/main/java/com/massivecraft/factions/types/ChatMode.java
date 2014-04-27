@@ -2,10 +2,7 @@ package com.massivecraft.factions.types;
 
 public enum ChatMode
 {
-	FACTION(3, "faction chat"), 
-	NATION(2, "nation chat"), 
-	ALLIANCE(1, "alliance chat"), 
-	PUBLIC(0, "public chat");
+	FACTION(3, "faction chat"), NATION(2, "nation chat"), ALLIANCE(1, "alliance chat"), PUBLIC(0, "public chat");
 
 	public final int value;
 	public final String nicename;

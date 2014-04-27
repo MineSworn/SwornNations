@@ -12,7 +12,9 @@ import org.bukkit.Bukkit;
 
 public class MaterialUtil
 {
-	private MaterialUtil() { }
+	private MaterialUtil()
+	{
+	}
 
 	/**
 	 * Returns the {@link org.bukkit.Material} from a given string

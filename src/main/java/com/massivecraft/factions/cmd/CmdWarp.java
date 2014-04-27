@@ -36,13 +36,13 @@ public class CmdWarp extends FCommand
 	@Override
 	public void perform()
 	{
-		if (!Conf.warpsEnabled)
+		if (! Conf.warpsEnabled)
 		{
 			fme.msg("<b>Sorry, Faction warps are disabled on this server.");
 			return;
 		}
 
-		if (!myFaction.hasWarp())
+		if (! myFaction.hasWarp())
 		{
 			fme.msg("<b>Your faction does not have a warp. "
 					+ (fme.getRole().value < Role.ADMIN.value ? "<i> Ask your leader to:" : "<i>You should:"));
@@ -50,7 +50,7 @@ public class CmdWarp extends FCommand
 			return;
 		}
 
-		if (!Conf.warpsTeleportAllowedFromEnemyTerritory && fme.isInEnemyTerritory())
+		if (! Conf.warpsTeleportAllowedFromEnemyTerritory && fme.isInEnemyTerritory())
 		{
 			fme.msg("<b>You cannot teleport to your faction warp while in the territory of an enemy faction.");
 			return;
@@ -62,7 +62,7 @@ public class CmdWarp extends FCommand
 		if (isEnemyNearby(faction, loc))
 			return;
 
-		if (!payPowerForCommand(Conf.warpsPowerCostToUse))
+		if (! payPowerForCommand(Conf.warpsPowerCostToUse))
 			return;
 
 		if (EssentialsFeatures.handleTeleport(me, myFaction.getWarp()))

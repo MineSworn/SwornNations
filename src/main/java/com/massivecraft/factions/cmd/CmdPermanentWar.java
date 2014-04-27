@@ -51,7 +51,8 @@ public class CmdPermanentWar extends FCommand
 			faction.setPeaceful(false);
 		}
 
-		SwornNations.get().log((fme == null ? "A server admin" : fme.getName()) + " " + change + " the faction \"" + faction.getTag() + "\".");
+		SwornNations.get()
+				.log((fme == null ? "A server admin" : fme.getName()) + " " + change + " the faction \"" + faction.getTag() + "\".");
 
 		for (FPlayer fplayer : FPlayers.i.getOnline())
 		{

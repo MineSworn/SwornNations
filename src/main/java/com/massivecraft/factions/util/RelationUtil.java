@@ -77,7 +77,7 @@ public class RelationUtil
 		if (fme == null)
 			return Relation.NEUTRAL; // ERROR
 
-		if (!fthat.isNormal() || !fme.isNormal())
+		if (! fthat.isNormal() || ! fme.isNormal())
 		{
 			return Relation.NEUTRAL;
 		}
@@ -87,7 +87,7 @@ public class RelationUtil
 			return Relation.MEMBER;
 		}
 
-		if (!ignorePeaceful && (fme.isPeaceful() || fthat.isPeaceful()))
+		if (! ignorePeaceful && (fme.isPeaceful() || fthat.isPeaceful()))
 		{
 			return Relation.NEUTRAL;
 		}

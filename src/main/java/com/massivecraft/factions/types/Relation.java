@@ -6,11 +6,7 @@ import com.massivecraft.factions.Conf;
 
 public enum Relation
 {
-	MEMBER(4, "member"), 
-	NATION(3, "nation"),
-	ALLY(2, "ally"), 
-	NEUTRAL(1, "neutral"),
-	ENEMY(0, "enemy");
+	MEMBER(4, "member"), NATION(3, "nation"), ALLY(2, "ally"), NEUTRAL(1, "neutral"), ENEMY(0, "enemy");
 
 	public final int value;
 	public final String nicename;

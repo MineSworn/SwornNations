@@ -27,10 +27,15 @@ public class Console implements RelationParticipator
 	// -------------------------------
 
 	private static Console i = new Console();
-	public static Console get() { return i; }
+
+	public static Console get()
+	{
+		return i;
+	}
 
 	// FIELD: name
 	private String name = "Console";
+
 	public String getName()
 	{
 		return this.name;

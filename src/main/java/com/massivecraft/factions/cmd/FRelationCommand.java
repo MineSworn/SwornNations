@@ -87,11 +87,12 @@ public abstract class FRelationCommand extends FCommand
 				return;
 			}
 
-//			if (! canAlly(them))
-//			{
-//				msg("<i>You can't enter a nation with " + them.getTag(fme) + "<i> because you are at war with their allies.");
-//				return;
-//			}
+			// if (! canAlly(them))
+			// {
+			// msg("<i>You can't enter a nation with " + them.getTag(fme) +
+			// "<i> because you are at war with their allies.");
+			// return;
+			// }
 
 			if (nationWishes.containsKey(them) && nationWishes.get(them) == myFaction)
 			{
@@ -125,7 +126,7 @@ public abstract class FRelationCommand extends FCommand
 
 		// try to set the new relation
 		Relation oldRelation = myFaction.getRelationTo(them, true);
-		
+
 		// Special case for nation
 		if (oldRelation == Relation.NATION)
 		{
@@ -136,20 +137,23 @@ public abstract class FRelationCommand extends FCommand
 			}
 		}
 
-//		if (oldRelation.equals(Relation.NATION) && ! myFaction.playerHasPermission(fme, NPermission.NATION))
-//		{
-//			msg("<b>You don't have permission to break a Nation with %s.", them.getTag());
-//			return;
-//		}
+		// if (oldRelation.equals(Relation.NATION) && !
+		// myFaction.playerHasPermission(fme, NPermission.NATION))
+		// {
+		// msg("<b>You don't have permission to break a Nation with %s.",
+		// them.getTag());
+		// return;
+		// }
 
-//		if (targetRelation == Relation.ENEMY)
-//			breakAllies(them);
+		// if (targetRelation == Relation.ENEMY)
+		// breakAllies(them);
 
-//		if (targetRelation == Relation.ALLY && !canAlly(them))
-//		{
-//			msg("<i>You can't ally " + them.getTag(fme) + "<i> because you are at war with their allies.");
-//			return;
-//		}
+		// if (targetRelation == Relation.ALLY && !canAlly(them))
+		// {
+		// msg("<i>You can't ally " + them.getTag(fme) +
+		// "<i> because you are at war with their allies.");
+		// return;
+		// }
 
 		myFaction.setRelationWish(them, targetRelation);
 		Relation currentRelation = myFaction.getRelationTo(them, true);
@@ -203,61 +207,63 @@ public abstract class FRelationCommand extends FCommand
 		}
 	}
 
-//	private boolean breakAllies(Faction them)
-//	{
-//		List<Faction> allies = new ArrayList<Faction>();
-//
-//		for (Faction otherFaction : Factions.i.get())
-//		{
-//			if (otherFaction == myFaction || otherFaction == them)
-//				continue;
-//
-//			Relation rel = otherFaction.getRelationTo(myFaction);
-//			if (rel.isAtLeast(Relation.ALLY))
-//				allies.add(otherFaction);
-//		}
-//
-//		boolean result = false;
-//		for (Faction otherFaction : allies)
-//		{
-//			if (otherFaction.getRelationTo(them).isAtLeast(Relation.ALLY))
-//			{
-//				result = true;
-//				otherFaction.setRelationWish(myFaction, Relation.ENEMY);
-//				myFaction.setRelationWish(otherFaction, Relation.ENEMY);
-//				otherFaction.msg("<i>Your faction is now &cenemy <i>to &c" + myFaction.getTag() + "<i> because they are at war with "
-//						+ them.getTag(otherFaction));
-//				myFaction.msg("<i>Your faction is now &cenemy<i> to &c" + otherFaction.getTag());
-//			}
-//		}
-//
-//		return result;
-//	}
-//
-//	private boolean canAlly(Faction them)
-//	{
-//		List<Faction> enemies = new ArrayList<Faction>();
-//
-//		for (Faction otherFaction : Factions.i.get())
-//		{
-//			if (otherFaction == myFaction || otherFaction == them)
-//				continue;
-//
-//			Relation rel = otherFaction.getRelationTo(myFaction);
-//			if (rel.isEnemy())
-//				enemies.add(otherFaction);
-//		}
-//
-//		boolean result = true;
-//		for (Faction otherFaction : enemies)
-//		{
-//			if (otherFaction.getRelationTo(them).isAtLeast(Relation.ALLY))
-//			{
-//				result = false;
-//				break;
-//			}
-//		}
-//
-//		return result;
-//	}
+	// private boolean breakAllies(Faction them)
+	// {
+	// List<Faction> allies = new ArrayList<Faction>();
+	//
+	// for (Faction otherFaction : Factions.i.get())
+	// {
+	// if (otherFaction == myFaction || otherFaction == them)
+	// continue;
+	//
+	// Relation rel = otherFaction.getRelationTo(myFaction);
+	// if (rel.isAtLeast(Relation.ALLY))
+	// allies.add(otherFaction);
+	// }
+	//
+	// boolean result = false;
+	// for (Faction otherFaction : allies)
+	// {
+	// if (otherFaction.getRelationTo(them).isAtLeast(Relation.ALLY))
+	// {
+	// result = true;
+	// otherFaction.setRelationWish(myFaction, Relation.ENEMY);
+	// myFaction.setRelationWish(otherFaction, Relation.ENEMY);
+	// otherFaction.msg("<i>Your faction is now &cenemy <i>to &c" +
+	// myFaction.getTag() + "<i> because they are at war with "
+	// + them.getTag(otherFaction));
+	// myFaction.msg("<i>Your faction is now &cenemy<i> to &c" +
+	// otherFaction.getTag());
+	// }
+	// }
+	//
+	// return result;
+	// }
+	//
+	// private boolean canAlly(Faction them)
+	// {
+	// List<Faction> enemies = new ArrayList<Faction>();
+	//
+	// for (Faction otherFaction : Factions.i.get())
+	// {
+	// if (otherFaction == myFaction || otherFaction == them)
+	// continue;
+	//
+	// Relation rel = otherFaction.getRelationTo(myFaction);
+	// if (rel.isEnemy())
+	// enemies.add(otherFaction);
+	// }
+	//
+	// boolean result = true;
+	// for (Faction otherFaction : enemies)
+	// {
+	// if (otherFaction.getRelationTo(them).isAtLeast(Relation.ALLY))
+	// {
+	// result = false;
+	// break;
+	// }
+	// }
+	//
+	// return result;
+	// }
 }

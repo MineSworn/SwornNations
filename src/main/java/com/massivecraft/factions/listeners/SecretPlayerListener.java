@@ -22,7 +22,8 @@ public class SecretPlayerListener implements Listener
 		if (SwornNations.get().handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (SwornNations.get().logPlayerCommands())
-				SwornNations.get().getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
+				SwornNations.get().getServer().getLogger()
+						.info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}
@@ -33,7 +34,8 @@ public class SecretPlayerListener implements Listener
 		if (SwornNations.get().handleCommand(event.getPlayer(), event.getMessage()))
 		{
 			if (SwornNations.get().logPlayerCommands())
-				SwornNations.get().getServer().getLogger().info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
+				SwornNations.get().getServer().getLogger()
+						.info(event.getPlayer().getName() + " issued server command: " + event.getMessage());
 			event.setCancelled(true);
 		}
 	}

@@ -60,19 +60,19 @@ public class CmdHome extends FCommand
 			}
 		}
 
-		if (!Conf.homesEnabled)
+		if (! Conf.homesEnabled)
 		{
 			fme.msg("<b>Sorry, Faction homes are disabled on this server.");
 			return;
 		}
 
-		if (!Conf.homesTeleportCommandEnabled)
+		if (! Conf.homesTeleportCommandEnabled)
 		{
 			fme.msg("<b>Sorry, the ability to teleport to Faction homes is disabled on this server.");
 			return;
 		}
 
-		if (!myFaction.hasHome())
+		if (! myFaction.hasHome())
 		{
 			fme.msg("<b>Your faction does not have a home. "
 					+ (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
@@ -80,19 +80,19 @@ public class CmdHome extends FCommand
 			return;
 		}
 
-		if (!Conf.homesTeleportAllowedFromEnemyTerritory && fme.isInEnemyTerritory())
+		if (! Conf.homesTeleportAllowedFromEnemyTerritory && fme.isInEnemyTerritory())
 		{
 			fme.msg("<b>You cannot teleport to your faction home while in the territory of an enemy faction.");
 			return;
 		}
 
-		if (!Conf.homesTeleportAllowedFromDifferentWorld && me.getWorld().getUID() != myFaction.getHome().getWorld().getUID())
+		if (! Conf.homesTeleportAllowedFromDifferentWorld && me.getWorld().getUID() != myFaction.getHome().getWorld().getUID())
 		{
 			fme.msg("<b>You cannot teleport to your faction home while in a different world.");
 			return;
 		}
 
-		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && myFaction.getHome().getBlockY() < Conf.homesMustBeGreaterThan)
+		if (! Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && myFaction.getHome().getBlockY() < Conf.homesMustBeGreaterThan)
 		{
 			if (moveHome())
 			{
@@ -115,7 +115,7 @@ public class CmdHome extends FCommand
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.econCostHome, "to teleport to your faction home", "for teleporting to your faction home"))
+		if (! payForCommand(Conf.econCostHome, "to teleport to your faction home", "for teleporting to your faction home"))
 			return;
 
 		// Create a smoke effect
@@ -135,7 +135,7 @@ public class CmdHome extends FCommand
 	public boolean moveHome()
 	{
 		Location home = myFaction.getHome();
-		while (home.getBlockY() < Conf.homesMustBeGreaterThan && home.getBlockY() < 256 && !checkIsValidHome(home))
+		while (home.getBlockY() < Conf.homesMustBeGreaterThan && home.getBlockY() < 256 && ! checkIsValidHome(home))
 		{
 			home = home.add(0, 1, 0);
 		}
@@ -153,7 +153,7 @@ public class CmdHome extends FCommand
 	{
 		if (home.getWorld().getBlockAt(home).getType() == Material.AIR
 				&& home.getWorld().getBlockAt(home.clone().add(0, 1, 0)).getType() == Material.AIR
-				&& home.getWorld().getBlockAt(home.clone().subtract(0, -1, 0)).getType() != Material.AIR)
+				&& home.getWorld().getBlockAt(home.clone().subtract(0, - 1, 0)).getType() != Material.AIR)
 			return true;
 		return false;
 	}

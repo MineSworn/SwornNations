@@ -34,8 +34,9 @@ public class FactionsChatListener implements Listener
 		String msg = event.getMessage();
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		ChatMode chat = me.getChatMode();
-		
-		// Slashless factions commands need to be handled here if the user isn't in public chat mode
+
+		// Slashless factions commands need to be handled here if the user isn't
+		// in public chat mode
 		if (chat != ChatMode.PUBLIC && SwornNations.get().handleCommand(talkingPlayer, msg))
 		{
 			if (Conf.logPlayerCommands)
@@ -45,8 +46,10 @@ public class FactionsChatListener implements Listener
 		}
 	}
 
-	// This is for handling insertion of the player's faction tag and faction chat,
-	// set at highest priority to give other plugins a chance to modify chat first
+	// This is for handling insertion of the player's faction tag and faction
+	// chat,
+	// set at highest priority to give other plugins a chance to modify chat
+	// first
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
@@ -129,7 +132,7 @@ public class FactionsChatListener implements Listener
 		String before = ! me.getChatTag().isEmpty() ? Conf.chatTagPrefix : "";
 		String key = Conf.chatTagReplaceString;
 		String after = ! me.getChatTag().isEmpty() ? Conf.chatTagSuffix : "";
-		
+
 		String nonColoredMsgFormat = eventFormat.replace(key, before + me.getChatTag().trim() + after);
 
 		// Relation Colored?

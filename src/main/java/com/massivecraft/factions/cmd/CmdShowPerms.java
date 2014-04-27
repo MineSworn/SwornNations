@@ -40,7 +40,7 @@ public class CmdShowPerms extends FCommand
 			if (you == null)
 				return;
 
-			if (!you.hasFaction() || !fme.hasFaction())
+			if (! you.hasFaction() || ! fme.hasFaction())
 				return;
 
 			if (you.getFaction() != fme.getFaction())
@@ -63,7 +63,7 @@ public class CmdShowPerms extends FCommand
 		}
 		else if (args.get(0).equalsIgnoreCase("r"))
 		{
-			if (!fme.hasFaction())
+			if (! fme.hasFaction())
 				return;
 			Role role = null;
 			if (args.get(1).equalsIgnoreCase("mod") || args.get(1).equalsIgnoreCase("moderator"))

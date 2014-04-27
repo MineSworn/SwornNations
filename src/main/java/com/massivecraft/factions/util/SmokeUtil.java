@@ -8,19 +8,19 @@ import org.bukkit.Location;
 
 // http://mc.kev009.com/Protocol
 // -----------------------------
-// Smoke Directions 
+// Smoke Directions
 // -----------------------------
-// Direction ID    Direction
-//            0    South - East
-//            1    South
-//            2    South - West
-//            3    East
-//            4    (Up or middle ?)
-//            5    West
-//            6    North - East
-//            7    North
-//            8    North - West
-//-----------------------------
+// Direction ID Direction
+// 0 South - East
+// 1 South
+// 2 South - West
+// 3 East
+// 4 (Up or middle ?)
+// 5 West
+// 6 North - East
+// 7 North
+// 8 North - West
+// -----------------------------
 
 public class SmokeUtil
 {

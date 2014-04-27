@@ -46,10 +46,22 @@ public class Faction extends Entity implements EconomyParticipator
 
 	// FIELD: invites
 	// Where string is a lowercase player name
-	private Set<String> invites; 
-	public void invite(FPlayer fplayer) { this.invites.add(fplayer.getName().toLowerCase()); }
-	public void deinvite(FPlayer fplayer) { this.invites.remove(fplayer.getName().toLowerCase()); }
-	public boolean isInvited(FPlayer fplayer) { return this.invites.contains(fplayer.getName().toLowerCase()); }
+	private Set<String> invites;
+
+	public void invite(FPlayer fplayer)
+	{
+		this.invites.add(fplayer.getName().toLowerCase());
+	}
+
+	public void deinvite(FPlayer fplayer)
+	{
+		this.invites.remove(fplayer.getName().toLowerCase());
+	}
+
+	public boolean isInvited(FPlayer fplayer)
+	{
+		return this.invites.contains(fplayer.getName().toLowerCase());
+	}
 
 	// FIELD: open
 	private boolean open;
@@ -237,8 +249,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public void confirmValidOutpost()
 	{
-		if (outpost == null
-				|| (outpost.getLocation() != null && Board.getFactionAt(new FLocation(outpost.getLocation())) == this))
+		if (outpost == null || (outpost.getLocation() != null && Board.getFactionAt(new FLocation(outpost.getLocation())) == this))
 			return;
 
 		msg("<b>Your faction outpost has been un-set since it is no longer in your territory.");
@@ -370,7 +381,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean isNormal()
 	{
-		return !(this.isNone() || this.isSafeZone() || this.isWarZone());
+		return ! (this.isNone() || this.isSafeZone() || this.isWarZone());
 	}
 
 	public boolean isNone()
@@ -585,7 +596,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public FPlayer getFPlayerAdmin()
 	{
-		if (!this.isNormal())
+		if (! this.isNormal())
 			return null;
 
 		for (FPlayer fplayer : fplayers)
@@ -601,7 +612,7 @@ public class Faction extends Entity implements EconomyParticipator
 	public ArrayList<FPlayer> getFPlayersWhereRole(Role role)
 	{
 		ArrayList<FPlayer> ret = new ArrayList<FPlayer>();
-		if (!this.isNormal())
+		if (! this.isNormal())
 			return ret;
 
 		for (FPlayer fplayer : fplayers)
@@ -652,8 +663,8 @@ public class Faction extends Entity implements EconomyParticipator
 
 		// even if all players are technically logged off, maybe someone was on
 		// recently enough to not consider them officially offline yet
-		return (Conf.considerFactionsReallyOfflineAfterXMinutes > 0
-				&& System.currentTimeMillis() < lastPlayerLoggedOffTime + (Conf.considerFactionsReallyOfflineAfterXMinutes * 60000));
+		return (Conf.considerFactionsReallyOfflineAfterXMinutes > 0 && System.currentTimeMillis() < lastPlayerLoggedOffTime
+				+ (Conf.considerFactionsReallyOfflineAfterXMinutes * 60000));
 	}
 
 	public void memberLoggedOff()
@@ -668,7 +679,7 @@ public class Faction extends Entity implements EconomyParticipator
 	// promotes new leader, or disbands faction if no other members left
 	public void promoteNewLeader()
 	{
-		if (!this.isNormal())
+		if (! this.isNormal())
 			return;
 		if (this.isPermanent() && Conf.permanentFactionsDisableLeaderPromotion)
 			return;
@@ -692,7 +703,8 @@ public class Faction extends Entity implements EconomyParticipator
 
 			// no members left and faction isn't permanent, so disband it
 			if (Conf.logFactionDisband)
-				SwornNations.get().log("The faction " + this.getTag() + " (" + this.getId() + ") has been disbanded since it has no members left.");
+				SwornNations.get().log(
+						"The faction " + this.getTag() + " (" + this.getId() + ") has been disbanded since it has no members left.");
 
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
@@ -708,8 +720,9 @@ public class Faction extends Entity implements EconomyParticipator
 			replacements.get(0).setRole(Role.ADMIN);
 			this.msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.", oldLeader == null ? ""
 					: oldLeader.getName(), replacements.get(0).getName());
-			SwornNations.get().log("Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: "
-					+ replacements.get(0).getName());
+			SwornNations.get().log(
+					"Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: "
+							+ replacements.get(0).getName());
 		}
 	}
 
@@ -758,7 +771,7 @@ public class Faction extends Entity implements EconomyParticipator
 		if (Conf.onUnclaimResetLwcLocks && LWCFeatures.isEnabled())
 		{
 			LWCFeatures.clearAllChests(loc);
-//			Bukkit.getServer().broadcastMessage("boardclearat / clearclaim");
+			// Bukkit.getServer().broadcastMessage("boardclearat / clearclaim");
 		}
 
 		claimOwnership.remove(loc);
@@ -820,13 +833,13 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean doesLocationHaveOwnersSet(FLocation loc)
 	{
-		if (claimOwnership.isEmpty() || !claimOwnership.containsKey(loc))
+		if (claimOwnership.isEmpty() || ! claimOwnership.containsKey(loc))
 		{
 			return false;
 		}
 
 		Set<String> ownerData = claimOwnership.get(loc);
-		return ownerData != null && !ownerData.isEmpty();
+		return ownerData != null && ! ownerData.isEmpty();
 	}
 
 	public boolean isPlayerInOwnerList(String playerName, FLocation loc)
@@ -888,7 +901,7 @@ public class Faction extends Entity implements EconomyParticipator
 		Iterator<String> iter = ownerData.iterator();
 		while (iter.hasNext())
 		{
-			if (!ownerList.isEmpty())
+			if (! ownerList.isEmpty())
 			{
 				ownerList += ", ";
 			}

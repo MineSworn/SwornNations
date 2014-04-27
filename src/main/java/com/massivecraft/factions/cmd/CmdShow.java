@@ -26,7 +26,7 @@ public class CmdShow extends FCommand
 		this.permission = Permission.SHOW.node;
 		this.disableOnLock = false;
 
-//		senderMustBePlayer = true;
+		// senderMustBePlayer = true;
 		senderMustBePlayer = false;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
@@ -68,7 +68,7 @@ public class CmdShow extends FCommand
 
 		msg(p.txt.titleize(faction.getTag(rme)));
 		msg("<a>Description: <i>%s", faction.getDescription());
-		if (!faction.isNormal())
+		if (! faction.isNormal())
 		{
 			return;
 		}
@@ -86,7 +86,7 @@ public class CmdShow extends FCommand
 
 		if (faction.isGold())
 		{
-			peaceStatus = "     " + ChatColor.GOLD + "This faction is currently at war with other gold factions."; 
+			peaceStatus = "     " + ChatColor.GOLD + "This faction is currently at war with other gold factions.";
 		}
 
 		msg("<a>Joining: <i>" + (faction.getOpen() ? "no invitation is needed" : "invitation is required") + peaceStatus);
@@ -132,7 +132,7 @@ public class CmdShow extends FCommand
 				continue;
 
 			Relation rel = otherFaction.getRelationTo(faction);
-			if (!rel.isAlly() && !rel.isEnemy() && !rel.isNation())
+			if (! rel.isAlly() && ! rel.isEnemy() && ! rel.isNation())
 				continue;
 			listpart = otherFaction.getTag(rme) + p.txt.parse("<i>") + ", ";
 			if (rel.isAlly())

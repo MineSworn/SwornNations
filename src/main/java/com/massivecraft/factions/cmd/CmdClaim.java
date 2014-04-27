@@ -34,7 +34,7 @@ public class CmdClaim extends FCommand
 	@Override
 	public void perform()
 	{
-		if (!fme.hasFaction() && args.size() == 0)
+		if (! fme.hasFaction() && args.size() == 0)
 		{
 			msg("<b>You cannot claim land for no faction.");
 			return;
@@ -68,7 +68,7 @@ public class CmdClaim extends FCommand
 					boolean success = fme.attemptClaim(forFaction, this.currentLocation(), true);
 					if (success)
 						failCount = 0;
-					else if (!success && failCount++ >= limit)
+					else if (! success && failCount++ >= limit)
 					{
 						this.stop();
 						return false;

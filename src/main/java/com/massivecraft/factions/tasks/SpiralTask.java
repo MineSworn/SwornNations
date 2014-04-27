@@ -11,15 +11,10 @@ import org.bukkit.World;
 import com.massivecraft.factions.FLocation;
 
 /*
- * reference diagram, task should move in this pattern out from chunk 0 in the center.
- *  8 [>][>][>][>][>] etc.
- * [^][6][>][>][>][>][>][6]
- * [^][^][4][>][>][>][4][v]
- * [^][^][^][2][>][2][v][v]
- * [^][^][^][^][0][v][v][v]
- * [^][^][^][1][1][v][v][v]
- * [^][^][3][<][<][3][v][v]
- * [^][5][<][<][<][<][5][v]
+ * reference diagram, task should move in this pattern out from chunk 0 in the
+ * center. 8 [>][>][>][>][>] etc. [^][6][>][>][>][>][>][6]
+ * [^][^][4][>][>][>][4][v] [^][^][^][2][>][2][v][v] [^][^][^][^][0][v][v][v]
+ * [^][^][^][1][1][v][v][v] [^][^][3][<][<][3][v][v] [^][5][<][<][<][<][5][v]
  * [7][<][<][<][<][<][<][7]
  */
 
@@ -28,7 +23,7 @@ public abstract class SpiralTask implements Runnable
 	// general task-related reference data
 	private transient World world = null;
 	private transient boolean readyToGo = false;
-	private transient int taskID = -1;
+	private transient int taskID = - 1;
 	private transient int limit = 0;
 
 	// values for the spiral pattern routine
@@ -36,7 +31,7 @@ public abstract class SpiralTask implements Runnable
 	private transient int z = 0;
 	private transient boolean isZLeg = false;
 	private transient boolean isNeg = false;
-	private transient int length = -1;
+	private transient int length = - 1;
 	private transient int current = 0;
 
 	public SpiralTask(FLocation fLocation, int radius)
@@ -107,7 +102,7 @@ public abstract class SpiralTask implements Runnable
 
 	public final void setTaskID(int ID)
 	{
-		if (ID == -1)
+		if (ID == - 1)
 			this.stop();
 		taskID = ID;
 	}
@@ -115,7 +110,7 @@ public abstract class SpiralTask implements Runnable
 	@Override
 	public final void run()
 	{
-		if (!this.valid() || !readyToGo)
+		if (! this.valid() || ! readyToGo)
 			return;
 
 		// this is set so it only does one iteration at a time, no matter how
@@ -123,7 +118,7 @@ public abstract class SpiralTask implements Runnable
 		readyToGo = false;
 
 		// make sure we're still inside the specified radius
-		if (!this.insideRadius())
+		if (! this.insideRadius())
 			return;
 
 		// track this to keep one iteration from dragging on too long and
@@ -135,14 +130,14 @@ public abstract class SpiralTask implements Runnable
 		while (now() < loopStartTime + 20)
 		{
 			// run the primary task on the current X/Z coordinates
-			if (!this.work())
+			if (! this.work())
 			{
 				this.finish();
 				return;
 			}
 
 			// move on to next chunk in spiral
-			if (!this.moveToNext())
+			if (! this.moveToNext())
 				return;
 		}
 
@@ -154,7 +149,7 @@ public abstract class SpiralTask implements Runnable
 	// done, otherwise returns true
 	public final boolean moveToNext()
 	{
-		if (!this.valid())
+		if (! this.valid())
 			return false;
 
 		// make sure we don't need to turn down the next leg of the spiral
@@ -163,7 +158,7 @@ public abstract class SpiralTask implements Runnable
 			current++;
 
 			// if we're outside the radius, we're done
-			if (!this.insideRadius())
+			if (! this.insideRadius())
 				return false;
 		}
 		else
@@ -181,9 +176,9 @@ public abstract class SpiralTask implements Runnable
 
 		// move one chunk further in the appropriate direction
 		if (isZLeg)
-			z += (isNeg) ? -1 : 1;
+			z += (isNeg) ? - 1 : 1;
 		else
-			x += (isNeg) ? -1 : 1;
+			x += (isNeg) ? - 1 : 1;
 
 		return true;
 	}
@@ -191,7 +186,7 @@ public abstract class SpiralTask implements Runnable
 	public final boolean insideRadius()
 	{
 		boolean inside = current < limit;
-		if (!inside)
+		if (! inside)
 			this.finish();
 		return inside;
 	}
@@ -206,18 +201,18 @@ public abstract class SpiralTask implements Runnable
 	// we're done, whether finished or cancelled
 	public final void stop()
 	{
-		if (!this.valid())
+		if (! this.valid())
 			return;
 
 		readyToGo = false;
 		Bukkit.getServer().getScheduler().cancelTask(taskID);
-		taskID = -1;
+		taskID = - 1;
 	}
 
 	// is this task still valid/workable?
 	public final boolean valid()
 	{
-		return taskID != -1;
+		return taskID != - 1;
 	}
 
 	private static long now()

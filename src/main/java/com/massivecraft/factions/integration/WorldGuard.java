@@ -36,7 +36,7 @@ public class WorldGuard
 	public static void init(Plugin plugin)
 	{
 		Plugin wgplug = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-		if (wgplug == null || !(wgplug instanceof WorldGuardPlugin))
+		if (wgplug == null || ! (wgplug instanceof WorldGuardPlugin))
 		{
 			enabled = false;
 			wg = null;
@@ -61,7 +61,7 @@ public class WorldGuard
 	// False: PVP is disallowed
 	public static boolean isPVP(Player player)
 	{
-		if (!enabled)
+		if (! enabled)
 		{
 			// No WG hooks so we'll always bypass this check.
 			return true;
@@ -82,7 +82,7 @@ public class WorldGuard
 	// False: No regions found within chunk
 	public static boolean checkForRegionsInChunk(Location loc)
 	{
-		if (!enabled)
+		if (! enabled)
 		{
 			// No WG hooks so we'll always bypass this check.
 			return false;

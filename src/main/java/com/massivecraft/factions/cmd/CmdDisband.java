@@ -44,18 +44,18 @@ public class CmdDisband extends FCommand
 
 		if (isMyFaction)
 		{
-			if (!assertMinRole(Role.ADMIN))
+			if (! assertMinRole(Role.ADMIN))
 				return;
 		}
 		else
 		{
-			if (!Permission.DISBAND_ANY.has(sender, true))
+			if (! Permission.DISBAND_ANY.has(sender, true))
 			{
 				return;
 			}
 		}
 
-		if (!faction.isNormal())
+		if (! faction.isNormal())
 		{
 			msg("<i>You cannot disband the Wilderness, SafeZone, or WarZone.");
 			return;
@@ -92,8 +92,9 @@ public class CmdDisband extends FCommand
 			}
 		}
 		if (Conf.logFactionDisband)
-			SwornNations.get().log("The faction " + faction.getTag() + " (" + faction.getId() + ") was disbanded by "
-					+ (senderIsConsole ? "console command" : fme.getName()) + ".");
+			SwornNations.get().log(
+					"The faction " + faction.getTag() + " (" + faction.getId() + ") was disbanded by "
+							+ (senderIsConsole ? "console command" : fme.getName()) + ".");
 
 		if (Econ.shouldBeUsed() && ! senderIsConsole && Conf.bankPayOutToDisbander)
 		{
@@ -105,7 +106,8 @@ public class CmdDisband extends FCommand
 			{
 				String amountString = Econ.moneyString(amount);
 				msg("<i>You have been given the disbanded faction's bank, totaling <h>%s<i>.", amountString);
-				SwornNations.get().log(fme.getName() + " has been given bank holdings of " + amountString + " from disbanding " + faction.getTag() + ".");
+				SwornNations.get().log(
+						fme.getName() + " has been given bank holdings of " + amountString + " from disbanding " + faction.getTag() + ".");
 			}
 		}
 

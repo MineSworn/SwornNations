@@ -35,19 +35,19 @@ public class CmdCoadmin extends FCommand
 		boolean permAny = Permission.COADMIN_ANY.has(sender, false);
 		Faction targetFaction = you.getFaction();
 
-		if (targetFaction != myFaction && !permAny)
+		if (targetFaction != myFaction && ! permAny)
 		{
 			msg("%s<b> is not a member in your faction.", you.describeTo(fme, true));
 			return;
 		}
 
-		if (fme != null && fme.getRole() != Role.ADMIN && !permAny)
+		if (fme != null && fme.getRole() != Role.ADMIN && ! permAny)
 		{
 			msg("<b>You are not the faction admin.");
 			return;
 		}
 
-		if (you == fme && !permAny)
+		if (you == fme && ! permAny)
 		{
 			msg("<b>The target player musn't be yourself.");
 			return;

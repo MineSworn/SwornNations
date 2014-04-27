@@ -221,7 +221,7 @@ public class FLocation
 	{
 		if (obj == this)
 			return true;
-		if (!(obj instanceof FLocation))
+		if (! (obj instanceof FLocation))
 			return false;
 
 		FLocation that = (FLocation) obj;
@@ -233,7 +233,7 @@ public class FLocation
 	{
 		if (obj == this)
 			return true;
-		if (!(obj instanceof FLocation))
+		if (! (obj instanceof FLocation))
 			return false;
 
 		FLocation that = (FLocation) obj;

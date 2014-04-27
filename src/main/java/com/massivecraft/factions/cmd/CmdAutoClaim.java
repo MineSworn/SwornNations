@@ -30,7 +30,7 @@ public class CmdAutoClaim extends FCommand
 	@Override
 	public void perform()
 	{
-		if (!fme.hasFaction() && args.size() == 0)
+		if (! fme.hasFaction() && args.size() == 0)
 		{
 			msg("<b>You cannot claim land for no faction.");
 			return;
@@ -43,7 +43,7 @@ public class CmdAutoClaim extends FCommand
 			return;
 		}
 
-		if (!fme.canClaimForFaction(forFaction))
+		if (! fme.canClaimForFaction(forFaction))
 		{
 			if (myFaction == forFaction)
 				msg("<b>You must be <h>%s<b> to claim land.", Role.MODERATOR.toString());

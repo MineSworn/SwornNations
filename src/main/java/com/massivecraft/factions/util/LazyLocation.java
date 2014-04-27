@@ -5,8 +5,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 /**
- * This class provides a lazy-load Location, so that World doesn't need to be initialized
- * yet when an object of this class is created, only when the Location is first accessed.
+ * This class provides a lazy-load Location, so that World doesn't need to be
+ * initialized yet when an object of this class is created, only when the
+ * Location is first accessed.
  */
 public class LazyLocation
 {

@@ -152,7 +152,7 @@ public class TextUtil
 	// -------------------------------------------- //
 
 	private final static String titleizeLine = repeat("_", 52);
-	private final static int titleizeBalance = -1;
+	private final static int titleizeBalance = - 1;
 
 	public String titleize(String str)
 	{
@@ -294,7 +294,7 @@ public class TextUtil
 		{
 			if (candidate.length() < minlength)
 				continue;
-			if (!candidate.toLowerCase().startsWith(start))
+			if (! candidate.toLowerCase().startsWith(start))
 				continue;
 
 			// The closer to zero the better

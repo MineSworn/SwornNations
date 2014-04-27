@@ -30,12 +30,12 @@ public class CmdOwnerList extends FCommand
 	{
 		boolean hasBypass = fme.isAdminBypassing();
 
-		if (!hasBypass && !assertHasFaction())
+		if (! hasBypass && ! assertHasFaction())
 		{
 			return;
 		}
 
-		if (!Conf.ownedAreasEnabled)
+		if (! Conf.ownedAreasEnabled)
 		{
 			fme.msg("<b>Owned areas are disabled on this server.");
 			return;
@@ -45,14 +45,14 @@ public class CmdOwnerList extends FCommand
 
 		if (Board.getFactionAt(flocation) != myFaction)
 		{
-			if (!hasBypass)
+			if (! hasBypass)
 			{
 				fme.msg("<b>This land is not claimed by your faction.");
 				return;
 			}
 
 			myFaction = Board.getFactionAt(flocation);
-			if (!myFaction.isNormal())
+			if (! myFaction.isNormal())
 			{
 				fme.msg("<i>This land is not claimed by any faction, thus no owners.");
 				return;

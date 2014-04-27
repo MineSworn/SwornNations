@@ -365,7 +365,8 @@ public class FactionsPlayerListener implements Listener
 				if (item != null)
 				{
 					if (! Conf.territoryDenyUseageMaterials.contains(new MyMaterial(item.getType())))
-						return true; // Item isn't one we're preventing for online factions.
+						return true; // Item isn't one we're preventing for
+										// online factions.
 				}
 			}
 			else
@@ -373,7 +374,8 @@ public class FactionsPlayerListener implements Listener
 				if (item != null)
 				{
 					if (! Conf.territoryDenyUseageMaterialsWhenOffline.contains(new MyMaterial(item.getType())))
-						return true; // Item isn't one we're preventing for offline factions.
+						return true; // Item isn't one we're preventing for
+										// offline factions.
 				}
 			}
 		}
@@ -381,7 +383,8 @@ public class FactionsPlayerListener implements Listener
 		if (otherFaction.isNone())
 		{
 			if (! Conf.wildernessDenyUseage || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName()))
-				return true; // This is not faction territory. Use whatever you like here.
+				return true; // This is not faction territory. Use whatever you
+								// like here.
 
 			if (! justCheck)
 				me.msg("<b>You can't use that in %s<b>.", Factions.i.getNone().getTag(me));
@@ -399,7 +402,8 @@ public class FactionsPlayerListener implements Listener
 			if (item != null)
 			{
 				if (! Conf.safeZoneDenyUseageMaterials.contains(new MyMaterial(item.getType())))
-					return true; // Item isn't one we're preventing for safezones.
+					return true; // Item isn't one we're preventing for
+									// safezones.
 			}
 
 			if (! justCheck)
@@ -459,8 +463,9 @@ public class FactionsPlayerListener implements Listener
 		FLocation loc = new FLocation(block);
 		Faction otherFaction = Board.getFactionAt(loc);
 
-		// no door/chest/whatever protection in wilderness, war zones, or safe zones
-		if (!otherFaction.isNormal())
+		// no door/chest/whatever protection in wilderness, war zones, or safe
+		// zones
+		if (! otherFaction.isNormal())
 			return true;
 
 		if (otherFaction.isSafeZone())
@@ -471,7 +476,8 @@ public class FactionsPlayerListener implements Listener
 			if (block != null)
 			{
 				if (! Conf.safeZoneProtectedMaterials.contains(new MyMaterial(block.getType())))
-					return true; // Block isn't one we're protecting for safezones.
+					return true; // Block isn't one we're protecting for
+									// safezones.
 			}
 
 			return false;
@@ -508,8 +514,8 @@ public class FactionsPlayerListener implements Listener
 			if (block != null)
 			{
 				if (! justCheck)
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.SOIL ? "trample" : "use",
+							otherFaction.getTag(myFaction));
 			}
 			return false;
 		}
@@ -520,8 +526,8 @@ public class FactionsPlayerListener implements Listener
 			{
 				if (! me.getFaction().playerHasPermission(me, NPermission.CHEST))
 				{
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.SOIL ? "trample" : "use",
+							otherFaction.getTag(myFaction));
 					return false;
 				}
 			}
@@ -530,8 +536,8 @@ public class FactionsPlayerListener implements Listener
 			{
 				if (! me.getFaction().playerHasPermission(me, NPermission.SWITCH))
 				{
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.",
-							block.getType() == Material.SOIL ? "trample" : "use", otherFaction.getTag(myFaction));
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.SOIL ? "trample" : "use",
+							otherFaction.getTag(myFaction));
 					return false;
 				}
 			}
@@ -616,8 +622,8 @@ public class FactionsPlayerListener implements Listener
 			fullCmd = "/" + fullCmd;
 		}
 
-		if (me.hasFaction() && !me.isAdminBypassing() && ! Conf.permanentFactionMemberDenyCommands.isEmpty() && me.getFaction().isPermanent()
-				&& isCommandInList(fullCmd, shortCmd, Conf.permanentFactionMemberDenyCommands))
+		if (me.hasFaction() && ! me.isAdminBypassing() && ! Conf.permanentFactionMemberDenyCommands.isEmpty()
+				&& me.getFaction().isPermanent() && isCommandInList(fullCmd, shortCmd, Conf.permanentFactionMemberDenyCommands))
 		{
 			me.msg("<b>You can't use the command \"" + fullCmd + "\" because you are in a permanent faction.");
 			return true;
@@ -687,7 +693,8 @@ public class FactionsPlayerListener implements Listener
 			}
 		}
 
-		// A NullPointerException is intermittently thrown here, something about a null FLocation
+		// A NullPointerException is intermittently thrown here, something about
+		// a null FLocation
 
 		try
 		{
@@ -863,8 +870,8 @@ public class FactionsPlayerListener implements Listener
 
 	public static boolean isEnemyNearby(FPlayer fme, Faction faction, Location loc)
 	{
-		if (Conf.homesTeleportAllowedEnemyDistance > 0 && !faction.isSafeZone()
-				&& (!fme.isInOwnTerritory() || (fme.isInOwnTerritory() && !Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory)))
+		if (Conf.homesTeleportAllowedEnemyDistance > 0 && ! faction.isSafeZone()
+				&& (! fme.isInOwnTerritory() || (fme.isInOwnTerritory() && ! Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory)))
 		{
 			World w = loc.getWorld();
 			double x = loc.getX();
@@ -873,7 +880,7 @@ public class FactionsPlayerListener implements Listener
 
 			for (Player p : Bukkit.getServer().getOnlinePlayers())
 			{
-				if (p == null || !p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
+				if (p == null || ! p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
 					continue;
 
 				FPlayer fp = FPlayers.i.get(p);
@@ -977,11 +984,13 @@ public class FactionsPlayerListener implements Listener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerMoveClearVisualizations(PlayerMoveEvent event)
 	{
-		if (event.isCancelled()) return;
+		if (event.isCancelled())
+			return;
 
 		Block blockFrom = event.getFrom().getBlock();
 		Block blockTo = event.getTo().getBlock();
-		if (blockFrom.equals(blockTo)) return;
+		if (blockFrom.equals(blockTo))
+			return;
 
 		VisualizeUtil.clear(event.getPlayer());
 	}

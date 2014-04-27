@@ -36,12 +36,12 @@ public class CmdTitle extends FCommand
 		args.remove(0);
 		String title = TextUtil.implode(args, " ");
 
-		if (!canIAdministerYou(fme, you))
+		if (! canIAdministerYou(fme, you))
 			return;
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.econCostTitle, "to change a players title", "for changing a players title"))
+		if (! payForCommand(Conf.econCostTitle, "to change a players title", "for changing a players title"))
 			return;
 
 		you.setTitle(title);

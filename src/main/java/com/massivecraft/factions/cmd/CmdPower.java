@@ -32,12 +32,12 @@ public class CmdPower extends FCommand
 		if (target == null)
 			return;
 
-		if (target != fme && !Permission.POWER_ANY.has(sender, true))
+		if (target != fme && ! Permission.POWER_ANY.has(sender, true))
 			return;
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.econCostPower, "to show player power info", "for showing player power info"))
+		if (! payForCommand(Conf.econCostPower, "to show player power info", "for showing player power info"))
 			return;
 
 		double powerBoost = target.getPowerBoost();

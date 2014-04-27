@@ -12,7 +12,7 @@ public class MyMaterial
 		this.mat = mat;
 		this.data = data;
 	}
-	
+
 	public MyMaterial(Material mat)
 	{
 		this(mat, (short) 0);

@@ -53,7 +53,7 @@ public class FactionsEntityListener implements Listener
 	public void onEntityDeath(EntityDeathEvent event)
 	{
 		Entity entity = event.getEntity();
-		if (!(entity instanceof Player))
+		if (! (entity instanceof Player))
 		{
 			return;
 		}
@@ -65,7 +65,7 @@ public class FactionsEntityListener implements Listener
 		{
 			// war zones always override worldsNoPowerLoss either way, thus this
 			// layout
-			if (!Conf.warZonePowerLoss)
+			if (! Conf.warZonePowerLoss)
 			{
 				fplayer.msg("<i>You didn't lose any power since you were in a war zone.");
 				return;
@@ -83,7 +83,7 @@ public class FactionsEntityListener implements Listener
 				return;
 			}
 		}
-		else if (faction.isNone() && !Conf.wildernessPowerLoss && !Conf.worldsNoWildernessProtection.contains(player.getWorld().getName()))
+		else if (faction.isNone() && ! Conf.wildernessPowerLoss && ! Conf.worldsNoWildernessProtection.contains(player.getWorld().getName()))
 		{
 			fplayer.msg("<i>You didn't lose any power since you were in the wilderness.");
 			return;
@@ -116,7 +116,7 @@ public class FactionsEntityListener implements Listener
 		if (event instanceof EntityDamageByEntityEvent)
 		{
 			EntityDamageByEntityEvent sub = (EntityDamageByEntityEvent) event;
-			if (!this.canDamagerHurtDamagee(sub, true))
+			if (! this.canDamagerHurtDamagee(sub, true))
 			{
 				event.setCancelled(true);
 			}
@@ -151,7 +151,7 @@ public class FactionsEntityListener implements Listener
 
 		if (boomer instanceof Creeper)
 		{
-			if (faction.isNone() && Conf.wildernessBlockCreepers && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
+			if (faction.isNone() && Conf.wildernessBlockCreepers && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
 			{
 				event.setCancelled(true);
 				return;
@@ -177,7 +177,7 @@ public class FactionsEntityListener implements Listener
 		}
 		else if (boomer instanceof Fireball || boomer instanceof WitherSkull || boomer instanceof Wither)
 		{
-			if (faction.isNone() && Conf.wildernessBlockFireballs && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
+			if (faction.isNone() && Conf.wildernessBlockFireballs && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
 			{
 				event.setCancelled(true);
 				return;
@@ -203,7 +203,7 @@ public class FactionsEntityListener implements Listener
 		}
 		else if (boomer instanceof TNTPrimed || boomer instanceof ExplosiveMinecart)
 		{
-			if (faction.isNone() && Conf.wildernessBlockTNT && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
+			if (faction.isNone() && Conf.wildernessBlockTNT && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
 			{
 				event.setCancelled(true);
 				return;
@@ -239,7 +239,7 @@ public class FactionsEntityListener implements Listener
 
 		EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(event.getCombuster(), event.getEntity(),
 				EntityDamageEvent.DamageCause.FIRE, 0.0D);
-		if (!this.canDamagerHurtDamagee(sub, false))
+		if (! this.canDamagerHurtDamagee(sub, false))
 			event.setCancelled(true);
 		sub = null;
 	}
@@ -267,20 +267,26 @@ public class FactionsEntityListener implements Listener
 			}
 		}
 
-		if (! badjuju) return;
+		if (! badjuju)
+			return;
 
 		if (potion.getShooter() instanceof LivingEntity)
 		{
 			LivingEntity thrower = (LivingEntity) potion.getShooter();
 
-			// scan through affected entities to make sure they're all valid targets
+			// scan through affected entities to make sure they're all valid
+			// targets
 			Iterator<LivingEntity> iter = event.getAffectedEntities().iterator();
 			while (iter.hasNext())
 			{
 				LivingEntity target = iter.next();
 				EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(thrower, target, EntityDamageEvent.DamageCause.CUSTOM, 0.0D);
 				if (! canDamagerHurtDamagee(sub, true))
-					event.setIntensity(target, 0.0); // affected entity list doesn't accept modification (so no iter.remove()), but this works
+					event.setIntensity(target, 0.0); // affected entity list
+														// doesn't accept
+														// modification (so no
+														// iter.remove()), but
+														// this works
 				sub = null;
 			}
 		}
@@ -288,7 +294,7 @@ public class FactionsEntityListener implements Listener
 
 	public boolean isPlayerInSafeZone(Entity damagee)
 	{
-		if (!(damagee instanceof Player))
+		if (! (damagee instanceof Player))
 		{
 			return false;
 		}
@@ -310,7 +316,7 @@ public class FactionsEntityListener implements Listener
 		Entity damagee = sub.getEntity();
 		double damage = sub.getDamage();
 
-		if (!(damagee instanceof Player))
+		if (! (damagee instanceof Player))
 			return true;
 
 		FPlayer defender = FPlayers.i.get((Player) damagee);
@@ -333,10 +339,12 @@ public class FactionsEntityListener implements Listener
 		if (damager == null)
 			return true;
 
-		if (damager == damagee) // ender pearl usage and other self-inflicted damage
+		if (damager == damagee) // ender pearl usage and other self-inflicted
+								// damage
 			return true;
 
-		// Players can not take attack damage in a SafeZone, or possibly peaceful territory
+		// Players can not take attack damage in a SafeZone, or possibly
+		// peaceful territory
 		if (defLocFaction.noPvPInTerritory())
 		{
 			if (damager instanceof Player)
@@ -348,10 +356,10 @@ public class FactionsEntityListener implements Listener
 				}
 				return false;
 			}
-			return !defLocFaction.noMonstersInTerritory();
+			return ! defLocFaction.noMonstersInTerritory();
 		}
 
-		if (!(damager instanceof Player))
+		if (! (damager instanceof Player))
 			return true;
 
 		FPlayer attacker = FPlayers.i.get((Player) damager);
@@ -436,7 +444,7 @@ public class FactionsEntityListener implements Listener
 		}
 
 		// Players without faction may be hurt anywhere
-		if (!defender.hasFaction())
+		if (! defender.hasFaction())
 			return true;
 
 		// You can never hurt faction members or allies
@@ -507,7 +515,7 @@ public class FactionsEntityListener implements Listener
 		}
 
 		// We are interested in blocking targeting for certain mobs:
-		if (!Conf.safeZoneNerfedCreatureTypes.contains(event.getEntityType()))
+		if (! Conf.safeZoneNerfedCreatureTypes.contains(event.getEntityType()))
 		{
 			return;
 		}
@@ -525,18 +533,18 @@ public class FactionsEntityListener implements Listener
 		if (event.isCancelled())
 			return;
 
-		if (!(event instanceof HangingBreakByEntityEvent))
+		if (! (event instanceof HangingBreakByEntityEvent))
 		{
 			return;
 		}
 
 		Entity breaker = ((HangingBreakByEntityEvent) event).getRemover();
-		if (!(breaker instanceof Player))
+		if (! (breaker instanceof Player))
 		{
 			return;
 		}
 
-		if (!FactionsBlockListener.playerCanBuildDestroyBlock((Player) breaker, event.getEntity().getLocation(), "remove paintings", false,
+		if (! FactionsBlockListener.playerCanBuildDestroyBlock((Player) breaker, event.getEntity().getLocation(), "remove paintings", false,
 				Material.PAINTING))
 		{
 			event.setCancelled(true);
@@ -549,7 +557,7 @@ public class FactionsEntityListener implements Listener
 		if (event.isCancelled())
 			return;
 
-		if (!FactionsBlockListener.playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "place paintings", false,
+		if (! FactionsBlockListener.playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "place paintings", false,
 				Material.PAINTING))
 		{
 			event.setCancelled(true);
@@ -568,7 +576,7 @@ public class FactionsEntityListener implements Listener
 		Entity entity = event.getEntity();
 
 		// for now only interested in Enderman and Wither boss tomfoolery
-		if (!(entity instanceof Enderman) && !(entity instanceof Wither))
+		if (! (entity instanceof Enderman) && ! (entity instanceof Wither))
 			return;
 
 		Location loc = event.getBlock().getLocation();
@@ -581,7 +589,7 @@ public class FactionsEntityListener implements Listener
 		else if (entity instanceof Wither)
 		{
 			Faction faction = Board.getFactionAt(new FLocation(loc));
-			if ((faction.isNone() && Conf.wildernessBlockFireballs && !Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
+			if ((faction.isNone() && Conf.wildernessBlockFireballs && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
 					|| (faction.isNormal() && (faction.hasPlayersOnline() ? Conf.territoryBlockFireballs
 							: Conf.territoryBlockFireballsWhenOffline)) || (faction.isWarZone() && Conf.warZoneBlockFireballs)
 					|| faction.isSafeZone())
@@ -640,8 +648,8 @@ public class FactionsEntityListener implements Listener
 			if (event.getDamager() instanceof Player)
 			{
 				Player player = (Player) event.getDamager();
-				if (! FactionsBlockListener.playerCanBuildDestroyBlock(player, itemFrame.getLocation(), "destroy", false, 
-						Material.ITEM_FRAME))
+				if (! FactionsBlockListener
+						.playerCanBuildDestroyBlock(player, itemFrame.getLocation(), "destroy", false, Material.ITEM_FRAME))
 					event.setCancelled(true);
 			}
 		}

@@ -25,7 +25,7 @@ public class CmdChatSpy extends FCommand
 	@Override
 	public void perform()
 	{
-		fme.setSpyingChat(this.argAsBool(0, !fme.isSpyingChat()));
+		fme.setSpyingChat(this.argAsBool(0, ! fme.isSpyingChat()));
 
 		if (fme.isSpyingChat())
 		{

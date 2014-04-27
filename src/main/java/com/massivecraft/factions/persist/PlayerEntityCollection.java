@@ -12,13 +12,10 @@ import org.bukkit.entity.Player;
 
 /**
  * The PlayerEntityCollection is an EntityCollection with the extra features a
- * player skin usually requires.
- * 
- * This entity collection is not only creative. It even creates the instance for
- * the player when the player logs in to the server.
- * 
- * This way we can be sure that PlayerEntityCollection.get() will contain all
- * entities in PlayerEntityCollection.getOnline()
+ * player skin usually requires. This entity collection is not only creative. It
+ * even creates the instance for the player when the player logs in to the
+ * server. This way we can be sure that PlayerEntityCollection.get() will
+ * contain all entities in PlayerEntityCollection.getOnline()
  */
 public abstract class PlayerEntityCollection<E extends Entity> extends EntityCollection<E>
 {

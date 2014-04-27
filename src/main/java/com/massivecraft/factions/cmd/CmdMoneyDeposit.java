@@ -40,8 +40,9 @@ public class CmdMoneyDeposit extends FCommand
 		boolean success = Econ.transferMoney(fme, fme, faction, amount);
 
 		if (success && Conf.logMoneyTransactions)
-			SwornNations.get().log(ChatColor.stripColor(SwornNations.get().txt.parse("%s deposited %s in the faction bank: %s", fme.getName(), Econ.moneyString(amount),
-					faction.describeTo(null))));
+			SwornNations.get().log(
+					ChatColor.stripColor(SwornNations.get().txt.parse("%s deposited %s in the faction bank: %s", fme.getName(),
+							Econ.moneyString(amount), faction.describeTo(null))));
 	}
 
 }

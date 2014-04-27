@@ -112,7 +112,7 @@ public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLoca
 						nameArray.add(nameElement);
 					}
 
-					if (!obj.has(locWorld))
+					if (! obj.has(locWorld))
 					{
 						obj.add(locWorld, new JsonObject());
 					}

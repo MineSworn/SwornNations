@@ -32,7 +32,7 @@ public class CmdSetoutpost extends FCommand
 	@Override
 	public void perform()
 	{
-		if (!Conf.homesEnabled)
+		if (! Conf.homesEnabled)
 		{
 			fme.msg("<b>Sorry, Faction outposts are disabled on this server.");
 			return;
@@ -76,7 +76,7 @@ public class CmdSetoutpost extends FCommand
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.ecnCostSetoutpost, "to set the faction outpost", "for setting the faction outpost"))
+		if (! payForCommand(Conf.ecnCostSetoutpost, "to set the faction outpost", "for setting the faction outpost"))
 			return;
 
 		faction.setOutpost(me.getLocation());

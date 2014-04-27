@@ -26,7 +26,7 @@ public class CmdSetwarp extends FCommand
 	public void perform()
 	{
 
-		if (!Conf.warpsEnabled)
+		if (! Conf.warpsEnabled)
 		{
 			fme.msg("<b>Sorry, Faction warps are disabled on this server.");
 			return;
@@ -42,14 +42,14 @@ public class CmdSetwarp extends FCommand
 			return;
 		}
 
-		if (Conf.warpsNotInOtherTerritory && (!Board.getFactionAt(new FLocation(me)).isNone())
-				&& !(Board.getFactionAt(new FLocation(me)) == faction))
+		if (Conf.warpsNotInOtherTerritory && (! Board.getFactionAt(new FLocation(me)).isNone())
+				&& ! (Board.getFactionAt(new FLocation(me)) == faction))
 		{
 			fme.msg("<b>Sorry,  your faction warp cannot be set in other claimed territory.");
 			return;
 		}
 
-		if (!payPowerForCommandF(Conf.warpsPowerCostPerPlayerToSet))
+		if (! payPowerForCommandF(Conf.warpsPowerCostPerPlayerToSet))
 			return;
 
 		faction.setWarp(me.getLocation());

@@ -38,19 +38,19 @@ public class CmdAdmin extends FCommand
 		boolean permAny = Permission.ADMIN_ANY.has(sender, false);
 		Faction targetFaction = fyou.getFaction();
 
-		if (targetFaction != myFaction && !permAny)
+		if (targetFaction != myFaction && ! permAny)
 		{
 			msg("%s<i> is not a member in your faction.", fyou.describeTo(fme, true));
 			return;
 		}
 
-		if (fme != null && fme.getRole() != Role.ADMIN && !permAny)
+		if (fme != null && fme.getRole() != Role.ADMIN && ! permAny)
 		{
 			msg("<b>You are not the faction admin.");
 			return;
 		}
 
-		if (fyou == fme && !permAny)
+		if (fyou == fme && ! permAny)
 		{
 			msg("<b>The target player musn't be yourself.");
 			return;
@@ -82,7 +82,8 @@ public class CmdAdmin extends FCommand
 		if (admin != null)
 			admin.setRole(Role.COADMIN);
 		fyou.setRole(Role.ADMIN);
-//		msg("<i>You have promoted %s<i> to the position of faction admin.", fyou.describeTo(fme, true));
+		// msg("<i>You have promoted %s<i> to the position of faction admin.",
+		// fyou.describeTo(fme, true));
 
 		// Inform all players
 		for (FPlayer fplayer : FPlayers.i.getOnline())

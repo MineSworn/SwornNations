@@ -45,7 +45,8 @@ public class CmdPermanent extends FCommand
 			faction.setPermanent(true);
 		}
 
-		SwornNations.get().log((fme == null ? "A server admin" : fme.getName()) + " " + change + " the faction \"" + faction.getTag() + "\".");
+		SwornNations.get()
+				.log((fme == null ? "A server admin" : fme.getName()) + " " + change + " the faction \"" + faction.getTag() + "\".");
 
 		// Inform all players
 		for (FPlayer fplayer : FPlayers.i.getOnline())

@@ -46,8 +46,9 @@ public class CmdUnclaim extends FCommand
 				msg("<i>Safe zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
-							+ otherFaction.getTag());
+					SwornNations.get().log(
+							fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
+									+ otherFaction.getTag());
 			}
 			else
 			{
@@ -63,8 +64,9 @@ public class CmdUnclaim extends FCommand
 				msg("<i>War zone was unclaimed.");
 
 				if (Conf.logLandUnclaims)
-					SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
-							+ otherFaction.getTag());
+					SwornNations.get().log(
+							fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: "
+									+ otherFaction.getTag());
 			}
 			else
 			{
@@ -80,17 +82,18 @@ public class CmdUnclaim extends FCommand
 			msg("<i>You unclaimed this land.");
 
 			if (Conf.logLandUnclaims)
-				SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
+				SwornNations.get().log(
+						fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 
 			return;
 		}
 
-		if (!assertHasFaction())
+		if (! assertHasFaction())
 		{
 			return;
 		}
 
-		if (!assertMinRole(Role.MODERATOR))
+		if (! assertMinRole(Role.MODERATOR))
 		{
 			return;
 		}
@@ -112,12 +115,12 @@ public class CmdUnclaim extends FCommand
 
 			if (Conf.bankEnabled && Conf.bankFactionPaysLandCosts)
 			{
-				if (!Econ.modifyMoney(myFaction, refund, "to unclaim this land", "for unclaiming this land"))
+				if (! Econ.modifyMoney(myFaction, refund, "to unclaim this land", "for unclaiming this land"))
 					return;
 			}
 			else
 			{
-				if (!Econ.modifyMoney(fme, refund, "to unclaim this land", "for unclaiming this land"))
+				if (! Econ.modifyMoney(fme, refund, "to unclaim this land", "for unclaiming this land"))
 					return;
 			}
 		}
@@ -126,7 +129,8 @@ public class CmdUnclaim extends FCommand
 		myFaction.msg("%s<i> unclaimed some land.", fme.describeTo(myFaction, true));
 
 		if (Conf.logLandUnclaims)
-			SwornNations.get().log(fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
+			SwornNations.get().log(
+					fme.getName() + " unclaimed land at (" + flocation.getCoordString() + ") from the faction: " + otherFaction.getTag());
 	}
 
 }

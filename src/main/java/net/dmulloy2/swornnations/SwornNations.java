@@ -83,8 +83,12 @@ import com.massivecraft.factions.util.TextUtil;
 public class SwornNations extends JavaPlugin
 {
 	private static SwornNations i;
-	public static SwornNations get() { return i; }
-	
+
+	public static SwornNations get()
+	{
+		return i;
+	}
+
 	// Listeners
 	public final FactionsPlayerListener playerListener;
 	public final FactionsChatListener chatListener;
@@ -154,6 +158,7 @@ public class SwornNations extends JavaPlugin
 	{
 		return this.baseCommands;
 	}
+
 	// MPlugin end
 
 	private Integer AutoLeaveTask = null;
@@ -197,7 +202,7 @@ public class SwornNations extends JavaPlugin
 		try
 		{
 			Map<String, Map<String, Object>> refCmd = this.getDescription().getCommands();
-			if (refCmd != null && !refCmd.isEmpty())
+			if (refCmd != null && ! refCmd.isEmpty())
 				this.refCommand = (String) (refCmd.keySet().toArray()[0]);
 		}
 		catch (ClassCastException ex)
@@ -304,7 +309,9 @@ public class SwornNations extends JavaPlugin
 
 	public GsonBuilder getGsonBuilder()
 	{
-		Type mapFLocToStringSetType = new TypeToken<Map<FLocation, Set<String>>>(){}.getType();
+		Type mapFLocToStringSetType = new TypeToken<Map<FLocation, Set<String>>>()
+		{
+		}.getType();
 
 		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
 				.registerTypeAdapter(LazyLocation.class, new MyLocationTypeAdapter())
@@ -317,7 +324,7 @@ public class SwornNations extends JavaPlugin
 	public void onDisable()
 	{
 		long start = System.currentTimeMillis();
-		
+
 		// Only save data if plugin actually completely loaded successfully
 		if (this.loadSuccessful)
 		{
@@ -339,7 +346,7 @@ public class SwornNations extends JavaPlugin
 
 		// Cancel any other tasks
 		getServer().getScheduler().cancelTasks(this);
-		
+
 		// only save data if plugin actually loaded successfully
 		if (loadSuccessful)
 			EM.saveAllToDisc();
@@ -393,6 +400,7 @@ public class SwornNations extends JavaPlugin
 		log("Now I suicide!");
 		this.getServer().getPluginManager().disablePlugin(this);
 	}
+
 	// MPlugin end
 
 	public void startAutoLeaveTask(boolean restartIfRunning)
@@ -454,7 +462,7 @@ public class SwornNations extends JavaPlugin
 
 		for (MCommand<?> command : this.getBaseCommands())
 		{
-			if (noSlash && !command.allowNoSlashAccess)
+			if (noSlash && ! command.allowNoSlashAccess)
 				continue;
 
 			for (String alias : command.aliases)
@@ -578,7 +586,7 @@ public class SwornNations extends JavaPlugin
 
 		// if listener isn't set, or config option is disabled, give back
 		// uncolored tag
-		if (listener == null || !Conf.chatTagRelationColored)
+		if (listener == null || ! Conf.chatTagRelationColored)
 		{
 			tag = me.getChatTag().trim();
 		}

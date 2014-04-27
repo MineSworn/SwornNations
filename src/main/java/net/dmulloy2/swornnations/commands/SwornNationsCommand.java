@@ -76,7 +76,8 @@ public abstract class SwornNationsCommand implements CommandExecutor
 		if (! hasPermission())
 		{
 			err("You do not have permission to perform this command!");
-			// log(Level.WARNING, sender.getName() + " was denied access to a command!");
+			// log(Level.WARNING, sender.getName() +
+			// " was denied access to a command!");
 			return;
 		}
 
@@ -87,7 +88,8 @@ public abstract class SwornNationsCommand implements CommandExecutor
 		catch (Throwable e)
 		{
 			err("Error executing command: {0}", e.getMessage());
-			// plugin.getLogHandler().debug(Util.getUsefulStack(e, "executing command " + name));
+			// plugin.getLogHandler().debug(Util.getUsefulStack(e,
+			// "executing command " + name));
 		}
 	}
 

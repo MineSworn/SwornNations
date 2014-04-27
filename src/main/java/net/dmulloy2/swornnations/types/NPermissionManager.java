@@ -51,7 +51,7 @@ public class NPermissionManager
 			return;
 		if (playerPerms.containsKey(player))
 		{
-			if (!playerPerms.get(player).containsKey(perm))
+			if (! playerPerms.get(player).containsKey(perm))
 				playerPerms.get(player).put(perm, true);
 			else
 				replaceEntry(player, perm, true);
@@ -70,7 +70,7 @@ public class NPermissionManager
 
 		if (rankPerms.containsKey(rank))
 		{
-			if (!rankPerms.get(rank).contains(perm))
+			if (! rankPerms.get(rank).contains(perm))
 				rankPerms.get(rank).add(perm);
 		}
 		else
@@ -92,7 +92,7 @@ public class NPermissionManager
 		if (playerPerms.containsKey(player))
 			if (playerPerms.get(player).containsKey(perm))
 				playerPerms.get(player).remove(perm);
-		if (!playerPerms.containsKey(player))
+		if (! playerPerms.containsKey(player))
 			playerPerms.put(player, new HashMap<NPermission, Boolean>());
 		playerPerms.get(player).put(perm, deny);
 	}
@@ -123,7 +123,7 @@ public class NPermissionManager
 			return false;
 		if (playerPerms.containsKey(player))
 			if (playerPerms.get(player).containsKey(perm))
-				if (!playerPerms.get(player).get(perm))
+				if (! playerPerms.get(player).get(perm))
 					return true;
 		return false;
 	}

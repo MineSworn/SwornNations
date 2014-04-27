@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 public class VisualizeUtil
 {
 	protected static Map<String, Set<Location>> playerLocations = new HashMap<String, Set<Location>>();
+
 	public static Set<Location> getPlayerLocations(Player player)
 	{
 		return getPlayerLocations(player.getName());

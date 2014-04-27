@@ -15,7 +15,9 @@ import org.bukkit.ChatColor;
 
 public class FormatUtil
 {
-	private FormatUtil() { }
+	private FormatUtil()
+	{
+	}
 
 	/**
 	 * Formats a given string with its objects.
@@ -32,7 +34,10 @@ public class FormatUtil
 		try
 		{
 			format = MessageFormat.format(format, objects);
-		} catch (Exception e) { }
+		}
+		catch (Exception e)
+		{
+		}
 
 		return ChatColor.translateAlternateColorCodes('&', format);
 	}
@@ -59,7 +64,10 @@ public class FormatUtil
 			{
 				return o.getClass().getSimpleName();
 			}
-		} catch (Exception e) { }
+		}
+		catch (Exception e)
+		{
+		}
 
 		return getFriendlyName(o.toString());
 	}

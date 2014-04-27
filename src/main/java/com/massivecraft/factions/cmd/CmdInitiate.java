@@ -40,7 +40,7 @@ public class CmdInitiate extends FCommand
 			fme.msg("<i>You must be in a faction to do this!");
 		}
 
-		if ((myFaction != fme.getFaction()) && !fme.isAdminBypassing())
+		if ((myFaction != fme.getFaction()) && ! fme.isAdminBypassing())
 		{
 			fme.msg("<b>You can only do this for players in your faction!");
 			return;

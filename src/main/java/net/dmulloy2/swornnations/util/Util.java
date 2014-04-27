@@ -20,7 +20,9 @@ import org.bukkit.material.MaterialData;
 
 public class Util
 {
-	private Util() { }
+	private Util()
+	{
+	}
 
 	/**
 	 * Gets the Player from a given name
@@ -135,9 +137,7 @@ public class Util
 	 */
 	public static boolean checkLocation(Location loc, Location loc2)
 	{
-		return loc.getBlockX() == loc2.getBlockX() 
-				&& loc.getBlockY() == loc2.getBlockY() 
-				&& loc.getBlockZ() == loc2.getBlockZ()
+		return loc.getBlockX() == loc2.getBlockX() && loc.getBlockY() == loc2.getBlockY() && loc.getBlockZ() == loc2.getBlockZ()
 				&& loc.getWorld().equals(loc2.getWorld());
 	}
 
@@ -175,8 +175,7 @@ public class Util
 
 		for (StackTraceElement ste : e.getStackTrace())
 		{
-			if (ste.getClassName().contains("com.massivecraft.factions") 
-					|| ste.getClassName().contains("net.dmulloy2.swornnations"))
+			if (ste.getClassName().contains("com.massivecraft.factions") || ste.getClassName().contains("net.dmulloy2.swornnations"))
 				ret.append('\t' + ste.toString() + '\n');
 		}
 

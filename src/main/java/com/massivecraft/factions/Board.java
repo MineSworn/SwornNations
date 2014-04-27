@@ -29,7 +29,7 @@ public class Board
 	// ----------------------------------------------//
 	public static String getIdAt(FLocation flocation)
 	{
-		if (!flocationIds.containsKey(flocation))
+		if (! flocationIds.containsKey(flocation))
 		{
 			return "0";
 		}
@@ -124,9 +124,9 @@ public class Board
 	{
 		Faction faction = getFactionAt(flocation);
 		FLocation a = flocation.getRelative(1, 0);
-		FLocation b = flocation.getRelative(-1, 0);
+		FLocation b = flocation.getRelative(- 1, 0);
 		FLocation c = flocation.getRelative(0, 1);
-		FLocation d = flocation.getRelative(0, -1);
+		FLocation d = flocation.getRelative(0, - 1);
 		return faction != getAbsoluteFactionAt(a) || faction != getAbsoluteFactionAt(b) || faction != getAbsoluteFactionAt(c)
 				|| faction != getAbsoluteFactionAt(d);
 	}
@@ -135,9 +135,9 @@ public class Board
 	public static boolean isConnectedLocation(FLocation flocation, Faction faction)
 	{
 		FLocation a = flocation.getRelative(1, 0);
-		FLocation b = flocation.getRelative(-1, 0);
+		FLocation b = flocation.getRelative(- 1, 0);
 		FLocation c = flocation.getRelative(0, 1);
-		FLocation d = flocation.getRelative(0, -1);
+		FLocation d = flocation.getRelative(0, - 1);
 		return faction == getAbsoluteFactionAt(a) || faction == getAbsoluteFactionAt(b) || faction == getAbsoluteFactionAt(c)
 				|| faction == getAbsoluteFactionAt(d);
 	}
@@ -162,7 +162,7 @@ public class Board
 						}
 					}
 
-					if (faction.hasHome() && !faction.hasOutpost())
+					if (faction.hasHome() && ! faction.hasOutpost())
 					{
 						FLocation home = new FLocation(faction.getHome());
 						if (home.getDistanceTo(entry.getKey()) > 20.0)
@@ -171,7 +171,7 @@ public class Board
 						}
 					}
 
-					if (!faction.hasHome() && faction.hasOutpost())
+					if (! faction.hasHome() && faction.hasOutpost())
 					{
 						FLocation outpost = new FLocation(faction.getOutpost());
 						if (outpost.getDistanceTo(entry.getKey()) > 20.0)
@@ -205,7 +205,7 @@ public class Board
 					}
 				}
 
-				if (faction.hasHome() && !faction.hasOutpost())
+				if (faction.hasHome() && ! faction.hasOutpost())
 				{
 					SwornNations.get().log("Faction has home and no outpost");
 					FLocation home = new FLocation(faction.getHome());
@@ -216,7 +216,7 @@ public class Board
 					}
 				}
 
-				if (!faction.hasHome() && faction.hasOutpost())
+				if (! faction.hasHome() && faction.hasOutpost())
 				{
 					SwornNations.get().log("Faction has no home and an outpost");
 					FLocation outpost = new FLocation(faction.getOutpost());
@@ -241,7 +241,7 @@ public class Board
 		while (iter.hasNext())
 		{
 			Entry<FLocation, String> entry = iter.next();
-			if (!Factions.i.exists(entry.getValue()))
+			if (! Factions.i.exists(entry.getValue()))
 			{
 				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.isEnabled())
 				{
@@ -318,7 +318,7 @@ public class Board
 
 		int halfWidth = Conf.mapWidth / 2;
 		int halfHeight = Conf.mapHeight / 2;
-		FLocation topLeft = flocation.getRelative(-halfWidth, -halfHeight);
+		FLocation topLeft = flocation.getRelative(- halfWidth, - halfHeight);
 		int width = halfWidth * 2 + 1;
 		int height = halfHeight * 2 + 1;
 
@@ -360,8 +360,7 @@ public class Board
 					}
 					else if (factionHere == faction || factionHere == factionLoc || relation.isAtLeast(Relation.ALLY)
 							|| (Conf.showNeutralFactionsOnMap && relation.equals(Relation.NEUTRAL))
-							|| (Conf.showEnemyFactionsOnMap && relation.equals(Relation.ENEMY))
-							|| fplayer.isAdminBypassing())
+							|| (Conf.showEnemyFactionsOnMap && relation.equals(Relation.ENEMY)) || fplayer.isAdminBypassing())
 					{
 						if (! fList.containsKey(factionHere.getTag()))
 							fList.put(factionHere.getTag(), Conf.mapKeyChrs[chrIdx++]);
@@ -399,7 +398,7 @@ public class Board
 		}
 
 		return ret;
-	
+
 	}
 
 	// -------------------------------------------- //
@@ -424,7 +423,7 @@ public class Board
 			worldName = entry.getKey().getWorldName();
 			coords = entry.getKey().getCoordString();
 			id = entry.getValue();
-			if (!worldCoordIds.containsKey(worldName))
+			if (! worldCoordIds.containsKey(worldName))
 			{
 				worldCoordIds.put(worldName, new TreeMap<String, String>());
 			}

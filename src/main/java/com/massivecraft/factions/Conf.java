@@ -36,14 +36,30 @@ public class Conf
 
 	// Power
 	public static double powerPlayerMax = 10.0;
-	public static double powerPlayerMin = -10.0;
+	public static double powerPlayerMin = - 10.0;
 	public static double powerPlayerStarting = 0.0;
-	public static double powerPerMinute = 0.2; // Default health rate... it takes 5 min to heal one power
+	public static double powerPerMinute = 0.2; // Default health rate... it
+												// takes 5 min to heal one power
 	public static double powerPerDeath = 3.0; // A death makes you lose 3 power
-	public static boolean powerRegenOffline = false; // does player power regenerate even while they're offline? players will lose this much power per day offline
-	public static double powerOfflineLossPerDay = 0.25; // players will lose this much power per day offline
-	public static double powerOfflineLossLimit = 0.0; // players will no longer lose power from being offline once their power drops to this  amount or less
-	public static double powerFactionMax = 0.0; // if greater than 0, the cap on how much power a faction can  have (additional power from players beyond that will act as a "buffer" of sorts)
+	public static boolean powerRegenOffline = false; // does player power
+														// regenerate even while
+														// they're offline?
+														// players will lose
+														// this much power per
+														// day offline
+	public static double powerOfflineLossPerDay = 0.25; // players will lose
+														// this much power per
+														// day offline
+	public static double powerOfflineLossLimit = 0.0; // players will no longer
+														// lose power from being
+														// offline once their
+														// power drops to this
+														// amount or less
+	public static double powerFactionMax = 0.0; // if greater than 0, the cap on
+												// how much power a faction can
+												// have (additional power from
+												// players beyond that will act
+												// as a "buffer" of sorts)
 
 	public static String prefixAdmin = "**";
 	public static String prefixCoadmin = "~*";
@@ -172,10 +188,12 @@ public class Conf
 
 	public static double actionDeniedPainAmount = 0;
 
-	// commands which will be prevented if the player is a member of a permanent faction
+	// commands which will be prevented if the player is a member of a permanent
+	// faction
 	public static Set<String> permanentFactionMemberDenyCommands = new LinkedHashSet<String>();
 
-	// commands which will be prevented when in claimed territory of another faction
+	// commands which will be prevented when in claimed territory of another
+	// faction
 	public static Set<String> territoryNeutralDenyCommands = new LinkedHashSet<String>();
 	public static Set<String> territoryEnemyDenyCommands = new LinkedHashSet<String>();
 
@@ -299,11 +317,21 @@ public class Conf
 	public static double econCostNeutral = 0.0;
 	public static double econCostNoBoom = 0.0;
 
-	// Faction banks, to pay for land claiming and other costs instead of individuals paying for them
+	// Faction banks, to pay for land claiming and other costs instead of
+	// individuals paying for them
 	public static boolean bankEnabled = true;
-	public static boolean bankMembersCanWithdraw = false; // Have to be at least moderator to withdraw or pay money to another faction
-	public static boolean bankFactionPaysCosts = true; // The faction pays for faction command costs, such as sethome
-	public static boolean bankFactionPaysLandCosts = true; // The faction pays for land claiming costs.
+	public static boolean bankMembersCanWithdraw = false; // Have to be at least
+															// moderator to
+															// withdraw or pay
+															// money to another
+															// faction
+	public static boolean bankFactionPaysCosts = true; // The faction pays for
+														// faction command
+														// costs, such as
+														// sethome
+	public static boolean bankFactionPaysLandCosts = true; // The faction pays
+															// for land claiming
+															// costs.
 	public static boolean bankPayOutToDisbander = true;
 
 	// mainly for other plugins/mods that use a fake player to take actions,

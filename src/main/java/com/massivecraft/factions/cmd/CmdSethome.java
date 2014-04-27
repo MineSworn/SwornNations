@@ -30,7 +30,7 @@ public class CmdSethome extends FCommand
 	@Override
 	public void perform()
 	{
-		if (!Conf.homesEnabled)
+		if (! Conf.homesEnabled)
 		{
 			fme.msg("<b>Sorry, Faction homes are disabled on this server.");
 			return;
@@ -48,12 +48,12 @@ public class CmdSethome extends FCommand
 		}
 
 		// Can the player set the faction home HERE?
-		if (!Permission.BYPASS.has(me) && Conf.homesMustBeInClaimedTerritory && Board.getFactionAt(new FLocation(me)) != faction)
+		if (! Permission.BYPASS.has(me) && Conf.homesMustBeInClaimedTerritory && Board.getFactionAt(new FLocation(me)) != faction)
 		{
 			fme.msg("<b>Sorry, your faction home can only be set inside your own claimed territory.");
 			return;
 		}
-		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && me.getLocation().getBlockY() < Conf.homesMustBeGreaterThan)
+		if (! Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && me.getLocation().getBlockY() < Conf.homesMustBeGreaterThan)
 		{
 			fme.msg("<b>Sorry, your faction home can only be set above ground.");
 			return;
@@ -61,7 +61,7 @@ public class CmdSethome extends FCommand
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.econCostSethome, "to set the faction home", "for setting the faction home"))
+		if (! payForCommand(Conf.econCostSethome, "to set the faction home", "for setting the faction home"))
 			return;
 
 		faction.setHome(me.getLocation());

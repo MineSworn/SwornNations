@@ -103,7 +103,7 @@ public class FactionsBlockListener implements Listener
 	public void onBlockPistonRetract(BlockPistonRetractEvent event)
 	{
 		// if not a sticky piston, retraction should be fine
-		if (event.isCancelled() || !event.isSticky() || !Conf.pistonProtectionThroughDenyBuild)
+		if (event.isCancelled() || ! event.isSticky() || ! Conf.pistonProtectionThroughDenyBuild)
 		{
 			return;
 		}
@@ -118,7 +118,7 @@ public class FactionsBlockListener implements Listener
 
 		Faction pistonFaction = Board.getFactionAt(new FLocation(event.getBlock()));
 
-		if (!canPistonMoveBlock(pistonFaction, targetLoc))
+		if (! canPistonMoveBlock(pistonFaction, targetLoc))
 		{
 			event.setCancelled(true);
 			return;
@@ -134,21 +134,21 @@ public class FactionsBlockListener implements Listener
 
 		if (otherFaction.isNone())
 		{
-			if (!Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(target.getWorld().getName()))
+			if (! Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(target.getWorld().getName()))
 				return true;
 
 			return false;
 		}
 		else if (otherFaction.isSafeZone())
 		{
-			if (!Conf.safeZoneDenyBuild)
+			if (! Conf.safeZoneDenyBuild)
 				return true;
 
 			return false;
 		}
 		else if (otherFaction.isWarZone())
 		{
-			if (!Conf.warZoneDenyBuild)
+			if (! Conf.warZoneDenyBuild)
 				return true;
 
 			return false;
@@ -181,7 +181,8 @@ public class FactionsBlockListener implements Listener
 			if (! Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(location.getWorld().getName()))
 			{
 				if (mat != Material.TNT || (mat == Material.TNT && absoluteFaction.isNone()))
-					return true; // This is not faction territory. Use whatever you like here.
+					return true; // This is not faction territory. Use whatever
+									// you like here.
 			}
 
 			if (! justCheck)
@@ -213,7 +214,7 @@ public class FactionsBlockListener implements Listener
 		Faction myFaction = me.getFaction();
 		Relation rel = myFaction.getRelationTo(otherFaction);
 		boolean online = otherFaction.hasPlayersOnline();
-		boolean pain = !justCheck && rel.confPainBuild(online);
+		boolean pain = ! justCheck && rel.confPainBuild(online);
 		boolean deny = rel.confDenyBuild(online);
 
 		// hurt the player for building/destroying in other territory?
@@ -221,14 +222,14 @@ public class FactionsBlockListener implements Listener
 		{
 			player.damage(Conf.actionDeniedPainAmount);
 
-			if (!deny)
+			if (! deny)
 				me.msg("<b>It is painful to try to " + action + " in the territory of " + otherFaction.getTag(myFaction));
 		}
 
 		// cancel building/destroying in other territory?
 		if (deny)
 		{
-			if (!justCheck)
+			if (! justCheck)
 				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
 
 			return false;
@@ -236,7 +237,7 @@ public class FactionsBlockListener implements Listener
 
 		if (action.equalsIgnoreCase("destroy"))
 		{
-			if (!otherFaction.playerHasPermission(me, NPermission.BREAK))
+			if (! otherFaction.playerHasPermission(me, NPermission.BREAK))
 			{
 				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
 				return false;
@@ -244,7 +245,7 @@ public class FactionsBlockListener implements Listener
 		}
 		else if (action.equalsIgnoreCase("build"))
 		{
-			if (!otherFaction.playerHasPermission(me, NPermission.BUILD))
+			if (! otherFaction.playerHasPermission(me, NPermission.BUILD))
 			{
 				me.msg("<b>You can't " + action + " in the territory of " + otherFaction.getTag(myFaction));
 				return false;
@@ -259,19 +260,20 @@ public class FactionsBlockListener implements Listener
 
 		// Also cancel and/or cause pain if player doesn't have ownership rights
 		// for this claim
-		if (Conf.ownedAreasEnabled && (Conf.ownedAreaDenyBuild || Conf.ownedAreaPainBuild) && !otherFaction.playerHasOwnershipRights(me, loc))
+		if (Conf.ownedAreasEnabled && (Conf.ownedAreaDenyBuild || Conf.ownedAreaPainBuild)
+				&& ! otherFaction.playerHasOwnershipRights(me, loc))
 		{
-			if (!pain && Conf.ownedAreaPainBuild && !justCheck)
+			if (! pain && Conf.ownedAreaPainBuild && ! justCheck)
 			{
 				player.damage(Conf.actionDeniedPainAmount);
 
-				if (!Conf.ownedAreaDenyBuild)
+				if (! Conf.ownedAreaDenyBuild)
 					me.msg("<b>It is painful to try to " + action + " in this territory, it is owned by: "
 							+ otherFaction.getOwnerListString(loc));
 			}
 			if (Conf.ownedAreaDenyBuild)
 			{
-				if (!justCheck)
+				if (! justCheck)
 					me.msg("<b>You can't " + action + " in this territory, it is owned by: " + otherFaction.getOwnerListString(loc));
 
 				return false;
@@ -321,7 +323,7 @@ public class FactionsBlockListener implements Listener
 		{
 			if (event.getBlock().getType() == blockedMaterial.getType())
 			{
-				if (!canPlaceBlockedItemHere(floc, fac, fplayer, false))
+				if (! canPlaceBlockedItemHere(floc, fac, fplayer, false))
 				{
 					fplayer.msg("<i>You cannot place this item outside your own territory!");
 					event.setCancelled(true);
@@ -333,7 +335,7 @@ public class FactionsBlockListener implements Listener
 		{
 			if (event.getBlock().getType() == blockedMaterial.getType())
 			{
-				if (!canPlaceBlockedItemHere(floc, fac, fplayer, true))
+				if (! canPlaceBlockedItemHere(floc, fac, fplayer, true))
 				{
 					fplayer.msg("<i>You cannot place this item outside your own territory or wilderness!");
 					event.setCancelled(true);

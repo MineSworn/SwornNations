@@ -52,7 +52,7 @@ public class CmdCreate extends FCommand
 			return;
 		}
 
-		if (!fme.isAdminBypassing())
+		if (! fme.isAdminBypassing())
 		{
 			for (String name : Conf.bannedFactionNames)
 			{
@@ -73,7 +73,7 @@ public class CmdCreate extends FCommand
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make sure they can pay
-		if (!canAffordCommand(Conf.econCostCreate, "to create a new faction"))
+		if (! canAffordCommand(Conf.econCostCreate, "to create a new faction"))
 			return;
 
 		// trigger the faction creation event (cancellable)

@@ -83,13 +83,13 @@ public abstract class FCommand extends MCommand<SwornNations>
 			return false;
 		}
 
-		if (this.isMoneyCommand && !Conf.econEnabled)
+		if (this.isMoneyCommand && ! Conf.econEnabled)
 		{
 			msg("<b>Faction economy features are disabled on this server.");
 			return false;
 		}
 
-		if (this.isMoneyCommand && !Conf.bankEnabled)
+		if (this.isMoneyCommand && ! Conf.bankEnabled)
 		{
 			msg("<b>The faction bank system is disabled on this server.");
 			return false;
@@ -102,13 +102,13 @@ public abstract class FCommand extends MCommand<SwornNations>
 	public boolean validSenderType(CommandSender sender, boolean informSenderIfNot)
 	{
 		boolean superValid = super.validSenderType(sender, informSenderIfNot);
-		if (!superValid)
+		if (! superValid)
 			return false;
 
-		if (!(this.senderMustBeMember || this.senderMustBeModerator || this.senderMustBeAdmin || this.senderMustHaveNPermission != null))
+		if (! (this.senderMustBeMember || this.senderMustBeModerator || this.senderMustBeAdmin || this.senderMustHaveNPermission != null))
 			return true;
 
-		if (!(sender instanceof Player))
+		if (! (sender instanceof Player))
 			return false;
 
 		FPlayer fplayer = FPlayers.i.get((Player) sender);
@@ -116,32 +116,32 @@ public abstract class FCommand extends MCommand<SwornNations>
 		if (fplayer.isAdminBypassing() && commandNotNeedFaction)
 			return true;
 
-		if (!fplayer.hasFaction())
+		if (! fplayer.hasFaction())
 		{
 			sender.sendMessage(p.txt.parse("<b>You are not member of any faction."));
 			return false;
 		}
 
-		if (this.senderMustBeOfficer && !fplayer.getRole().isAtLeast(Role.OFFICER))
+		if (this.senderMustBeOfficer && ! fplayer.getRole().isAtLeast(Role.OFFICER))
 		{
 			sender.sendMessage(p.txt.parse("<b>Only faction officers can %s.", this.getHelpShort()));
 			return false;
 		}
 
-		if (this.senderMustBeModerator && !fplayer.getRole().isAtLeast(Role.MODERATOR))
+		if (this.senderMustBeModerator && ! fplayer.getRole().isAtLeast(Role.MODERATOR))
 		{
 			sender.sendMessage(p.txt.parse("<b>Only faction moderators can %s.", this.getHelpShort()));
 			return false;
 		}
 
-		if (this.senderMustBeAdmin && !fplayer.getRole().isAtLeast(Role.ADMIN))
+		if (this.senderMustBeAdmin && ! fplayer.getRole().isAtLeast(Role.ADMIN))
 		{
 			sender.sendMessage(p.txt.parse("<b>Only faction admins can %s.", this.getHelpShort()));
 			return false;
 		}
 
-		if (this.senderMustHaveNPermission != null && !fplayer.getFaction().playerHasPermission(fplayer, this.senderMustHaveNPermission)
-				&& !fplayer.isAdminBypassing())
+		if (this.senderMustHaveNPermission != null && ! fplayer.getFaction().playerHasPermission(fplayer, this.senderMustHaveNPermission)
+				&& ! fplayer.isAdminBypassing())
 		{
 			sender.sendMessage(p.txt.parse("<b>You don't have permission to %s.", this.getHelpShort()));
 			return false;
@@ -159,7 +159,7 @@ public abstract class FCommand extends MCommand<SwornNations>
 		if (me == null)
 			return true;
 
-		if (!fme.hasFaction())
+		if (! fme.hasFaction())
 		{
 			sendMessage("You are not member of any faction.");
 			return false;
@@ -331,7 +331,7 @@ public abstract class FCommand extends MCommand<SwornNations>
 
 	public boolean canIAdministerYou(FPlayer i, FPlayer you)
 	{
-		if (!i.getFaction().equals(you.getFaction()))
+		if (! i.getFaction().equals(you.getFaction()))
 		{
 			i.sendMessage(p.txt.parse("%s <b>is not in the same faction as you.", you.describeTo(i, true)));
 			return false;
@@ -365,26 +365,26 @@ public abstract class FCommand extends MCommand<SwornNations>
 	// returns true unless person can't afford the cost
 	public boolean payForCommand(double cost, String toDoThis, String forDoingThis)
 	{
-		if (!Econ.shouldBeUsed() || this.fme == null || cost == 0.0 || fme.isAdminBypassing())
+		if (! Econ.shouldBeUsed() || this.fme == null || cost == 0.0 || fme.isAdminBypassing())
 			return true;
 
 		if (Conf.bankEnabled && Conf.bankFactionPaysCosts && fme.hasFaction())
-			return Econ.modifyMoney(myFaction, -cost, toDoThis, forDoingThis);
+			return Econ.modifyMoney(myFaction, - cost, toDoThis, forDoingThis);
 		else
-			return Econ.modifyMoney(fme, -cost, toDoThis, forDoingThis);
+			return Econ.modifyMoney(fme, - cost, toDoThis, forDoingThis);
 	}
 
 	// like above, but just make sure they can pay; returns true unless person
 	// can't afford the cost
 	public boolean canAffordCommand(double cost, String toDoThis)
 	{
-		if (!Econ.shouldBeUsed() || this.fme == null || cost == 0.0 || fme.isAdminBypassing())
+		if (! Econ.shouldBeUsed() || this.fme == null || cost == 0.0 || fme.isAdminBypassing())
 			return true;
 
 		if (Conf.bankEnabled && Conf.bankFactionPaysCosts && fme.hasFaction())
-			return Econ.hasAtLeast(myFaction, -cost, toDoThis);
+			return Econ.hasAtLeast(myFaction, - cost, toDoThis);
 		else
-			return Econ.hasAtLeast(fme, -cost, toDoThis);
+			return Econ.hasAtLeast(fme, - cost, toDoThis);
 	}
 
 	public boolean payPowerForCommandF(int cost)
@@ -404,8 +404,8 @@ public abstract class FCommand extends MCommand<SwornNations>
 
 	public boolean isEnemyNearby(Faction faction, Location loc)
 	{
-		if (Conf.homesTeleportAllowedEnemyDistance > 0 && !faction.isSafeZone()
-				&& (!fme.isInOwnTerritory() || (fme.isInOwnTerritory() && !Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory)))
+		if (Conf.homesTeleportAllowedEnemyDistance > 0 && ! faction.isSafeZone()
+				&& (! fme.isInOwnTerritory() || (fme.isInOwnTerritory() && ! Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory)))
 		{
 			World w = loc.getWorld();
 			double x = loc.getX();
@@ -414,7 +414,7 @@ public abstract class FCommand extends MCommand<SwornNations>
 
 			for (Player p : me.getServer().getOnlinePlayers())
 			{
-				if (p == null || !p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
+				if (p == null || ! p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
 					continue;
 
 				FPlayer fp = FPlayers.i.get(p);

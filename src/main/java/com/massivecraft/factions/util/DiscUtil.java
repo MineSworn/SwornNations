@@ -110,7 +110,7 @@ public class DiscUtil
 
 	public static boolean deleteRecursive(File path) throws FileNotFoundException
 	{
-		if (!path.exists())
+		if (! path.exists())
 			throw new FileNotFoundException(path.getAbsolutePath());
 		boolean ret = true;
 		if (path.isDirectory())
@@ -172,9 +172,12 @@ public class DiscUtil
 				lastWarn = now;
 
 				// Warn players
-				SwornNations.get().getServer().broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] Factions has detected that disk space is low."));
-				SwornNations.get().getServer().broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] Please make some space on your Disk!"));
-				SwornNations.get().getServer().broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] This message will be displayed every 5 minutes."));
+				SwornNations.get().getServer()
+						.broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] Factions has detected that disk space is low."));
+				SwornNations.get().getServer()
+						.broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] Please make some space on your Disk!"));
+				SwornNations.get().getServer()
+						.broadcastMessage(SwornNations.get().txt.parse("<b>[SEVERE] This message will be displayed every 5 minutes."));
 
 				// Lock the factions plugin
 				SwornNations.get().setLocked(true);

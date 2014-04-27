@@ -28,7 +28,7 @@ public class CmdChat extends FCommand
 	@Override
 	public void perform()
 	{
-		if (!Conf.factionOnlyChat)
+		if (! Conf.factionOnlyChat)
 		{
 			msg("<b>The built in chat chat channels are disabled on this server.");
 			return;

@@ -64,19 +64,19 @@ public class CmdOutpost extends FCommand
 			}
 		}
 
-		if (!Conf.homesEnabled)
+		if (! Conf.homesEnabled)
 		{
 			fme.msg("<b>Sorry, Faction outposts are disabled on this server.");
 			return;
 		}
 
-		if (!Conf.homesTeleportCommandEnabled)
+		if (! Conf.homesTeleportCommandEnabled)
 		{
 			fme.msg("<b>Sorry, the ability to teleport to Faction outposts is disabled on this server.");
 			return;
 		}
 
-		if (!myFaction.hasOutpost())
+		if (! myFaction.hasOutpost())
 		{
 			fme.msg("<b>Your faction does not have a outpost. "
 					+ (fme.getRole().value < Role.MODERATOR.value ? "<i> Ask your leader to:" : "<i>You should:"));
@@ -84,19 +84,20 @@ public class CmdOutpost extends FCommand
 			return;
 		}
 
-		if (!Conf.homesTeleportAllowedFromEnemyTerritory && fme.isInEnemyTerritory())
+		if (! Conf.homesTeleportAllowedFromEnemyTerritory && fme.isInEnemyTerritory())
 		{
 			fme.msg("<b>You cannot teleport to your faction outpost while in the territory of an enemy faction.");
 			return;
 		}
 
-		if (!Conf.homesTeleportAllowedFromDifferentWorld && me.getWorld().getUID() != myFaction.getOutpost().getWorld().getUID())
+		if (! Conf.homesTeleportAllowedFromDifferentWorld && me.getWorld().getUID() != myFaction.getOutpost().getWorld().getUID())
 		{
 			fme.msg("<b>You cannot teleport to your faction outpost while in a different world.");
 			return;
 		}
 
-		if (!Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0 && myFaction.getOutpost().getBlockY() < Conf.homesMustBeGreaterThan)
+		if (! Permission.BYPASS.has(me) && Conf.homesMustBeGreaterThan > 0
+				&& myFaction.getOutpost().getBlockY() < Conf.homesMustBeGreaterThan)
 		{
 			if (moveoutpost())
 			{
@@ -119,7 +120,7 @@ public class CmdOutpost extends FCommand
 
 		// if economy is enabled, they're not on the bypass list, and this
 		// command has a cost set, make 'em pay
-		if (!payForCommand(Conf.econCostHome, "to teleport to your faction outpost", "for teleporting to your faction outpost"))
+		if (! payForCommand(Conf.econCostHome, "to teleport to your faction outpost", "for teleporting to your faction outpost"))
 			return;
 
 		// Create a smoke effect
@@ -139,7 +140,7 @@ public class CmdOutpost extends FCommand
 	public boolean moveoutpost()
 	{
 		Location outpost = myFaction.getOutpost();
-		while (outpost.getBlockY() < Conf.homesMustBeGreaterThan && outpost.getBlockY() < 256 && !checkIsValidoutpost(outpost))
+		while (outpost.getBlockY() < Conf.homesMustBeGreaterThan && outpost.getBlockY() < 256 && ! checkIsValidoutpost(outpost))
 		{
 			outpost = outpost.add(0, 1, 0);
 		}
@@ -157,7 +158,7 @@ public class CmdOutpost extends FCommand
 	{
 		if (outpost.getWorld().getBlockAt(outpost).getType() == Material.AIR
 				&& outpost.getWorld().getBlockAt(outpost.clone().add(0, 1, 0)).getType() == Material.AIR
-				&& outpost.getWorld().getBlockAt(outpost.clone().subtract(0, -1, 0)).getType() != Material.AIR)
+				&& outpost.getWorld().getBlockAt(outpost.clone().subtract(0, - 1, 0)).getType() != Material.AIR)
 			return true;
 		return false;
 	}
