@@ -632,7 +632,7 @@ public class FactionsPlayerListener implements Listener
 		for (String territorycommands : Conf.ownTerritoryOnlyCommands)
 		{
 			String[] args = fullCmd.split(" ");
-			if (args[0].equalsIgnoreCase("/" + territorycommands))
+			if (args[0].equalsIgnoreCase("/" + territorycommands) || args[0].equalsIgnoreCase("/e" + territorycommands))
 			{
 				if (! me.hasFaction())
 				{
