@@ -1,8 +1,6 @@
 package com.massivecraft.factions;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -75,48 +73,23 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.factionId = faction.getId();
 	}
 
-	// UUID Stuff
-	// TODO: Sort and convert this stuff
-	private String uniqueID;
+	// FIELDS: Unique ID
+	private String uniqueId;
 	private String lastKnownBy;
-	private List<String> knownBy = new ArrayList<String>();
 
-	public void updateUniqueID()
+	public void updateUniqueId()
 	{
 		Player player = getPlayer();
 		if (player == null)
 			return;
 
+		uniqueId = player.getUniqueId().toString();
 		lastKnownBy = player.getName();
-		uniqueID = player.getUniqueId().toString();
-		if (! knownBy.contains(player.getName()))
-			knownBy.add(player.getName());
 	}
 
-	public String getUniqueID()
-	{
-		return uniqueID;
-	}
-
-	public UUID getUUID()
-	{
-		return UUID.fromString(uniqueID);
-	}
-
-	public String getLastKnownBy()
-	{
-		return lastKnownBy;
-	}
-
-	public List<String> getKnownBy()
-	{
-		return knownBy;
-	}
-
-	public boolean knownBy(String name)
-	{
-		return knownBy.contains(name);
-	}
+	public UUID getUUID() { return UUID.fromString(uniqueId); }
+	public String getUniqueId() { return uniqueId; }
+	public String getLastKnownBy() { return lastKnownBy; }
 
 	// FIELD: role
 	private Role role;
