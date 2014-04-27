@@ -51,16 +51,16 @@ public class EssentialsFeatures
 	 * Handles Essentials Teleportation
 	 * 
 	 * @param player
-	 *            - {@link Player} to teleport
+	 *        - {@link Player} to teleport
 	 * @param loc
-	 *            - {@link Location} to teleport to
+	 *        - {@link Location} to teleport to
 	 * @return Whether or not the teleportation was successful
 	 */
 	public static boolean handleTeleport(Player player, Location loc)
 	{
 		try
 		{
-			if (!Conf.homesTeleportCommandEssentialsIntegration || essentials == null)
+			if (! Conf.homesTeleportCommandEssentialsIntegration || essentials == null)
 				return false;
 
 			User user = essentials.getUser(player);
