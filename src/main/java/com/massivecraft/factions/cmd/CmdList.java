@@ -93,6 +93,11 @@ public class CmdList extends FCommand
 		int pageNumber = this.argAsInt(0, 1);
 		int pageCount = (factionList.size() / pageHeight) + 1;
 		int start = (pageNumber - 1) * pageHeight;
+		if (start > factionList.size())
+		{
+			msg("<b>No page with index: " + pageNumber);
+			return;
+		}
 		int end = start + pageHeight;
 		if (end > factionList.size())
 			end = factionList.size();
