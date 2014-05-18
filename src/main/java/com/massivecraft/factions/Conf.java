@@ -53,7 +53,7 @@ public class Conf
 
 	public static int factionTagLengthMin = 3;
 	public static int factionTagLengthMax = 7;
-	public static boolean factionTagForceUpperCase = true;
+	public static boolean factionTagForceUpperCase = false;
 
 	public static boolean newFactionsDefaultOpen = false;
 
