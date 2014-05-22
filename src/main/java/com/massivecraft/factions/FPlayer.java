@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
 
@@ -43,20 +45,14 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	private transient FLocation lastStoodAt = new FLocation();
 
 	// FIELD: factionId
-	private String factionId;
+	private @Getter String factionId;
 
 	public Faction getFaction()
 	{
-		if (this.factionId == null)
-		{
+		if (factionId == null)
 			return null;
-		}
-		return Factions.i.get(this.factionId);
-	}
 
-	public String getFactionId()
-	{
-		return this.factionId;
+		return Factions.i.get(factionId);
 	}
 
 	public boolean hasFaction()
@@ -73,36 +69,23 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.factionId = faction.getId();
 	}
 
-	// FIELDS: Unique ID
-	private String uniqueId;
+	// FIELDS: lastKnownBy
 	private String lastKnownBy;
 
-	public void updateUniqueId()
+	public void updateName()
 	{
 		Player player = getPlayer();
 		if (player == null)
 			return;
 
-		uniqueId = player.getUniqueId().toString();
 		lastKnownBy = player.getName();
 	}
 
-	public UUID getUUID() { return UUID.fromString(uniqueId); }
-	public String getUniqueId() { return uniqueId; }
+	public UUID getUUID() { return UUID.fromString(getId()); }
 	public String getLastKnownBy() { return lastKnownBy; }
 
 	// FIELD: role
-	private Role role;
-
-	public Role getRole()
-	{
-		return this.role;
-	}
-
-	public void setRole(Role role)
-	{
-		this.role = role;
-	}
+	private @Getter @Setter Role role;
 
 	// FIELD: title
 	private String title;
@@ -112,17 +95,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 	// FIELD: powerBoost
 	// special increase/decrease to min and max power for this player
-	private double powerBoost;
-
-	public double getPowerBoost()
-	{
-		return this.powerBoost;
-	}
-
-	public void setPowerBoost(double powerBoost)
-	{
-		this.powerBoost = powerBoost;
-	}
+	private @Getter @Setter double powerBoost;
 
 	// FIELD: lastPowerUpdateTime
 	private long lastPowerUpdateTime;
@@ -134,12 +107,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	private transient boolean mapAutoUpdating;
 
 	// FIELD: autoClaimEnabled
-	private transient Faction autoClaimFor;
-
-	public Faction getAutoClaimFor()
-	{
-		return autoClaimFor;
-	}
+	private transient @Getter Faction autoClaimFor;
 
 	public void setAutoClaimFor(Faction faction)
 	{
@@ -375,7 +343,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 	public String getName()
 	{
-		return getId();
+		// return getId();
+		return lastKnownBy;
 	}
 
 	public String getTag()

@@ -1,16 +1,16 @@
 package com.massivecraft.factions.persist;
 
 import java.util.List;
+import java.util.UUID;
 
-import net.dmulloy2.swornnations.SwornNations;
-
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PlayerEntity extends Entity
 {
 	public Player getPlayer()
 	{
-		return SwornNations.get().getServer().getPlayer(getId());
+		return Bukkit.getPlayer(UUID.fromString(getId()));
 	}
 
 	// -------------------------------------------- //

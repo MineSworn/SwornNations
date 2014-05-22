@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Getter;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.swornnations.types.NPermissionManager;
@@ -36,7 +37,7 @@ public class Faction extends Entity implements EconomyParticipator
 	private Map<String, Relation> relationWish;
 
 	// FIELD: claimOwnership
-	private Map<FLocation, Set<String>> claimOwnership = new ConcurrentHashMap<FLocation, Set<String>>();
+	private @Getter Map<FLocation, Set<String>> claimOwnership = new ConcurrentHashMap<FLocation, Set<String>>();
 
 	private NPermissionManager permManager;
 
@@ -46,7 +47,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 	// FIELD: invites
 	// Where string is a lowercase player name
-	private Set<String> invites;
+	private @Getter Set<String> invites;
 
 	public void invite(FPlayer fplayer)
 	{

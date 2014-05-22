@@ -26,7 +26,7 @@ public abstract class PlayerEntityCollection<E extends Entity> extends EntityCol
 
 	public E get(Player player)
 	{
-		return this.get(player.getName());
+		return get(player.getUniqueId().toString());
 	}
 
 	public Set<E> getOnline()
