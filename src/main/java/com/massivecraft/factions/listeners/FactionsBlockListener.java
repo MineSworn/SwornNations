@@ -168,7 +168,7 @@ public class FactionsBlockListener implements Listener
 		if (Conf.playersWhoBypassAllProtection.contains(name))
 			return true;
 
-		FPlayer me = FPlayers.i.get(name);
+		FPlayer me = FPlayers.i.get(player);
 		if (me.isAdminBypassing())
 			return true;
 
