@@ -11,22 +11,21 @@ import com.massivecraft.factions.types.Role;
 
 public class NPermissionManager
 {
-
-	Map<FPlayer, HashMap<NPermission, Boolean>> playerPerms = new HashMap<FPlayer, HashMap<NPermission, Boolean>>();
-	Map<Role, HashSet<NPermission>> rankPerms = new HashMap<Role, HashSet<NPermission>>();
+	private Map<String, HashMap<NPermission, Boolean>> playerPerms = new HashMap<String, HashMap<NPermission, Boolean>>();
+	private Map<Role, HashSet<NPermission>> rankPerms = new HashMap<Role, HashSet<NPermission>>();
 
 	public NPermissionManager()
 	{
 		setDefaultPerms();
 	}
 
-	public NPermissionManager(Map<FPlayer, HashMap<NPermission, Boolean>> p, Map<Role, HashSet<NPermission>> r)
+	public NPermissionManager(Map<String, HashMap<NPermission, Boolean>> p, Map<Role, HashSet<NPermission>> r)
 	{
 		playerPerms = p;
 		rankPerms = r;
 	}
 
-	public Map<FPlayer, HashMap<NPermission, Boolean>> getPlayerPerms()
+	public Map<String, HashMap<NPermission, Boolean>> getPlayerPerms()
 	{
 		return Collections.unmodifiableMap(playerPerms);
 	}
@@ -49,6 +48,7 @@ public class NPermissionManager
 	{
 		if (player.getRole() == Role.ADMIN)
 			return;
+
 		if (playerPerms.containsKey(player))
 		{
 			if (! playerPerms.get(player).containsKey(perm))
@@ -58,8 +58,9 @@ public class NPermissionManager
 		}
 		else
 		{
-			playerPerms.put(player, new HashMap<NPermission, Boolean>());
-			playerPerms.get(player).put(perm, true);
+			String id = player.getId();
+			playerPerms.put(id, new HashMap<NPermission, Boolean>());
+			playerPerms.get(id).put(perm, true);
 		}
 	}
 
@@ -84,17 +85,21 @@ public class NPermissionManager
 	{
 		if (player.getRole() == Role.ADMIN)
 			return;
+
 		replaceEntry(player, perm, false);
 	}
 
 	public void replaceEntry(FPlayer player, NPermission perm, boolean deny)
 	{
-		if (playerPerms.containsKey(player))
-			if (playerPerms.get(player).containsKey(perm))
-				playerPerms.get(player).remove(perm);
-		if (! playerPerms.containsKey(player))
-			playerPerms.put(player, new HashMap<NPermission, Boolean>());
-		playerPerms.get(player).put(perm, deny);
+		String id = player.getId();
+		if (playerPerms.containsKey(id))
+			if (playerPerms.get(id).containsKey(perm))
+				playerPerms.get(id).remove(perm);
+
+		if (! playerPerms.containsKey(id))
+			playerPerms.put(id, new HashMap<NPermission, Boolean>());
+
+		playerPerms.get(id).put(perm, deny);
 	}
 
 	public void removePerm(Role rank, NPermission perm)
@@ -110,10 +115,13 @@ public class NPermissionManager
 	{
 		if (player.getRole() == Role.ADMIN || player.isAdminBypassing())
 			return true;
-		if (playerPerms.containsKey(player))
-			if (playerPerms.get(player).containsKey(perm))
-				if (playerPerms.get(player).get(perm))
+
+		String id = player.getId();
+		if (playerPerms.containsKey(id))
+			if (playerPerms.get(id).containsKey(perm))
+				if (playerPerms.get(id).get(perm))
 					return true;
+
 		return false;
 	}
 
@@ -121,10 +129,13 @@ public class NPermissionManager
 	{
 		if (player.getRole() == Role.ADMIN || player.isAdminBypassing())
 			return false;
-		if (playerPerms.containsKey(player))
-			if (playerPerms.get(player).containsKey(perm))
-				if (! playerPerms.get(player).get(perm))
+
+		String id = player.getId();
+		if (playerPerms.containsKey(id))
+			if (playerPerms.get(id).containsKey(perm))
+				if (! playerPerms.get(id).get(perm))
 					return true;
+
 		return false;
 	}
 

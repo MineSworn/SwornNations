@@ -19,7 +19,7 @@ import com.griefcraft.lwc.LWCPlugin;
 import com.griefcraft.model.Protection;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 
 public class LWCFeatures
@@ -66,7 +66,11 @@ public class LWCFeatures
 			Protection prot = lwc.findProtection(chest);
 			if (prot != null)
 			{
-				if (! faction.getFPlayers().contains(FPlayers.i.get(prot.getOwner())))
+				boolean found = false;
+				for (FPlayer fplayer : faction.getFPlayers())
+					if (fplayer.getName().equals(prot.getOwner()))
+						found = true;
+				if (! found)
 					prot.remove();
 			}
 		}
@@ -76,8 +80,7 @@ public class LWCFeatures
 	{
 		World world = Bukkit.getWorld(flocation.getWorldName());
 		if (world == null)
-			return; // world not loaded or something? cancel out to prevent
-					// error
+			return; // world not loaded or something? cancel out to prevent error
 
 		Location location = new Location(world, flocation.getX() * 16, 5, flocation.getZ() * 16);
 		Chunk chunk = location.getChunk();

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.entity.Player;
 
@@ -27,6 +28,39 @@ public abstract class PlayerEntityCollection<E extends Entity> extends EntityCol
 	public E get(Player player)
 	{
 		return this.get(player.getName());
+	}
+
+	public E get(OfflinePlayer player)
+	{
+		return this.get(player.getName());
+	}
+
+	@Override
+	@Deprecated
+	public E get(String id)
+	{
+		return super.get(id);
+	}
+
+	@Override
+	@Deprecated
+	public E getCreative(String id)
+	{
+		return super.getCreative(id);
+	}
+
+	@Override
+	@Deprecated
+	public synchronized E create(String id)
+	{
+		return super.create(id);
+	}
+
+	@Override
+	@Deprecated
+	public E getBestIdMatch(String pattern)
+	{
+		return super.getBestIdMatch(pattern);
 	}
 
 	public Set<E> getOnline()

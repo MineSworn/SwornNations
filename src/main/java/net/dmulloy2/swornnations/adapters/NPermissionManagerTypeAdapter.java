@@ -20,13 +20,10 @@ import org.bukkit.craftbukkit.libs.com.google.gson.JsonPrimitive;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializationContext;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
 
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.types.Role;
 
 public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissionManager>, JsonSerializer<NPermissionManager>
 {
-
 	private static String PLAYERS = "players";
 	private static String ROLES = "roles";
 
@@ -40,7 +37,7 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			JsonArray roles = obj.getAsJsonArray(ROLES);
 			JsonArray players = obj.getAsJsonArray(PLAYERS);
 
-			Map<FPlayer, HashMap<NPermission, Boolean>> playerPerms = new HashMap<FPlayer, HashMap<NPermission, Boolean>>();
+			Map<String, HashMap<NPermission, Boolean>> playerPerms = new HashMap<String, HashMap<NPermission, Boolean>>();
 			Map<Role, HashSet<NPermission>> rankPerms = new HashMap<Role, HashSet<NPermission>>();
 
 			for (JsonElement e : roles)
@@ -58,7 +55,7 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			for (JsonElement e : players)
 			{
 				String[] s = e.getAsString().split(",");
-				FPlayer p = FPlayers.i.get(s[0]);
+				String id = s[0];
 				HashMap<NPermission, Boolean> perms = new HashMap<NPermission, Boolean>();
 				for (int i = 1; i < s.length; i++)
 				{
@@ -66,7 +63,7 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 
 					perms.put(NPermission.match(ss[0]), (ss[1].equalsIgnoreCase("t")) ? true : false);
 				}
-				playerPerms.put(p, perms);
+				playerPerms.put(id, perms);
 			}
 
 			return new NPermissionManager(playerPerms, rankPerms);
@@ -101,10 +98,10 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			obj.add(ROLES, roles);
 
 			JsonArray players = new JsonArray();
-			for (Entry<FPlayer, HashMap<NPermission, Boolean>> entry : src.getPlayerPerms().entrySet())
+			for (Entry<String, HashMap<NPermission, Boolean>> entry : src.getPlayerPerms().entrySet())
 			{
 				StringBuilder ret = new StringBuilder();
-				ret.append(entry.getKey().getName());
+				ret.append(entry.getKey());
 				for (Entry<NPermission, Boolean> e : entry.getValue().entrySet())
 				{
 					ret.append("," + e.getKey().toString() + ":" + ((e.getValue()) ? "t" : "f"));

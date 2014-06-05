@@ -5,6 +5,7 @@ import java.util.List;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.Console;
 import net.dmulloy2.swornnations.types.NPermission;
+import net.dmulloy2.swornnations.util.Util;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -192,6 +193,11 @@ public abstract class FCommand extends MCommand<SwornNations>
 
 		if (name != null)
 		{
+			Player player = Util.matchPlayer(name);
+			if (player != null)
+				name = player.getName();
+
+			@SuppressWarnings("deprecation")
 			FPlayer fplayer = FPlayers.i.get(name);
 			if (fplayer != null)
 			{
@@ -229,6 +235,11 @@ public abstract class FCommand extends MCommand<SwornNations>
 
 		if (name != null)
 		{
+			Player player = Util.matchPlayer(name);
+			if (player != null)
+				name = player.getName();
+
+			@SuppressWarnings("deprecation")
 			FPlayer fplayer = FPlayers.i.getBestIdMatch(name);
 			if (fplayer != null)
 			{
@@ -283,6 +294,11 @@ public abstract class FCommand extends MCommand<SwornNations>
 			// Next we match player names
 			if (faction == null)
 			{
+				Player player = Util.matchPlayer(name);
+				if (player != null)
+					name = player.getName();
+
+				@SuppressWarnings("deprecation")
 				FPlayer fplayer = FPlayers.i.getBestIdMatch(name);
 				if (fplayer != null)
 				{
