@@ -315,39 +315,40 @@ public abstract class EntityCollection<E extends Entity>
 					}
 
 					ExecutorService e = Executors.newFixedThreadPool(3);
-					List<Future<Map<String, UUID>>> futures = e.invokeAll(fetchers);
+					List<Future<Map<String, UUID>>> results = e.invokeAll(fetchers);
 
-					Map<String, UUID> response = new HashMap<String, UUID>();
-					for (Future<Map<String, UUID>> future : futures)
-						response.putAll(future.get());
-
-					for (String s : list)
+					for (Future<Map<String, UUID>> future : results)
 					{
-						// Are we missing any responses?
-						if (! response.containsKey(s))
+						Map<String, UUID> response = future.get();
+						for (String s : list)
 						{
-							// They don't have a UUID
-							invalidList.add(s);
-						}
-					}
-
-					for (String value : response.keySet())
-					{
-						// Replace their old named entry with a UUID key
-						String id = response.get(value).toString();
-
-						FPlayer player = data.get(value);
-						if (player == null)
-						{
-							// The player never existed here
-							invalidList.add(value);
-							continue;
+							// Are we missing any responses?
+							if (! response.containsKey(s))
+							{
+								// They don't have a UUID
+								invalidList.add(s);
+							}
 						}
 
-						player.setId(id); // Update the object
+						for (String value : response.keySet())
+						{
+							// Replace their old named entry with a UUID key
+							String id = response.get(value).toString();
 
-						data.remove(value); // Out with the old...
-						data.put(id, player); // And in with the new
+							FPlayer player = data.get(value);
+
+							if (player == null)
+							{
+								// The player never existed here
+								invalidList.add(value);
+								continue;
+							}
+
+							player.setId(id); // Update the object
+
+							data.remove(value); // Out with the old...
+							data.put(id, player); // And in with the new
+						}
 					}
 
 					if (invalidList.size() > 0)
