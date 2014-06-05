@@ -36,7 +36,7 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 
 	public void clean()
 	{
-		for (FPlayer fplayer : get())
+		for (FPlayer fplayer : this.get())
 		{
 			if (! Factions.i.exists(fplayer.getFactionId()))
 			{

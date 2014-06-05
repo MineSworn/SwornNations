@@ -60,7 +60,7 @@ public class FactionsPlayerListener implements Listener
 		}
 
 		// UUID Stuff
-		me.updateName();
+		me.updateUniqueId();
 
 		// Update the lastLoginTime for this fplayer
 		me.setLastLoginTime(System.currentTimeMillis());
