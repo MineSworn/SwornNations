@@ -12,7 +12,9 @@ import org.bukkit.Bukkit;
 
 public class MaterialUtil
 {
-	private MaterialUtil() { }
+	private MaterialUtil()
+	{
+	}
 
 	/**
 	 * Returns the {@link org.bukkit.Material} from a given string
@@ -41,17 +43,20 @@ public class MaterialUtil
 		try
 		{
 			material = org.bukkit.Material.matchMaterial(string);
-		} catch (Throwable ex) { }
+		}
+		catch (Throwable ex)
+		{
+		}
 
 		if (material == null)
 		{
 			try
 			{
-				// This method never returns null, but if a result is not found, it returns AIR
-				org.bukkit.Material internal = Bukkit.getUnsafe().getMaterialFromInternalName(string);
-				if (internal != org.bukkit.Material.AIR)
-					material = internal;
-			} catch (Throwable ex) { }
+				material = Bukkit.getUnsafe().getMaterialFromInternalName(string);
+			}
+			catch (Throwable ex)
+			{
+			}
 		}
 
 		return material;
@@ -90,7 +95,7 @@ public class MaterialUtil
 			return mat.getId();
 		}
 
-		return -1; // Result not found
+		return 1; // Stone
 	}
 
 	/**

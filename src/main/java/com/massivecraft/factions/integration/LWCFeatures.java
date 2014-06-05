@@ -19,7 +19,7 @@ import com.griefcraft.lwc.LWCPlugin;
 import com.griefcraft.model.Protection;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 
 public class LWCFeatures
@@ -66,15 +66,7 @@ public class LWCFeatures
 			Protection prot = lwc.findProtection(chest);
 			if (prot != null)
 			{
-				// Iterate through the Faction's players
-				// Still better than the API method(s)
-				boolean found = false;
-				for (FPlayer fplayer : faction.getFPlayers())
-				{
-					if (fplayer.getName().equals(prot.getOwner()) || fplayer.getUUID().toString().equals(prot.getOwner()))
-						found = true;
-				}
-				if (! found)
+				if (! faction.getFPlayers().contains(FPlayers.i.get(prot.getOwner())))
 					prot.remove();
 			}
 		}

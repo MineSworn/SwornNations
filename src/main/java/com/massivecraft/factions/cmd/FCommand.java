@@ -5,7 +5,6 @@ import java.util.List;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.Console;
 import net.dmulloy2.swornnations.types.NPermission;
-import net.dmulloy2.swornnations.util.Util;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -193,23 +192,10 @@ public abstract class FCommand extends MCommand<SwornNations>
 
 		if (name != null)
 		{
-			// Check online players
-			Player player = Util.matchPlayer(name);
-			if (player != null)
-				ret = FPlayers.i.get(player);
-
-			if (ret == null)
+			FPlayer fplayer = FPlayers.i.get(name);
+			if (fplayer != null)
 			{
-				// Iterate through existing FPlayers
-				// Still much faster than the Bukkit API methods
-				for (FPlayer fplayer : FPlayers.i.get())
-				{
-					if (fplayer.getName().equalsIgnoreCase(name))
-					{
-						ret = fplayer;
-						break;
-					}
-				}
+				ret = fplayer;
 			}
 		}
 

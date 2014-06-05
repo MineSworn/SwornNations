@@ -7,7 +7,6 @@ import java.util.Set;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.MyMaterial;
 import net.dmulloy2.swornnations.types.NPermission;
-import net.dmulloy2.swornnations.util.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -352,7 +351,7 @@ public class FactionsPlayerListener implements Listener
 		if (Conf.playersWhoBypassAllProtection.contains(name))
 			return true;
 
-		FPlayer me = FPlayers.i.get(player);
+		FPlayer me = FPlayers.i.get(name);
 		if (me.isAdminBypassing())
 			return true;
 
@@ -457,7 +456,7 @@ public class FactionsPlayerListener implements Listener
 		if (Conf.playersWhoBypassAllProtection.contains(name))
 			return true;
 
-		FPlayer me = FPlayers.i.get(player);
+		FPlayer me = FPlayers.i.get(name);
 		if (me.isAdminBypassing())
 			return true;
 
@@ -651,10 +650,9 @@ public class FactionsPlayerListener implements Listener
 
 				if (args.length > 1)
 				{
-					Player pl = Util.matchPlayer(args[1]);
-					if (pl != null)
+					FPlayer target = FPlayers.i.get(args[1]);
+					if (target != null)
 					{
-						FPlayer target = FPlayers.i.get(pl);
 						if (target.isOnlineAndVisibleTo(player))
 						{
 							FLocation loc = new FLocation(target);

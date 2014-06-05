@@ -26,6 +26,7 @@ import com.massivecraft.factions.types.Role;
 
 public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissionManager>, JsonSerializer<NPermissionManager>
 {
+
 	private static String PLAYERS = "players";
 	private static String ROLES = "roles";
 
@@ -103,7 +104,7 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			for (Entry<FPlayer, HashMap<NPermission, Boolean>> entry : src.getPlayerPerms().entrySet())
 			{
 				StringBuilder ret = new StringBuilder();
-				ret.append(entry.getKey().getUUID().toString());
+				ret.append(entry.getKey().getName());
 				for (Entry<NPermission, Boolean> e : entry.getValue().entrySet())
 				{
 					ret.append("," + e.getKey().toString() + ":" + ((e.getValue()) ? "t" : "f"));
