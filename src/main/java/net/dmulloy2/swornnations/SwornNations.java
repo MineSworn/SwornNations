@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
+import net.dmulloy2.SwornPlugin;
 import net.dmulloy2.swornnations.adapters.MyMaterialTypeAdapter;
 import net.dmulloy2.swornnations.adapters.NPermissionManagerTypeAdapter;
 import net.dmulloy2.swornnations.types.MyMaterial;
@@ -29,7 +30,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
@@ -80,7 +80,7 @@ import com.massivecraft.factions.util.TextUtil;
  * </ul>
  */
 
-public class SwornNations extends JavaPlugin
+public class SwornNations extends SwornPlugin
 {
 	private static SwornNations i;
 

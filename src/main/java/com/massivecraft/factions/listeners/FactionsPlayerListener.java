@@ -7,7 +7,7 @@ import java.util.Set;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.MyMaterial;
 import net.dmulloy2.swornnations.types.NPermission;
-import net.dmulloy2.swornnations.util.Util;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

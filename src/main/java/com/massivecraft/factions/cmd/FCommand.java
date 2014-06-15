@@ -5,7 +5,7 @@ import java.util.List;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.Console;
 import net.dmulloy2.swornnations.types.NPermission;
-import net.dmulloy2.swornnations.util.Util;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.Location;
 import org.bukkit.World;

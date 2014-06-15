@@ -4,7 +4,7 @@ import java.util.UnknownFormatConversionException;
 import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
-import net.dmulloy2.swornnations.util.Util;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
