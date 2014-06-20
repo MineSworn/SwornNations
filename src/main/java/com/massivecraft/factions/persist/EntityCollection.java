@@ -250,11 +250,14 @@ public abstract class EntityCollection<E extends Entity>
 		{
 			if (! file.exists())
 				return new HashMap<String, E>();
-	
+
 			String content = DiscUtil.readCatch(file);
 			if (content == null)
 				return null;
-	
+
+			if (gson == null)
+				gson = SwornNations.get().getGson();
+
 			Type type = getMapType();
 			return gson.fromJson(content, type);
 		}

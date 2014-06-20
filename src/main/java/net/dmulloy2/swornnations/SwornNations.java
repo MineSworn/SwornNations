@@ -139,6 +139,14 @@ public class SwornNations extends SwornPlugin
 	private boolean autoSave = true;
 	protected boolean loadSuccessful = false;
 
+	public Gson getGson()
+	{
+		if (gson == null)
+			gson = getGsonBuilder().create();
+
+		return gson;
+	}
+
 	public boolean getAutoSave()
 	{
 		return this.autoSave;
