@@ -27,7 +27,11 @@ import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
@@ -180,131 +184,161 @@ public class SwornNations extends SwornPlugin
 	@Override
 	public void onEnable()
 	{
-		// MPlugin start
-		long start = System.currentTimeMillis();
-		this.loadSuccessful = false;
-
-		// Ensure basefolder exists!
-		getDataFolder().mkdirs();
-
-		// Create Utility Instances
-		this.perm = new PermUtil(this);
-		this.persist = new Persist(this);
-		this.gson = this.getGsonBuilder().create();
-
-		this.txt = new TextUtil();
-		initTXT();
-
-		// attempt to get first command defined in plugin.yml as reference
-		// command, if any commands are defined in there
-		// reference command will be used to prevent "unknown command" console
-		// messages
 		try
 		{
-			Map<String, Map<String, Object>> refCmd = this.getDescription().getCommands();
-			if (refCmd != null && ! refCmd.isEmpty())
-				this.refCommand = (String) (refCmd.keySet().toArray()[0]);
-		}
-		catch (ClassCastException ex)
-		{
-		}
+			// MPlugin start
+			long start = System.currentTimeMillis();
+			this.loadSuccessful = false;
 
-		// Create and register listeners
-		this.mPluginSecretPlayerListener = new SecretPlayerListener();
-		this.mPluginSecretServerListener = new SecretServerListener();
-		getServer().getPluginManager().registerEvents(this.mPluginSecretPlayerListener, this);
-		getServer().getPluginManager().registerEvents(this.mPluginSecretServerListener, this);
+			// Ensure basefolder exists!
+			getDataFolder().mkdirs();
 
-		// Register recurring tasks
-		long saveTicks = 20 * 60 * 30; // Approximately every 30 min
-		if (saveTask == null)
-		{
-			saveTask = new SaveTask(this).runTaskTimer(this, saveTicks, saveTicks).getTaskId();
-		}
-		// MPlugin end
+			// Create Utility Instances
+			this.perm = new PermUtil(this);
+			this.persist = new Persist(this);
+			this.gson = this.getGsonBuilder().create();
 
-		// Load Conf from disk
-		Conf.load();
-		FPlayers.i.loadFromDisc();
-		Factions.i.loadFromDisc();
-		Board.load();
+			this.txt = new TextUtil();
+			initTXT();
 
-		if (Conf.resetAllPerms)
-		{
-			for (Faction f : Factions.i.get())
+			// attempt to get first command defined in plugin.yml as reference
+			// command, if any commands are defined in there
+			// reference command will be used to prevent "unknown command"
+			// console
+			// messages
+			try
 			{
-				f.resetPermManager();
+				Map<String, Map<String, Object>> refCmd = this.getDescription().getCommands();
+				if (refCmd != null && ! refCmd.isEmpty())
+					this.refCommand = (String) (refCmd.keySet().toArray()[0]);
+			}
+			catch (ClassCastException ex)
+			{
 			}
 
-			Conf.resetAllPerms = false;
-			Factions.i.saveToDisc();
-			Conf.save();
-		}
+			// Create and register listeners
+			this.mPluginSecretPlayerListener = new SecretPlayerListener();
+			this.mPluginSecretServerListener = new SecretServerListener();
+			getServer().getPluginManager().registerEvents(this.mPluginSecretPlayerListener, this);
+			getServer().getPluginManager().registerEvents(this.mPluginSecretServerListener, this);
 
-		// Standardizes gold factions' enemies and tag
-		if (Conf.convertGoldFactions)
-		{
-			for (Faction f : Factions.i.get())
+			// Register recurring tasks
+			long saveTicks = 20 * 60 * 30; // Approximately every 30 min
+			if (saveTask == null)
 			{
-				if (f.getTag().startsWith(ChatColor.GOLD.toString()))
-				{
-					f.setGold(true);
-					f.setTag(ChatColor.stripColor(f.getTag()));
+				saveTask = new SaveTask(this).runTaskTimer(this, saveTicks, saveTicks).getTaskId();
+			}
+			// MPlugin end
 
-					for (Entry<String, Relation> relation : f.getRelationWishes().entrySet())
+			// Load Conf from disk
+			Conf.load();
+			FPlayers.i.loadFromDisc();
+			Factions.i.loadFromDisc();
+			Board.load();
+
+			if (Conf.resetAllPerms)
+			{
+				for (Faction f : Factions.i.get())
+				{
+					f.resetPermManager();
+				}
+
+				Conf.resetAllPerms = false;
+				Factions.i.saveToDisc();
+				Conf.save();
+			}
+
+			// Standardizes gold factions' enemies and tag
+			if (Conf.convertGoldFactions)
+			{
+				for (Faction f : Factions.i.get())
+				{
+					if (f.getTag().startsWith(ChatColor.GOLD.toString()))
 					{
-						if (relation.getValue() == Relation.ENEMY)
+						f.setGold(true);
+						f.setTag(ChatColor.stripColor(f.getTag()));
+
+						for (Entry<String, Relation> relation : f.getRelationWishes().entrySet())
 						{
-							f.removeRelationWish(relation.getKey());
+							if (relation.getValue() == Relation.ENEMY)
+							{
+								f.removeRelationWish(relation.getKey());
+							}
 						}
 					}
 				}
+
+				Conf.convertGoldFactions = false;
+				Factions.i.saveToDisc();
+				Conf.save();
 			}
 
-			Conf.convertGoldFactions = false;
-			Factions.i.saveToDisc();
-			Conf.save();
+			// Add Base Commands
+			this.cmdBase = new FCmdRoot();
+			this.cmdAutoHelp = new CmdAutoHelp();
+			this.getBaseCommands().add(cmdBase);
+
+			EssentialsFeatures.setup();
+			Econ.setup();
+			LWCFeatures.setup();
+
+			if (Conf.worldGuardChecking)
+			{
+				WorldGuard.init(this);
+			}
+
+			// start up task which runs the autoRemoveClaimsAfterTime routine
+			if (Conf.autoCleanupClaimsEnabled)
+				startAutoCleanupTask();
+
+			// start up task which runs the autoLeaveAfterDaysOfInactivity
+			// routine
+			startAutoLeaveTask(false);
+
+			// Clean owner lists, if applicable
+			if (Conf.cleanOwnerLists)
+				cleanOwnerLists();
+
+			// Register Listeners
+			PluginManager pm = getServer().getPluginManager();
+			pm.registerEvents(playerListener, this);
+			pm.registerEvents(chatListener, this);
+			pm.registerEvents(entityListener, this);
+			pm.registerEvents(exploitListener, this);
+			pm.registerEvents(blockListener, this);
+
+			// Since some other plugins execute commands directly through this
+			// command interface, provide it
+			getCommand(refCommand).setExecutor(this);
+
+			log("%s has been enabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
+			this.loadSuccessful = true;
 		}
-
-		// Add Base Commands
-		this.cmdBase = new FCmdRoot();
-		this.cmdAutoHelp = new CmdAutoHelp();
-		this.getBaseCommands().add(cmdBase);
-
-		EssentialsFeatures.setup();
-		Econ.setup();
-		LWCFeatures.setup();
-
-		if (Conf.worldGuardChecking)
+		catch (final Throwable ex)
 		{
-			WorldGuard.init(this);
+			log("Failed to enable SwornNations. Backing up files...");
+			this.backupFiles();
+			log("Files backed up... Printing exception...");
+			ex.printStackTrace();
+
+			getServer().getPluginManager().registerEvents(new Listener()
+			{
+				@EventHandler(priority = EventPriority.MONITOR)
+				public void onPlayerJoin(PlayerJoinEvent event)
+				{
+					Player player = event.getPlayer();
+					if (player.isOp())
+					{
+						player.sendMessage(ChatColor.RED + "SwornNations failed to enable! Check console!");
+					}
+				}
+			}, this);
 		}
+	}
 
-		// start up task which runs the autoRemoveClaimsAfterTime routine
-		if (Conf.autoCleanupClaimsEnabled)
-			startAutoCleanupTask();
-
-		// start up task which runs the autoLeaveAfterDaysOfInactivity routine
-		startAutoLeaveTask(false);
-
-		// Clean owner lists, if applicable
-		if (Conf.cleanOwnerLists)
-			cleanOwnerLists();
-
-		// Register Listeners
-		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(playerListener, this);
-		pm.registerEvents(chatListener, this);
-		pm.registerEvents(entityListener, this);
-		pm.registerEvents(exploitListener, this);
-		pm.registerEvents(blockListener, this);
-
-		// Since some other plugins execute commands directly through this
-		// command interface, provide it
-		getCommand(refCommand).setExecutor(this);
-
-		log("%s has been enabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
-		this.loadSuccessful = true;
+	private final void backupFiles()
+	{
+		
 	}
 
 	public GsonBuilder getGsonBuilder()

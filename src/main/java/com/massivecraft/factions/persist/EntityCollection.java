@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.dmulloy2.swornnations.SwornNations;
+
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 
 import com.massivecraft.factions.util.DiscUtil;
@@ -244,19 +246,24 @@ public abstract class EntityCollection<E extends Entity>
 
 	private Map<String, E> loadCore()
 	{
-		if (! this.file.exists())
+		try
 		{
-			return new HashMap<String, E>();
+			if (! file.exists())
+				return new HashMap<String, E>();
+	
+			String content = DiscUtil.readCatch(file);
+			if (content == null)
+				return null;
+	
+			Type type = getMapType();
+			return gson.fromJson(content, type);
 		}
-
-		String content = DiscUtil.readCatch(this.file);
-		if (content == null)
+		catch (Throwable ex)
 		{
+			SwornNations.get().log("Failed to load core. Gson exists: " + (gson != null));
+			ex.printStackTrace();
 			return null;
 		}
-
-		Type type = this.getMapType();
-		return this.gson.fromJson(content, type);
 	}
 
 	// -------------------------------------------- //
