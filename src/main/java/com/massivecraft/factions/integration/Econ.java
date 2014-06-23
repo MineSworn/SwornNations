@@ -19,6 +19,8 @@ import com.massivecraft.factions.types.Permission;
 import com.massivecraft.factions.types.Role;
 import com.massivecraft.factions.util.RelationUtil;
 
+// TODO: Figure this out
+@SuppressWarnings("deprecation")
 public class Econ
 {
 	private static Economy econ = null;
