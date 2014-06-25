@@ -2,8 +2,10 @@ package com.massivecraft.factions.listeners;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -29,6 +31,8 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -63,8 +67,7 @@ public class FactionsEntityListener implements Listener
 		Faction faction = Board.getFactionAt(new FLocation(player.getLocation()));
 		if (faction.isWarZone())
 		{
-			// war zones always override worldsNoPowerLoss either way, thus this
-			// layout
+			// war zones always override worldsNoPowerLoss either way, thus this layout
 			if (! Conf.warZonePowerLoss)
 			{
 				fplayer.msg("<i>You didn't lose any power since you were in a war zone.");
@@ -72,7 +75,8 @@ public class FactionsEntityListener implements Listener
 			}
 			if (Conf.worldsNoPowerLoss.contains(player.getWorld().getName()))
 			{
-				fplayer.msg("<b>The world you are in has power loss normally disabled, but you still lost power since you were in a war zone.");
+				fplayer.msg("<b>The world you are in has power loss normally disabled,"
+						+ " but you still lost power since you were in a war zone.");
 			}
 		}
 		else if (faction.isSafeZone())
@@ -83,7 +87,8 @@ public class FactionsEntityListener implements Listener
 				return;
 			}
 		}
-		else if (faction.isNone() && ! Conf.wildernessPowerLoss && ! Conf.worldsNoWildernessProtection.contains(player.getWorld().getName()))
+		else if (faction.isNone() && ! Conf.wildernessPowerLoss
+				&& ! Conf.worldsNoWildernessProtection.contains(player.getWorld().getName()))
 		{
 			fplayer.msg("<i>You didn't lose any power since you were in the wilderness.");
 			return;
@@ -151,7 +156,8 @@ public class FactionsEntityListener implements Listener
 
 		if (boomer instanceof Creeper)
 		{
-			if (faction.isNone() && Conf.wildernessBlockCreepers && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
+			if (faction.isNone() && Conf.wildernessBlockCreepers
+					&& ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
 			{
 				event.setCancelled(true);
 				return;
@@ -177,7 +183,8 @@ public class FactionsEntityListener implements Listener
 		}
 		else if (boomer instanceof Fireball || boomer instanceof WitherSkull || boomer instanceof Wither)
 		{
-			if (faction.isNone() && Conf.wildernessBlockFireballs && ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
+			if (faction.isNone() && Conf.wildernessBlockFireballs
+					&& ! Conf.worldsNoWildernessProtection.contains(loc.getWorld().getName()))
 			{
 				event.setCancelled(true);
 				return;
@@ -229,7 +236,23 @@ public class FactionsEntityListener implements Listener
 		}
 	}
 
-	// mainly for flaming arrows; don't want allies or people in safe zones to
+	@SuppressWarnings("deprecation") // Old Event
+	private final EntityDamageByEntityEvent getDamageEvent(Entity damager, Entity entity, DamageCause cause, double damage)
+	{
+		try
+		{
+			Map<DamageModifier, Double> modifiers = new HashMap<>();
+			modifiers.put(DamageModifier.BASE, damage);
+
+			return new EntityDamageByEntityEvent(damager, entity, cause, modifiers);
+		}
+		catch (Throwable ex)
+		{
+			return new EntityDamageByEntityEvent(damager, entity, cause, damage);
+		}
+	}
+
+	// Mainly for flaming arrows - don't want allies or people in safe zones to
 	// be ignited even after damage event is cancelled
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityCombustByEntity(EntityCombustByEntityEvent event)
@@ -237,16 +260,14 @@ public class FactionsEntityListener implements Listener
 		if (event.isCancelled())
 			return;
 
-		EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(event.getCombuster(), event.getEntity(),
-				EntityDamageEvent.DamageCause.FIRE, 0.0D);
-		if (! this.canDamagerHurtDamagee(sub, false))
+		EntityDamageByEntityEvent sub = getDamageEvent(event.getCombuster(), event.getEntity(), DamageCause.FIRE, 0.0D);
+		if (! canDamagerHurtDamagee(sub, false))
 			event.setCancelled(true);
-		sub = null;
 	}
 
-	private static final Set<PotionEffectType> badPotionEffects = new LinkedHashSet<PotionEffectType>(Arrays.asList(
-			PotionEffectType.BLINDNESS, PotionEffectType.CONFUSION, PotionEffectType.HARM, PotionEffectType.HUNGER, PotionEffectType.POISON,
-			PotionEffectType.SLOW, PotionEffectType.SLOW_DIGGING, PotionEffectType.WEAKNESS));
+	private static final Set<PotionEffectType> badPotionEffects = new LinkedHashSet<>(Arrays.asList(PotionEffectType.BLINDNESS,
+			PotionEffectType.CONFUSION, PotionEffectType.HARM, PotionEffectType.HUNGER, PotionEffectType.POISON, PotionEffectType.SLOW,
+			PotionEffectType.SLOW_DIGGING, PotionEffectType.WEAKNESS));
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPotionSplashEvent(PotionSplashEvent event)
@@ -274,20 +295,14 @@ public class FactionsEntityListener implements Listener
 		{
 			LivingEntity thrower = (LivingEntity) potion.getShooter();
 
-			// scan through affected entities to make sure they're all valid
-			// targets
+			// scan through affected entities to make sure they're all valid targets
 			Iterator<LivingEntity> iter = event.getAffectedEntities().iterator();
 			while (iter.hasNext())
 			{
 				LivingEntity target = iter.next();
-				EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(thrower, target, EntityDamageEvent.DamageCause.CUSTOM, 0.0D);
+				EntityDamageByEntityEvent sub = getDamageEvent(thrower, target, DamageCause.CUSTOM, 0.0D);
 				if (! canDamagerHurtDamagee(sub, true))
-					event.setIntensity(target, 0.0); // affected entity list
-														// doesn't accept
-														// modification (so no
-														// iter.remove()), but
-														// this works
-				sub = null;
+					event.setIntensity(target, 0.0); // affected entity list doesn't accept modification (so no iter.remove())
 			}
 		}
 	}
