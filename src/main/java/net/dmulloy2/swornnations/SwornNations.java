@@ -1,5 +1,6 @@
 package net.dmulloy2.swornnations;
 
+import java.io.File;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -27,14 +28,11 @@ import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
 import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
+import com.google.common.io.Files;
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
@@ -324,36 +322,65 @@ public class SwornNations extends SwornPlugin
 		}
 		catch (final Throwable ex)
 		{
-			log("Failed to enable SwornNations. Backing up files...");
-			this.backupFiles();
-			log("Files backed up... Printing exception...");
+			log("Failed to enable SwornNations! Printing exception...");
+			this.loadSuccessful = false;
 			ex.printStackTrace();
 
-			getServer().getPluginManager().registerEvents(new Listener()
-			{
-				@EventHandler(priority = EventPriority.MONITOR)
-				public void onPlayerJoin(PlayerJoinEvent event)
-				{
-					Player player = event.getPlayer();
-					if (player.isOp())
-					{
-						player.sendMessage(ChatColor.RED + "SwornNations failed to enable! Check console!");
-					}
-				}
-			}, this);
+			log("Backing up files...");
+			this.backupFiles();
+
+			log("Disabling...");
+			setEnabled(false);
 		}
 	}
 
 	private final void backupFiles()
 	{
-		
+		try
+		{
+			File folder = getDataFolder();
+			if (! folder.exists())
+			{
+				folder.mkdirs();
+				return;
+			}
+
+			File backups = new File(folder, "backups");
+			if (backups.exists())
+			{
+				File[] files = backups.listFiles();
+				if (files != null && files.length != 0)
+				{
+					for (File child : files)
+						child.delete();
+				}
+
+				backups.delete();
+			}
+
+			backups.mkdir();
+
+			File[] files = folder.listFiles();
+			if (files == null || files.length == 0)
+				return;
+
+			for (File file : files)
+			{
+				Files.copy(file, new File(backups, file.getName()));
+			}
+
+			log("Files successfully backed up!");
+		}
+		catch (Throwable ex)
+		{
+			log("Failed to backup files!");
+			ex.printStackTrace();
+		}
 	}
 
 	public GsonBuilder getGsonBuilder()
 	{
-		Type mapFLocToStringSetType = new TypeToken<Map<FLocation, Set<String>>>()
-		{
-		}.getType();
+		Type mapFLocToStringSetType = new TypeToken<Map<FLocation, Set<String>>>() { }.getType();
 
 		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
 				.registerTypeAdapter(LazyLocation.class, new MyLocationTypeAdapter())
