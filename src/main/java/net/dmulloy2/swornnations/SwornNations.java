@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import net.dmulloy2.SwornPlugin;
 import net.dmulloy2.swornnations.adapters.MyMaterialTypeAdapter;
 import net.dmulloy2.swornnations.adapters.NPermissionManagerTypeAdapter;
-import net.dmulloy2.swornnations.types.MyMaterial;
 import net.dmulloy2.swornnations.types.NPermissionManager;
+import net.dmulloy2.types.MyMaterial;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

@@ -2,7 +2,7 @@ package net.dmulloy2.swornnations.adapters;
 
 import java.io.IOException;
 
-import net.dmulloy2.swornnations.types.MyMaterial;
+import net.dmulloy2.types.MyMaterial;
 import net.dmulloy2.util.MaterialUtil;
 
 import org.bukkit.Material;

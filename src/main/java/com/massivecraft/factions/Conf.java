@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import net.dmulloy2.swornnations.SwornNations;
-import net.dmulloy2.swornnations.types.MyMaterial;
 import net.dmulloy2.swornnations.types.NPermission;
+import net.dmulloy2.types.MyMaterial;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

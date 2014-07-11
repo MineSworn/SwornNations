@@ -1,7 +1,7 @@
 package com.massivecraft.factions.listeners;
 
-import net.dmulloy2.swornnations.types.MyMaterial;
 import net.dmulloy2.swornnations.types.NPermission;
+import net.dmulloy2.types.MyMaterial;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
