@@ -43,6 +43,8 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
@@ -236,6 +238,8 @@ public class FactionsEntityListener implements Listener
 		}
 	}
 
+	private static final Function<? super Double, Double> ZERO = Functions.constant(-0.0);
+
 	@SuppressWarnings("deprecation") // Old Event
 	private final EntityDamageByEntityEvent getDamageEvent(Entity damager, Entity entity, DamageCause cause, double damage)
 	{
@@ -244,7 +248,10 @@ public class FactionsEntityListener implements Listener
 			Map<DamageModifier, Double> modifiers = new HashMap<>();
 			modifiers.put(DamageModifier.BASE, damage);
 
-			return new EntityDamageByEntityEvent(damager, entity, cause, modifiers);
+			Map<DamageModifier, Function<? super Double, Double>> functions = new HashMap<>();
+			functions.put(DamageModifier.BASE, ZERO);
+
+			return new EntityDamageByEntityEvent(damager, entity, cause, modifiers, functions);
 		}
 		catch (Throwable ex)
 		{
