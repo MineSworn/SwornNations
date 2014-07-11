@@ -321,7 +321,7 @@ public class FactionsBlockListener implements Listener
 		Faction fac = Board.getFactionAt(floc);
 		for (MyMaterial blockedMaterial : Conf.ownTerritoryOnlyMaterials)
 		{
-			if (event.getBlock().getType() == blockedMaterial.getType())
+			if (event.getBlock().getType() == blockedMaterial.getMaterial())
 			{
 				if (! canPlaceBlockedItemHere(floc, fac, fplayer, false))
 				{
@@ -333,7 +333,7 @@ public class FactionsBlockListener implements Listener
 
 		for (MyMaterial blockedMaterial : Conf.ownTerritoryAndWildernessMaterials)
 		{
-			if (event.getBlock().getType() == blockedMaterial.getType())
+			if (event.getBlock().getType() == blockedMaterial.getMaterial())
 			{
 				if (! canPlaceBlockedItemHere(floc, fac, fplayer, true))
 				{
