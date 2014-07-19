@@ -428,7 +428,7 @@ public abstract class FCommand extends MCommand<SwornNations>
 			double y = loc.getY();
 			double z = loc.getZ();
 
-			for (Player p : me.getServer().getOnlinePlayers())
+			for (Player p : Util.getOnlinePlayers())
 			{
 				if (p == null || ! p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
 					continue;

@@ -626,19 +626,16 @@ public class Faction extends Entity implements EconomyParticipator
 		return ret;
 	}
 
-	public ArrayList<Player> getOnlinePlayers()
+	public List<Player> getOnlinePlayers()
 	{
-		ArrayList<Player> ret = new ArrayList<Player>();
-		if (this.isPlayerFreeType())
+		List<Player> ret = new ArrayList<>();
+		if (isPlayerFreeType())
 			return ret;
 
-		for (Player player : SwornNations.get().getServer().getOnlinePlayers())
+		for (FPlayer fplayer : FPlayers.i.getOnline())
 		{
-			FPlayer fplayer = FPlayers.i.get(player);
 			if (fplayer.getFaction() == this)
-			{
-				ret.add(player);
-			}
+				ret.add(fplayer.getPlayer());
 		}
 
 		return ret;
@@ -649,16 +646,13 @@ public class Faction extends Entity implements EconomyParticipator
 	public boolean hasPlayersOnline()
 	{
 		// only real factions can have players online, not safe zone / war zone
-		if (this.isPlayerFreeType())
+		if (isPlayerFreeType())
 			return false;
 
-		for (Player player : SwornNations.get().getServer().getOnlinePlayers())
+		for (FPlayer fplayer : FPlayers.i.getOnline())
 		{
-			FPlayer fplayer = FPlayers.i.get(player);
 			if (fplayer.getFaction() == this)
-			{
 				return true;
-			}
 		}
 
 		// even if all players are technically logged off, maybe someone was on
@@ -688,12 +682,12 @@ public class Faction extends Entity implements EconomyParticipator
 
 		// get list of moderators, or list of normal members if there are no
 		// moderators
-		ArrayList<FPlayer> replacements = this.getFPlayersWhereRole(Role.MODERATOR);
+		List<FPlayer> replacements = this.getFPlayersWhereRole(Role.MODERATOR);
 		if (replacements == null || replacements.isEmpty())
 			replacements = this.getFPlayersWhereRole(Role.NORMAL);
 
-		if (replacements == null || replacements.isEmpty())
-		{ // faction admin is the only member; one-man faction
+		if (replacements == null || replacements.isEmpty()) // faction admin is the only member; one-man faction
+		{
 			if (this.isPermanent())
 			{
 				if (oldLeader != null)
@@ -714,7 +708,8 @@ public class Faction extends Entity implements EconomyParticipator
 			this.detach();
 		}
 		else
-		{ // promote new faction admin
+		{
+			// promote new faction admin
 			if (oldLeader != null)
 				oldLeader.setRole(Role.NORMAL);
 			replacements.get(0).setRole(Role.ADMIN);

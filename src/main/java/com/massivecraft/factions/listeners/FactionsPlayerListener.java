@@ -9,7 +9,6 @@ import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.types.MyMaterial;
 import net.dmulloy2.util.Util;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -660,22 +659,22 @@ public class FactionsPlayerListener implements Listener
 							if (fplayer.isOnlineAndVisibleTo(player))
 							{
 								FLocation loc = new FLocation(fplayer);
-	
+
 								boolean isCloseToHome = false;
 								boolean isCloseToOutpost = false;
-	
+
 								if (me.getFaction().hasHome())
 								{
 									FLocation fHome = new FLocation(me.getFaction().getHome());
 									isCloseToHome = fHome.getDistanceTo(loc) < 40.0D;
 								}
-	
+
 								if (me.getFaction().hasOutpost())
 								{
 									FLocation outpost = new FLocation(me.getFaction().getOutpost());
 									isCloseToOutpost = outpost.getDistanceTo(loc) < 40.0;
 								}
-	
+
 								if (! isCloseToHome && ! isCloseToOutpost)
 								{
 									me.msg("<b>You can't use that command for players outside of 40 chunks from your faction home or outpost");
@@ -888,7 +887,7 @@ public class FactionsPlayerListener implements Listener
 			double y = loc.getY();
 			double z = loc.getZ();
 
-			for (Player p : Bukkit.getServer().getOnlinePlayers())
+			for (Player p : Util.getOnlinePlayers())
 			{
 				if (p == null || ! p.isOnline() || p.isDead() || p == fme || p.getWorld() != w)
 					continue;

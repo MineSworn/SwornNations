@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
+import net.dmulloy2.util.Util;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.entity.Player;
@@ -65,11 +66,13 @@ public abstract class PlayerEntityCollection<E extends Entity> extends EntityCol
 
 	public Set<E> getOnline()
 	{
-		Set<E> entities = new HashSet<E>();
-		for (Player player : Bukkit.getServer().getOnlinePlayers())
+		Set<E> online = new HashSet<>();
+
+		for (Player player : Util.getOnlinePlayers())
 		{
-			entities.add(this.get(player));
+			online.add(get(player));
 		}
-		return entities;
+
+		return online;
 	}
 }
