@@ -3,7 +3,8 @@ package com.massivecraft.factions.integration;
 import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
-import net.ess3.api.IEssentials;
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +14,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.Teleport;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
@@ -23,37 +25,31 @@ import com.massivecraft.factions.Conf;
  */
 public class EssentialsFeatures
 {
-	private static IEssentials essentials;
+	private static Essentials essentials;
 
 	/**
 	 * Integrate main Essentials plugin
 	 */
 	public static void setup()
 	{
-		if (essentials == null)
+		try
 		{
 			PluginManager pm = Bukkit.getPluginManager();
 			if (pm.isPluginEnabled("Essentials"))
 			{
 				Plugin essPlugin = pm.getPlugin("Essentials");
-				essentials = (IEssentials) essPlugin;
+				essentials = (Essentials) essPlugin;
 
 				SwornNations.get().log("Essentials integration successful!");
 			}
-			else
-			{
-				SwornNations.get().log("Essentials could not be found. Using backup Teleportation.");
-			}
-		}
+		} catch (Throwable ex) { }
 	}
 
 	/**
 	 * Handles Essentials Teleportation
-	 * 
-	 * @param player
-	 *        - {@link Player} to teleport
-	 * @param loc
-	 *        - {@link Location} to teleport to
+	 *
+	 * @param player {@link Player} to teleport
+	 * @param loc {@link Location} to teleport to
 	 * @return Whether or not the teleportation was successful
 	 */
 	public static boolean handleTeleport(Player player, Location loc)
@@ -70,19 +66,17 @@ public class EssentialsFeatures
 			teleport.teleport(loc, chargeFor, TeleportCause.COMMAND);
 			return true;
 		}
-		catch (Exception e)
+		catch (Throwable ex)
 		{
-			player.sendMessage(ChatColor.RED + "Could not teleport using Essentials: " + e.getMessage());
-			SwornNations.get().log(Level.WARNING, "Could not teleport player %s using Essentials: %s", player.getName(), e);
-			if (Conf.debug)
+			String message = ex.getMessage();
+			if (message.contains("Time before next teleport"))
 			{
-				e.printStackTrace();
-			}
-			else
-			{
-				SwornNations.get().log(Level.WARNING, "To see full stack trace, use \"f config debug true\"");
+				player.sendMessage(FormatUtil.format("&cError: &4{0}", message));
+				return true;
 			}
 
+			SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "teleporting " + player.getName() + " with Essentials"));
+			player.sendMessage(ChatColor.RED + "Failed to teleport with Essentials: " + ex);
 			return false;
 		}
 	}
