@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.util.Util;
 
 import com.massivecraft.factions.util.DiscUtil;
 
@@ -134,22 +135,18 @@ public class Persist
 	{
 		String content = DiscUtil.readCatch(file);
 		if (content == null)
-		{
 			return null;
-		}
 
 		try
 		{
 			T instance = p.gson.fromJson(content, clazz);
 			return instance;
 		}
-		catch (Exception ex)
-		{ // output the error message rather than full stack trace; error
-			// parsing the file, most likely
-			p.log(Level.WARNING, ex.getMessage());
+		catch (Throwable ex)
+		{
+			p.log(Level.WARNING, Util.getUsefulStack(ex, "loading file " + file.getName()));
+			return null;
 		}
-
-		return null;
 	}
 
 	// LOAD BY TYPE
