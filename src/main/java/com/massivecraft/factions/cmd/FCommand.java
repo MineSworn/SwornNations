@@ -19,8 +19,8 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
-import com.massivecraft.factions.types.Relation;
-import com.massivecraft.factions.types.Role;
+import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.struct.Role;
 
 public abstract class FCommand extends MCommand<SwornNations>
 {

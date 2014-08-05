@@ -11,8 +11,8 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.integration.EssentialsFeatures;
+import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.Permission;
-import com.massivecraft.factions.types.Role;
 import com.massivecraft.factions.util.SmokeUtil;
 
 public class CmdHome extends FCommand

@@ -3,8 +3,8 @@ package com.massivecraft.factions.cmd;
 import net.dmulloy2.swornnations.types.NPermission;
 
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.Permission;
-import com.massivecraft.factions.types.Role;
 
 public class CmdAutoClaim extends FCommand
 {

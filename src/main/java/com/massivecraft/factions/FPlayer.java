@@ -20,10 +20,10 @@ import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
 import com.massivecraft.factions.integration.WorldGuard;
 import com.massivecraft.factions.persist.PlayerEntity;
+import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.ChatMode;
 import com.massivecraft.factions.types.Permission;
-import com.massivecraft.factions.types.Relation;
-import com.massivecraft.factions.types.Role;
 import com.massivecraft.factions.util.LazyLocation;
 import com.massivecraft.factions.util.RelationUtil;
 

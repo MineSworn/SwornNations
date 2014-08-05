@@ -11,8 +11,8 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent;
 import com.massivecraft.factions.integration.Econ;
+import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.Permission;
-import com.massivecraft.factions.types.Role;
 
 public class CmdDisband extends FCommand
 {

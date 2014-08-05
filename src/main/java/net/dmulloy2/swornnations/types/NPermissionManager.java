@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.types.Role;
+import com.massivecraft.factions.struct.Role;
 
 public class NPermissionManager
 {

@@ -39,9 +39,9 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.Permission;
-import com.massivecraft.factions.types.Relation;
-import com.massivecraft.factions.types.Role;
 import com.massivecraft.factions.util.VisualizeUtil;
 
 public class FactionsPlayerListener implements Listener

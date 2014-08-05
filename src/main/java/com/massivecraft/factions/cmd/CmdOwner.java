@@ -7,8 +7,8 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.Permission;
-import com.massivecraft.factions.types.Role;
 
 public class CmdOwner extends FCommand
 {

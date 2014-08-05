@@ -1,4 +1,4 @@
-package com.massivecraft.factions.types;
+package com.massivecraft.factions.struct;
 
 import org.bukkit.ChatColor;
 

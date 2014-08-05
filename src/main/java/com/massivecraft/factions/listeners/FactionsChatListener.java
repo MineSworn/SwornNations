@@ -17,8 +17,8 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.types.ChatMode;
-import com.massivecraft.factions.types.Relation;
 
 public class FactionsChatListener implements Listener
 {

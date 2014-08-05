@@ -20,7 +20,7 @@ import org.bukkit.craftbukkit.libs.com.google.gson.JsonPrimitive;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializationContext;
 import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
 
-import com.massivecraft.factions.types.Role;
+import com.massivecraft.factions.struct.Role;
 
 public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissionManager>, JsonSerializer<NPermissionManager>
 {

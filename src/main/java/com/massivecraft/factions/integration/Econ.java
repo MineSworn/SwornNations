@@ -15,8 +15,8 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.iface.EconomyParticipator;
+import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.Permission;
-import com.massivecraft.factions.types.Role;
 import com.massivecraft.factions.util.RelationUtil;
 
 // TODO: Figure this out

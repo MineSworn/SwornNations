@@ -2,7 +2,7 @@ package com.massivecraft.factions.cmd;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.types.Role;
+import com.massivecraft.factions.struct.Role;
 
 /**
  * @author dmulloy2

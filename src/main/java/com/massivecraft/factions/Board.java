@@ -14,7 +14,7 @@ import net.dmulloy2.swornnations.SwornNations;
 import org.bukkit.ChatColor;
 
 import com.massivecraft.factions.integration.LWCFeatures;
-import com.massivecraft.factions.types.Relation;
+import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.util.AsciiCompass;
 
 public class Board
