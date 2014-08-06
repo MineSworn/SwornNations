@@ -3,9 +3,7 @@ package net.dmulloy2.swornnations.adapters;
 import java.io.IOException;
 
 import net.dmulloy2.types.MyMaterial;
-import net.dmulloy2.util.MaterialUtil;
 
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.com.google.gson.TypeAdapter;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
 import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonToken;
@@ -22,12 +20,7 @@ public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 			return null;
 		}
 
-		String[] item = reader.nextString().split(":");
-
-		Material mat = MaterialUtil.getMaterial(item[0]);
-		short data = Short.parseShort(item[1]);
-
-		return new MyMaterial(mat, data);
+		return MyMaterial.fromString(reader.nextString());
 	}
 
 	@Override
@@ -39,6 +32,6 @@ public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 			return;
 		}
 
-		writer.value(value.toString());
+		writer.value(value.serialize());
 	}
 }
