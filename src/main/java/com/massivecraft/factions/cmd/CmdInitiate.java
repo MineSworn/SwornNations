@@ -1,5 +1,7 @@
 package com.massivecraft.factions.cmd;
 
+import net.dmulloy2.swornnations.types.NPermission;
+
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Role;
@@ -14,7 +16,6 @@ public class CmdInitiate extends FCommand
 	{
 		super();
 		this.aliases.add("initiate");
-
 		this.requiredArgs.add("player name");
 
 		this.disableOnLock = true;
@@ -22,7 +23,8 @@ public class CmdInitiate extends FCommand
 		senderMustBePlayer = true;
 		senderMustBeMember = false;
 		senderMustBeModerator = false;
-		senderMustBeAdmin = true;
+		senderMustBeAdmin = false;
+		senderMustHaveNPermission = NPermission.INITIATE;
 
 		this.setHelpShort("remove initiate status from a player");
 	}
@@ -35,11 +37,6 @@ public class CmdInitiate extends FCommand
 			return;
 
 		Faction myFaction = fme.getFaction();
-		if (myFaction == null)
-		{
-			fme.msg("<i>You must be in a faction to do this!");
-		}
-
 		if ((myFaction != fme.getFaction()) && ! fme.isAdminBypassing())
 		{
 			fme.msg("<b>You can only do this for players in your faction!");
@@ -53,9 +50,7 @@ public class CmdInitiate extends FCommand
 		}
 
 		you.setRole(Role.NORMAL);
-
 		fme.msg("<i>You have removed initiate status from <i>%s<i>.", you.describeTo(fme));
-
 		myFaction.msg(fme.describeTo(myFaction) + " <i>has removed initiate status from <i>" + you.describeTo(myFaction));
 	}
 }

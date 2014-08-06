@@ -473,6 +473,7 @@ public class Conf
 		moderatorNationPermissions.add(NPermission.DESCRIPTION);
 
 		coadminNationPermissions.addAll(moderatorNationPermissions);
+		coadminNationPermissions.add(NPermission.INITIATE);
 		coadminNationPermissions.add(NPermission.MODERATOR);
 		coadminNationPermissions.add(NPermission.PERM);
 		coadminNationPermissions.add(NPermission.NATION);

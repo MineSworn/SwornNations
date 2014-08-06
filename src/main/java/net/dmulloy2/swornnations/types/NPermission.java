@@ -1,5 +1,9 @@
 package net.dmulloy2.swornnations.types;
 
+/**
+ * @author dmulloy2
+ */
+
 public enum NPermission
 {
 	ALLY,
@@ -9,6 +13,7 @@ public enum NPermission
 	CLAIM,
 	DESCRIPTION,
 	ENEMY,
+	INITIATE,
 	INVITE,
 	KICK,
 	MODERATOR,
@@ -24,13 +29,15 @@ public enum NPermission
 	TAG,
 	TITLE,
 	UNCLAIM,
-	WARP;
+	WARP,
+	;
 
-	public static NPermission match(String s)
+	public static NPermission match(String partial)
 	{
+		partial = partial.toLowerCase();
 		for (NPermission perm : NPermission.values())
 		{
-			if (s.equalsIgnoreCase(perm.name()))
+			if (perm.name().toLowerCase().startsWith(partial))
 				return perm;
 		}
 
