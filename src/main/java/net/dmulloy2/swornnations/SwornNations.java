@@ -171,7 +171,7 @@ public class SwornNations extends SwornPlugin
 
 	// MPlugin end
 
-	private Integer AutoLeaveTask = null;
+	private Integer autoLeaveTask;
 
 	// Commands
 	public FCmdRoot cmdBase;
@@ -401,10 +401,10 @@ public class SwornNations extends SwornPlugin
 			Conf.save();
 		}
 
-		if (AutoLeaveTask != null)
+		if (autoLeaveTask != null)
 		{
-			getServer().getScheduler().cancelTask(AutoLeaveTask);
-			this.AutoLeaveTask = null;
+			getServer().getScheduler().cancelTask(autoLeaveTask);
+			this.autoLeaveTask = null;
 		}
 
 		if (saveTask != null)
@@ -474,18 +474,18 @@ public class SwornNations extends SwornPlugin
 
 	public void startAutoLeaveTask(boolean restartIfRunning)
 	{
-		if (AutoLeaveTask != null)
+		if (autoLeaveTask != null)
 		{
 			if (! restartIfRunning)
 				return;
 
-			getServer().getScheduler().cancelTask(AutoLeaveTask);
+			getServer().getScheduler().cancelTask(autoLeaveTask);
 		}
 
 		if (Conf.autoLeaveRoutineRunsEveryXMinutes > 0.0)
 		{
 			long ticks = (long) (20 * 60 * Conf.autoLeaveRoutineRunsEveryXMinutes);
-			AutoLeaveTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoLeaveTask(), ticks, ticks);
+			autoLeaveTask = new AutoLeaveTask().runTaskTimer(this, ticks, ticks).getTaskId();
 		}
 	}
 
@@ -494,7 +494,7 @@ public class SwornNations extends SwornPlugin
 		if (Conf.autoCleanupClaimsRunsEveryXMinutes > 0.0)
 		{
 			long ticks = (long) (20 * 60 * Conf.autoCleanupClaimsRunsEveryXMinutes);
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoCleanupTask(), ticks, ticks);
+			new AutoCleanupTask().runTaskTimer(this, ticks, ticks);
 		}
 	}
 
