@@ -9,7 +9,7 @@ import com.massivecraft.factions.FPlayers;
 
 public class AutoLeaveTask extends BukkitRunnable
 {
-	double rate;
+	private final double rate;
 
 	public AutoLeaveTask()
 	{

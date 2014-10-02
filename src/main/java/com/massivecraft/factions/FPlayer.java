@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -87,8 +89,43 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		lastKnownBy = player.getName();
 	}
 
-	public UUID getUUID() { return UUID.fromString(uniqueId); }
-	public String getUniqueId() { return uniqueId; }
+	@Override
+	public String getUniqueId()
+	{
+		// Really this shouldn't ever be null
+		// But just in case...
+		if (uniqueId == null)
+		{
+			// Check online players first
+			Player player = Util.matchPlayer(getName());
+			if (player != null)
+			{
+				uniqueId = player.getUniqueId().toString();
+				lastKnownBy = player.getName();
+				return uniqueId;
+			}
+
+			try
+			{
+				// Then send a request to Mojang's servers
+				UUID uuid = UUIDFetcher.getUUID(getName());
+				if (uuid != null)
+				{
+					uniqueId = uuid.toString();
+					lastKnownBy = getName();
+					return uniqueId;
+				}
+			}
+			catch (Throwable ex)
+			{
+				SwornNations.get().log(Util.getUsefulStack(ex, "getting unique id for " + getName()));
+			}
+		}
+
+		return uniqueId;
+	}
+
+	public UUID getUUID() { return UUID.fromString(getUniqueId()); }
 	public String getLastKnownBy() { return lastKnownBy; }
 
 	// FIELD: role
@@ -373,6 +410,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.title = title;
 	}
 
+	@Override
 	public String getName()
 	{
 		return getId();

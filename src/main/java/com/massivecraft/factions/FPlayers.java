@@ -49,9 +49,7 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 	public void autoLeaveOnInactivityRoutine()
 	{
 		if (Conf.autoLeaveAfterDaysOfInactivity <= 0.0)
-		{
 			return;
-		}
 
 		long now = System.currentTimeMillis();
 		double toleranceMillis = Conf.autoLeaveAfterDaysOfInactivity * 24 * 60 * 60 * 1000;
@@ -63,8 +61,7 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 				if (Conf.logFactionLeave || Conf.logFactionKick)
 					SwornNations.get().log("Player " + fplayer.getName() + " was auto-removed due to inactivity.");
 
-				// if player is faction admin, sort out the faction since he's
-				// going away
+				// if player is faction admin, sort out the faction since he's going away
 				if (fplayer.getRole() == Role.ADMIN)
 				{
 					Faction faction = fplayer.getFaction();

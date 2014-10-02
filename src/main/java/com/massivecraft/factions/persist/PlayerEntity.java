@@ -2,15 +2,15 @@ package com.massivecraft.factions.persist;
 
 import java.util.List;
 
-import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.entity.Player;
 
-public class PlayerEntity extends Entity
+public abstract class PlayerEntity extends Entity
 {
-	public Player getPlayer()
+	public final Player getPlayer()
 	{
-		return SwornNations.get().getServer().getPlayer(getId());
+		return Util.matchPlayer(getUniqueId());
 	}
 
 	// -------------------------------------------- //
@@ -30,7 +30,8 @@ public class PlayerEntity extends Entity
 
 	public boolean isOnlineAndVisibleTo(Player player)
 	{
-		return isOnline() && (player == null || player.canSee(getPlayer()));
+		Player me = getPlayer();
+		return me != null && me.isOnline() && (player == null || player.canSee(me));
 	}
 
 	// -------------------------------------------- //
@@ -48,7 +49,15 @@ public class PlayerEntity extends Entity
 
 	public void sendMessage(List<String> msgs)
 	{
+		Player player = getPlayer();
+		if (player == null)
+			return;
+
 		for (String msg : msgs)
-			sendMessage(msg);
+			player.sendMessage(msg);
 	}
+
+	public abstract String getUniqueId();
+
+	public abstract String getName();
 }
