@@ -80,6 +80,7 @@ permissions:
       factions.map: true
       factions.mod: true
       factions.money.kit.standard: true
+      factions.motd: true
       factions.noboom: true
       factions.open: true
       factions.owner: true
@@ -283,3 +284,5 @@ permissions:
     description: teleports you to another faction's outpost
   factions.outpost:
     description: teleport to your faction outpost
+  factions.motd:
+    description: set your faction's motd

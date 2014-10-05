@@ -65,6 +65,13 @@ public class FactionsPlayerListener implements Listener
 		// Update the lastLoginTime for this fplayer
 		me.setLastLoginTime(System.currentTimeMillis());
 
+		// Faction MOTD
+		Faction faction = me.getFaction();
+		if (faction != null && faction.hasMOTD())
+		{
+			me.msg("&d[Faction MOTD]: &e%s", faction.getMOTD());
+		}
+
 		handlePlayerMove(player, player.getLocation(), null, false);
 	}
 

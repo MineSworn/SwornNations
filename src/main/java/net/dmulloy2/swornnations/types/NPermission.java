@@ -17,6 +17,7 @@ public enum NPermission
 	INVITE,
 	KICK,
 	MODERATOR,
+	MOTD,
 	NATION,
 	NEUTRAL,
 	OFFICER,

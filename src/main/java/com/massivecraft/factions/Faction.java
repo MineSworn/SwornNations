@@ -199,6 +199,24 @@ public class Faction extends Entity implements EconomyParticipator
 		this.description = value;
 	}
 
+	// FIELD: motd
+	private String motd;
+
+	public String getMOTD()
+	{
+		return this.motd;
+	}
+
+	public void setMOTD(String value)
+	{
+		this.motd = value;
+	}
+
+	public boolean hasMOTD()
+	{
+		return motd != null && ! motd.isEmpty();
+	}
+
 	// FIELD: home
 	private LazyLocation home;
 

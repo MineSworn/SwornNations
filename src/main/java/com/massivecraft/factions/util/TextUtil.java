@@ -80,10 +80,7 @@ public class TextUtil
 
 	public static String parseColorAmp(String string)
 	{
-		string = string.replaceAll("(§([a-z0-9]))", "\u00A7$2");
-		string = string.replaceAll("(&([a-z0-9]))", "\u00A7$2");
-		string = string.replace("&&", "&");
-		return string;
+		return ChatColor.translateAlternateColorCodes('&', string);
 	}
 
 	public static String parseColorAcc(String string)
