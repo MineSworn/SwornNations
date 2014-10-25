@@ -984,7 +984,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 					|| this.getPowerRounded() == (int) Math.round(Conf.powerPlayerStarting)))
 				return false;
 			return ! this.deleteMe;
-		} catch (Throwable ex) { }
+		} catch (IllegalArgumentException ex) { }
 		return false;
 	}
 

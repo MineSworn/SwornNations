@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
 
@@ -78,7 +77,7 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 			}
 			catch (IllegalArgumentException ex)
 			{
-				SwornNations.get().log(Level.WARNING, "Found nonexistant player {0}, removing!", fplayer.getName());
+				// Probably an npc, disregard them
 				fplayer.detach();
 			}
 		}
