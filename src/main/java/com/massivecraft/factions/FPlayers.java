@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
 
@@ -56,20 +57,28 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 
 		for (FPlayer fplayer : FPlayers.i.get())
 		{
-			if (fplayer.isOffline() && now - fplayer.getLastLoginTime() > toleranceMillis)
+			try
 			{
-				if (Conf.logFactionLeave || Conf.logFactionKick)
-					SwornNations.get().log("Player " + fplayer.getName() + " was auto-removed due to inactivity.");
-
-				// if player is faction admin, sort out the faction since he's going away
-				if (fplayer.getRole() == Role.ADMIN)
+				if (fplayer.isOffline() && now - fplayer.getLastLoginTime() > toleranceMillis)
 				{
-					Faction faction = fplayer.getFaction();
-					if (faction != null)
-						fplayer.getFaction().promoteNewLeader();
-				}
+					if (Conf.logFactionLeave || Conf.logFactionKick)
+						SwornNations.get().log("Player " + fplayer.getName() + " was auto-removed due to inactivity.");
 
-				fplayer.leave(false);
+					// if player is faction admin, sort out the faction since he's going away
+					if (fplayer.getRole() == Role.ADMIN)
+					{
+						Faction faction = fplayer.getFaction();
+						if (faction != null)
+							fplayer.getFaction().promoteNewLeader();
+					}
+
+					fplayer.leave(false);
+					fplayer.detach();
+				}
+			}
+			catch (IllegalArgumentException ex)
+			{
+				SwornNations.get().log(Level.WARNING, "Found nonexistant player {0}, removing!", fplayer.getName());
 				fplayer.detach();
 			}
 		}
