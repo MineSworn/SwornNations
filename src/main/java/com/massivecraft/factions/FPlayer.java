@@ -977,11 +977,15 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	@Override
 	public boolean shouldBeSaved()
 	{
-		if (! this.hasFaction()
-				&& (this.getPowerRounded() == this.getPowerMaxRounded() || this.getPowerRounded() == (int) Math
-						.round(Conf.powerPlayerStarting)))
-			return false;
-		return ! this.deleteMe;
+		try
+		{
+			if (! this.hasFaction()
+					&& (this.getPowerRounded() == this.getPowerMaxRounded()
+					|| this.getPowerRounded() == (int) Math.round(Conf.powerPlayerStarting)))
+				return false;
+			return ! this.deleteMe;
+		} catch (Throwable ex) { }
+		return false;
 	}
 
 	@Override
