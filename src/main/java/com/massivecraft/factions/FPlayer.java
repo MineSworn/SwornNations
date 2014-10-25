@@ -229,10 +229,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	public boolean isAdminBypassing()
 	{
 		// Check if they still have the bypass permission
-		if (! Permission.BYPASS.has(getPlayer()) && isAdminBypassing)
-		{
+		if (isAdminBypassing && ! Permission.BYPASS.has(getPlayer()))
 			this.isAdminBypassing = false;
-		}
 
 		return this.isAdminBypassing;
 	}
