@@ -268,6 +268,9 @@ public class FactionsPlayerListener implements Listener
 
 		Block block = event.getClickedBlock();
 		Player player = event.getPlayer();
+		if (player == null || player.hasMetadata("NPC"))
+			return;
+
 		FPlayer fme = FPlayers.i.get(player);
 
 		if (! canPlayerUseBlock(player, block, false))
