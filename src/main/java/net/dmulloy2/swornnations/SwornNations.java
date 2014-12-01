@@ -284,7 +284,11 @@ public class SwornNations extends SwornPlugin
 			this.cmdAutoHelp = new CmdAutoHelp();
 			this.getBaseCommands().add(cmdBase);
 
-			EssentialsFeatures.setup();
+			try
+			{
+				EssentialsFeatures.setup();
+			} catch (Throwable ex) { }
+
 			Econ.setup();
 			LWCFeatures.setup();
 
