@@ -18,7 +18,6 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.UnsupportedIntersectionException;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
@@ -59,6 +58,7 @@ public class WorldGuard
 	// Returns:
 	// True: PVP is allowed
 	// False: PVP is disallowed
+	@SuppressWarnings("deprecation")
 	public static boolean isPVP(Player player)
 	{
 		if (! enabled)
@@ -120,9 +120,9 @@ public class WorldGuard
 				foundregions = true;
 			}
 		}
-		catch (UnsupportedIntersectionException e)
+		catch (Throwable ex)
 		{
-			e.printStackTrace();
+			ex.printStackTrace();
 		}
 
 		region = null;
