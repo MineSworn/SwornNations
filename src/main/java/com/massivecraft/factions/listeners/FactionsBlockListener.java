@@ -62,9 +62,8 @@ public class FactionsBlockListener implements Listener
 		if (event.isCancelled())
 			return;
 
-		if (event.getInstaBreak()
-				&& ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false, event.getBlock()
-						.getType()))
+		if (event.getInstaBreak() && ! playerCanBuildDestroyBlock(event.getPlayer(), event.getBlock().getLocation(), "destroy", false,
+				event.getBlock().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -105,62 +104,40 @@ public class FactionsBlockListener implements Listener
 	{
 		// if not a sticky piston, retraction should be fine
 		if (event.isCancelled() || ! event.isSticky() || ! Conf.pistonProtectionThroughDenyBuild)
-		{
 			return;
-		}
 
-		Location targetLoc = event.getRetractLocation();
-
-		// if potentially retracted block is just air, no worries
-		if (targetLoc.getBlock().isEmpty())
-		{
+		// This is just a rehash of the deprecated method
+		// TODO: Figure out a better solution
+		Block targetBlock = event.getBlock().getRelative(event.getDirection(), 2);
+		if (targetBlock.isEmpty())
 			return;
-		}
 
 		Faction pistonFaction = Board.getFactionAt(new FLocation(event.getBlock()));
-
-		if (! canPistonMoveBlock(pistonFaction, targetLoc))
-		{
+		if (! canPistonMoveBlock(pistonFaction, targetBlock.getLocation()))
 			event.setCancelled(true);
-			return;
-		}
 	}
 
 	private boolean canPistonMoveBlock(Faction pistonFaction, Location target)
 	{
 		Faction otherFaction = Board.getFactionAt(new FLocation(target));
-
 		if (pistonFaction == otherFaction)
 			return true;
 
 		if (otherFaction.isNone())
 		{
-			if (! Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(target.getWorld().getName()))
-				return true;
-
-			return false;
+			return ! Conf.wildernessDenyBuild || Conf.worldsNoWildernessProtection.contains(target.getWorld().getName());
 		}
 		else if (otherFaction.isSafeZone())
 		{
-			if (! Conf.safeZoneDenyBuild)
-				return true;
-
-			return false;
+			return ! Conf.safeZoneDenyBuild;
 		}
 		else if (otherFaction.isWarZone())
 		{
-			if (! Conf.warZoneDenyBuild)
-				return true;
-
-			return false;
+			return ! Conf.warZoneDenyBuild;
 		}
 
 		Relation rel = pistonFaction.getRelationTo(otherFaction);
-
-		if (rel.confDenyBuild(otherFaction.hasPlayersOnline()))
-			return false;
-
-		return true;
+		return ! rel.confDenyBuild(otherFaction.hasPlayersOnline());
 	}
 
 	public static boolean playerCanBuildDestroyBlock(Player player, Location location, String action, boolean justCheck, Material mat)
