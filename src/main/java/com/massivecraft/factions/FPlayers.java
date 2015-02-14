@@ -2,6 +2,7 @@ package com.massivecraft.factions;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -12,6 +13,7 @@ import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
 
 import com.massivecraft.factions.persist.PlayerEntityCollection;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.util.TextUtil;
 
 public class FPlayers extends PlayerEntityCollection<FPlayer>
 {
@@ -22,21 +24,36 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 	{
 		super(FPlayer.class, new CopyOnWriteArrayList<FPlayer>(), new ConcurrentSkipListMap<String, FPlayer>(String.CASE_INSENSITIVE_ORDER),
 				new File(SwornNations.get().getDataFolder(), "players.json"), SwornNations.get().gson);
-
 		this.setCreative(true);
+	}
+
+	@Override
+	public FPlayer getBestIdMatch(String pattern)
+	{
+		@SuppressWarnings("deprecation")
+		FPlayer ret = get(pattern);
+		if (ret != null)
+			return ret;
+
+		Map<String, FPlayer> names = new HashMap<>();
+		for (FPlayer player : get())
+		{
+			names.put(player.getName(), player);
+		}
+
+		String id = TextUtil.getBestStartWithCI(names.keySet(), pattern);
+		return id != null ? names.get(id) : null;
 	}
 
 	@Override
 	public Type getMapType()
 	{
-		return new TypeToken<Map<String, FPlayer>>()
-		{
-		}.getType();
+		return new TypeToken<Map<String, FPlayer>>() { }.getType();
 	}
 
 	public void clean()
 	{
-		for (FPlayer fplayer : this.get())
+		for (FPlayer fplayer : get())
 		{
 			if (! Factions.i.exists(fplayer.getFactionId()))
 			{
@@ -88,9 +105,7 @@ public class FPlayers extends PlayerEntityCollection<FPlayer>
 		for (FPlayer fplayer : FPlayers.i.get())
 		{
 			if (fplayer.getFaction().isNone())
-			{
 				fplayer.detach();
-			}
 		}
 	}
 }

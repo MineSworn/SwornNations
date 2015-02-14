@@ -8,6 +8,7 @@ import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.util.Util;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -187,28 +188,30 @@ public abstract class FCommand extends MCommand<SwornNations>
 	// -------------------------------------------- //
 
 	// FPLAYER ======================
-	public FPlayer strAsFPlayer(String name, FPlayer def, boolean msg)
+	public FPlayer strAsFPlayer(String identifier, FPlayer def, boolean msg)
 	{
 		FPlayer ret = def;
 
-		if (name != null)
+		if (identifier != null)
 		{
-			Player player = Util.matchPlayer(name);
+			OfflinePlayer player = Util.matchPlayer(identifier);
 			if (player != null)
-				name = player.getName();
-
-			@SuppressWarnings("deprecation")
-			FPlayer fplayer = FPlayers.i.get(name);
-			if (fplayer != null)
 			{
-				ret = fplayer;
+				FPlayer fPlayer = FPlayers.i.get(player);
+				if (fPlayer != null)
+					ret = fPlayer;
+			}
+			else
+			{
+				@SuppressWarnings("deprecation")
+				FPlayer fPlayer = FPlayers.i.get(identifier);
+				if (fPlayer != null)
+					ret = fPlayer;
 			}
 		}
 
 		if (msg && ret == null)
-		{
-			this.msg("<b>No player \"<p>%s<b>\" could be found.", name);
-		}
+			msg("<b>No player \"<p>%s<b>\" could be found.", identifier);
 
 		return ret;
 	}
@@ -237,14 +240,11 @@ public abstract class FCommand extends MCommand<SwornNations>
 		{
 			Player player = Util.matchPlayer(name);
 			if (player != null)
-				name = player.getName();
+				name = player.getUniqueId().toString();
 
-			@SuppressWarnings("deprecation")
 			FPlayer fplayer = FPlayers.i.getBestIdMatch(name);
 			if (fplayer != null)
-			{
 				ret = fplayer;
-			}
 		}
 
 		if (msg && ret == null)
@@ -296,9 +296,8 @@ public abstract class FCommand extends MCommand<SwornNations>
 			{
 				Player player = Util.matchPlayer(name);
 				if (player != null)
-					name = player.getName();
+					name = player.getUniqueId().toString();
 
-				@SuppressWarnings("deprecation")
 				FPlayer fplayer = FPlayers.i.getBestIdMatch(name);
 				if (fplayer != null)
 				{

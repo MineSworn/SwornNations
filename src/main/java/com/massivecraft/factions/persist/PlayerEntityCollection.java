@@ -28,18 +28,26 @@ public abstract class PlayerEntityCollection<E extends Entity> extends EntityCol
 
 	public E get(Player player)
 	{
-		return this.get(player.getName());
+		return super.get(player.getUniqueId().toString());
 	}
 
 	public E get(OfflinePlayer player)
 	{
-		return this.get(player.getName());
+		return super.get(player.getUniqueId().toString());
 	}
 
 	@Override
 	@Deprecated
 	public E get(String id)
 	{
+		// Ensure it's a UUID
+		if (id.length() != 36)
+		{
+			OfflinePlayer player = Util.matchOfflinePlayer(id);
+			if (player != null)
+				id = player.getUniqueId().toString();
+		}
+
 		return super.get(id);
 	}
 

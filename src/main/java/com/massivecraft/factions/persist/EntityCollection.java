@@ -1,16 +1,32 @@
 package com.massivecraft.factions.persist;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
 
+import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 
+import com.google.common.collect.ImmutableList;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.util.DiscUtil;
 import com.massivecraft.factions.util.TextUtil;
 
@@ -228,7 +244,12 @@ public abstract class EntityCollection<E extends Entity>
 
 	private boolean saveCore(Map<String, E> entities)
 	{
-		return DiscUtil.writeCatch(this.file, this.gson.toJson(entities));
+		return saveCore(file, entities);
+	}
+
+	private boolean saveCore(File file, Map<String, E> entities)
+	{
+		return DiscUtil.writeCatch(file, gson.toJson(entities));
 	}
 
 	public boolean loadFromDisc()
@@ -244,6 +265,7 @@ public abstract class EntityCollection<E extends Entity>
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Map<String, E> loadCore()
 	{
 		try
@@ -259,14 +281,215 @@ public abstract class EntityCollection<E extends Entity>
 				gson = SwornNations.get().getGson();
 
 			Type type = getMapType();
+			if (type.toString().contains("FPlayer"))
+			{
+				Map<String, FPlayer> data = gson.fromJson(content, type);
+				Set<String> keys = keysRequiringUpdate(data.keySet());
+				Set<String> invalid = new HashSet<String>();
+				if (keys.size() > 0)
+				{
+					// Enable caching if we're converting
+					UUIDFetcher.setCachingEnabled(true);
+
+					long start = System.currentTimeMillis();
+					SwornNations.get().log("Converting players.json to UUID");
+
+					// Back it up
+					File backup = new File(file.getParentFile(), "players.json_old");
+					if (! backup.exists())
+					{
+						try
+						{
+							backup.createNewFile();
+						} catch (IOException ex) { }
+					}
+
+					saveCore(backup, (Map<String, E>) data);
+					SwornNations.get().log("Backed up old players.json to " + backup);
+
+					SwornNations.get().log("Please wait while SwornNations converts {0} names to UUID.", keys.size());
+
+					try
+					{
+						List<String> names = new ArrayList<String>(keys);
+						ImmutableList.Builder<List<String>> builder = ImmutableList.builder();
+						int namesCopied = 0;
+						while (namesCopied < names.size())
+						{
+							builder.add(ImmutableList.copyOf(names.subList(namesCopied, Math.min(namesCopied + 100, names.size()))));
+							namesCopied += 100;
+						}
+
+						List<UUIDFetcher> fetchers = new ArrayList<UUIDFetcher>();
+						for (List<String> namesList : builder.build())
+						{
+							fetchers.add(new UUIDFetcher(namesList));
+						}
+
+						ExecutorService e = Executors.newFixedThreadPool(3);
+						List<Future<Map<String, UUID>>> results = e.invokeAll(fetchers);
+						for (Future<Map<String, UUID>> result : results)
+						{
+							Map<String, UUID> uuids = result.get();
+							for (Entry<String, UUID> entry : uuids.entrySet())
+							{
+								String name = entry.getKey();
+								FPlayer player = data.get(name);
+								if (player == null)
+								{
+									invalid.add(name);
+									continue;
+								}
+
+								UUID uniqueId = entry.getValue();
+								player.setId(uniqueId.toString());
+
+								data.remove(name);
+								data.put(uniqueId.toString(), player);
+							}
+						}
+					}
+					catch (Throwable ex)
+					{
+						SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "converting players to UUID"));
+					}
+
+					SwornNations.get().log("Converted players to UUID. Took {0} ms.", System.currentTimeMillis() - start);
+				}
+
+				return (Map<String, E>) data;
+			}
+			else if (type.toString().contains("Faction"))
+			{
+				Map<String, Faction> data = gson.fromJson(content, type);
+
+				int needsUpdate = 0;
+				for (Faction faction : data.values())
+				{
+					needsUpdate += keysRequiringUpdate(faction.getInvites()).size();
+					Map<FLocation, Set<String>> claims = faction.getClaimOwnership();
+					for (FLocation key : faction.getClaimOwnership().keySet())
+					{
+						needsUpdate += keysRequiringUpdate(claims.get(key)).size();
+					}
+
+					if (needsUpdate > 0)
+						break;
+				}
+
+				if (needsUpdate > 0)
+				{
+					long start = System.currentTimeMillis();
+					SwornNations.get().log("Converting factions.json to UUID");
+
+					try
+					{
+						// Back it up
+						File backup = new File(file.getParentFile(), "factions.json_old");
+						if (! backup.exists())
+						{
+							try
+							{
+								backup.createNewFile();
+							} catch (IOException ex) { }
+						}
+
+						saveCore(backup, (Map<String, E>) data);
+						SwornNations.get().log("Backed up old factions.json to " + backup);
+
+						SwornNations.get().log("Please wait while SwornNations converts {0} factions to UUID.", data.size());
+
+						for (Entry<String, Faction> entry : data.entrySet())
+						{
+							Faction faction = entry.getValue();
+
+							// Convert claim ownership
+							Map<FLocation, Set<String>> claims = faction.getClaimOwnership();
+							for (Entry<FLocation, Set<String>> claim : claims.entrySet())
+							{
+								Set<String> owners = claim.getValue();
+
+								Set<String> keys = keysRequiringUpdate(owners);
+								if (keys.size() > 0)
+								{
+									UUIDFetcher fetcher = new UUIDFetcher(new ArrayList<String>(keys));
+
+									try
+									{
+										Map<String, UUID> uuids = fetcher.call();
+										for (Entry<String, UUID> entry1 : uuids.entrySet())
+										{
+											owners.remove(entry1.getKey().toLowerCase());
+											owners.add(entry1.getValue().toString());
+										}
+									}
+									catch (Throwable ex)
+									{
+										SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "fetching UUIDs from Mojang"));
+									}
+								}
+
+								claims.put(claim.getKey(), owners);
+							}
+
+							// Convert invites
+							Set<String> invites = faction.getInvites();
+
+							Set<String> keys = keysRequiringUpdate(invites);
+							if (keys.size() > 0)
+							{
+								UUIDFetcher fetcher = new UUIDFetcher(new ArrayList<String>(keys));
+
+								try
+								{
+									Map<String, UUID> uuids = fetcher.call();
+									for (Entry<String, UUID> entry1 : uuids.entrySet())
+									{
+										invites.remove(entry1.getKey().toLowerCase());
+										invites.add(entry1.getValue().toString());
+									}
+								}
+								catch (Throwable ex)
+								{
+									SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "fetching UUIDs from Mojang"));
+								}
+							}
+						}
+
+						SwornNations.get().log("Converted Factions to UUID. Took {0} ms.", System.currentTimeMillis() - start);
+					}
+					catch (Throwable ex)
+					{
+						SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "converting Factions to UUID"));
+					}
+
+					return (Map<String, E>) data;
+				}
+			}
+
 			return gson.fromJson(content, type);
 		}
 		catch (Throwable ex)
 		{
-			SwornNations.get().log("Failed to load core. Gson exists: " + (gson != null));
+			SwornNations.get().log("Failed to load core." + (gson != null ? " Gson does not exist!" : ""));
 			ex.printStackTrace();
 			return null;
 		}
+	}
+
+	private Set<String> keysRequiringUpdate(Set<String> keys)
+	{
+		Set<String> ret = new HashSet<String>();
+		for (String key : keys)
+		{
+			if (! key.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+			{
+				if (key.matches("[a-zA-Z0-9_]{2,16}"))
+					ret.add(key);
+			}
+		}
+
+		return ret;
 	}
 
 	// -------------------------------------------- //
@@ -318,9 +541,6 @@ public abstract class EntityCollection<E extends Entity>
 		{
 			int idAsInt = Integer.parseInt(id);
 			this.updateNextIdForId(idAsInt);
-		}
-		catch (Exception ignored)
-		{
-		}
+		} catch (Throwable ex) { }
 	}
 }

@@ -94,7 +94,7 @@ public class CmdOwner extends FCommand
 		}
 
 		if (Conf.ownedAreasPlayersCanOnlyClaimOwn && myFaction.doesLocationHaveOwnersSet(flocation)
-				&& ! myFaction.isPlayerInOwnerList(fme.getName(), flocation) && ! fme.isAdminBypassing())
+				&& ! myFaction.isPlayerInOwnerList(fme, flocation) && ! fme.isAdminBypassing())
 		{
 			fme.msg("<i>You cannot claim owner on this plot, it is already owned by %s.", myFaction.getOwnerListString(flocation));
 			return;
@@ -109,9 +109,9 @@ public class CmdOwner extends FCommand
 			return;
 		}
 
-		if (myFaction.isPlayerInOwnerList(playerName, flocation))
+		if (myFaction.isPlayerInOwnerList(target, flocation))
 		{
-			myFaction.removePlayerAsOwner(playerName, flocation);
+			myFaction.removePlayerAsOwner(target, flocation);
 			fme.msg("<i>You have removed ownership of this claimed land from %s<i>.", playerName);
 			return;
 		}
@@ -121,7 +121,7 @@ public class CmdOwner extends FCommand
 		if (! payForCommand(Conf.econCostOwner, "to set ownership of claimed land", "for setting ownership of claimed land"))
 			return;
 
-		myFaction.setPlayerAsOwner(target.getName(), flocation);
+		myFaction.setPlayerAsOwner(target, flocation);
 
 		fme.msg("<i>You have added %s<i> to the owner list for this claimed land.", playerName);
 	}

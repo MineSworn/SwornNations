@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.swornnations.types.NPermissionManager;
@@ -63,6 +64,11 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 
 					perms.put(NPermission.match(ss[0]), (ss[1].equalsIgnoreCase("t")) ? true : false);
 				}
+
+				// Make sure id is a UUID
+				if (id.length() != 36)
+					id = UUIDFetcher.getUUID(id).toString();
+
 				playerPerms.put(id, perms);
 			}
 

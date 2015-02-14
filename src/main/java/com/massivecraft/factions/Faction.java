@@ -13,9 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.swornnations.types.NPermissionManager;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.iface.EconomyParticipator;
@@ -48,19 +50,24 @@ public class Faction extends Entity implements EconomyParticipator
 	// Where string is a lowercase player name
 	private Set<String> invites;
 
+	public Set<String> getInvites()
+	{
+		return invites;
+	}
+
 	public void invite(FPlayer fplayer)
 	{
-		this.invites.add(fplayer.getName().toLowerCase());
+		invites.add(fplayer.getUniqueId());
 	}
 
 	public void deinvite(FPlayer fplayer)
 	{
-		this.invites.remove(fplayer.getName().toLowerCase());
+		invites.remove(fplayer.getUniqueId());
 	}
 
 	public boolean isInvited(FPlayer fplayer)
 	{
-		return this.invites.contains(fplayer.getName().toLowerCase());
+		return invites.contains(fplayer.getUniqueId());
 	}
 
 	// FIELD: open
@@ -163,20 +170,13 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public String getTag(RelationParticipator rp)
 	{
-		if (rp == null)
-		{
-			return getTag();
-		}
-
-		return getTag(getColorTo(rp).toString());
+		return rp == null ? getTag() : getTag(getColorTo(rp).toString());
 	}
 
 	public void setTag(String str)
 	{
 		if (Conf.factionTagForceUpperCase)
-		{
 			str = str.toUpperCase();
-		}
 
 		this.tag = str;
 	}
@@ -715,15 +715,14 @@ public class Faction extends Entity implements EconomyParticipator
 
 			// no members left and faction isn't permanent, so disband it
 			if (Conf.logFactionDisband)
-				SwornNations.get().log(
-						"The faction " + this.getTag() + " (" + this.getId() + ") has been disbanded since it has no members left.");
+				SwornNations.get().log("The faction {0} ({1}) has been disbanded since it has no members left.", getTag(), getId());
 
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
 				fplayer.msg("<i>The faction %s<i> was disbanded.", this.getTag(fplayer));
 			}
 
-			this.detach();
+			detach();
 		}
 		else
 		{
@@ -731,11 +730,10 @@ public class Faction extends Entity implements EconomyParticipator
 			if (oldLeader != null)
 				oldLeader.setRole(Role.NORMAL);
 			replacements.get(0).setRole(Role.ADMIN);
-			this.msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.", oldLeader == null ? ""
-					: oldLeader.getName(), replacements.get(0).getName());
-			SwornNations.get().log(
-					"Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: "
-							+ replacements.get(0).getName());
+			msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.",
+					oldLeader == null ? "" : oldLeader.getName(), replacements.get(0).getName());
+			SwornNations.get().log("Faction {0} ({1}) admin{2} was removed. Replacement admin: {3}", getTag(), getId(),
+					oldLeader == null ? "" : " " + oldLeader.getName(), replacements.get(0).getName());
 		}
 	}
 
@@ -855,44 +853,32 @@ public class Faction extends Entity implements EconomyParticipator
 		return ownerData != null && ! ownerData.isEmpty();
 	}
 
-	public boolean isPlayerInOwnerList(String playerName, FLocation loc)
+	public boolean isPlayerInOwnerList(FPlayer player, FLocation loc)
 	{
 		if (claimOwnership.isEmpty())
-		{
 			return false;
-		}
-		Set<String> ownerData = claimOwnership.get(loc);
-		if (ownerData == null)
-		{
-			return false;
-		}
-		if (ownerData.contains(playerName.toLowerCase()))
-		{
-			return true;
-		}
 
-		return false;
+		Set<String> ownerData = claimOwnership.get(loc);
+		return ownerData != null && ownerData.contains(player.getUniqueId());
 	}
 
-	public void setPlayerAsOwner(String playerName, FLocation loc)
+	public void setPlayerAsOwner(FPlayer player, FLocation loc)
 	{
 		Set<String> ownerData = claimOwnership.get(loc);
 		if (ownerData == null)
-		{
 			ownerData = new HashSet<String>();
-		}
-		ownerData.add(playerName.toLowerCase());
+
+		ownerData.add(player.getUniqueId());
 		claimOwnership.put(loc, ownerData);
 	}
 
-	public void removePlayerAsOwner(String playerName, FLocation loc)
+	public void removePlayerAsOwner(FPlayer player, FLocation loc)
 	{
 		Set<String> ownerData = claimOwnership.get(loc);
 		if (ownerData == null)
-		{
 			return;
-		}
-		ownerData.remove(playerName.toLowerCase());
+
+		ownerData.remove(player.getUniqueId());
 		claimOwnership.put(loc, ownerData);
 	}
 
@@ -905,9 +891,7 @@ public class Faction extends Entity implements EconomyParticipator
 	{
 		Set<String> ownerData = claimOwnership.get(loc);
 		if (ownerData == null || ownerData.isEmpty())
-		{
 			return "";
-		}
 
 		String ownerList = "";
 
@@ -918,12 +902,18 @@ public class Faction extends Entity implements EconomyParticipator
 			{
 				ownerList += ", ";
 			}
-			ownerList += iter.next();
+
+			String uniqueId = iter.next();
+			OfflinePlayer owner = Util.matchOfflinePlayer(uniqueId);
+			if (owner != null)
+				ownerList += owner.getName();
 		}
+
 		return ownerList;
 	}
 
-	public void cleanOwnerList()
+	// No longer practical / necessary
+	/*public void cleanOwnerList()
 	{
 		if (claimOwnership.isEmpty())
 			return;
@@ -943,15 +933,16 @@ public class Faction extends Entity implements EconomyParticipator
 					entry.getValue().remove(name);
 			}
 		}
-	}
+	}*/
 
 	public boolean playerHasOwnershipRights(FPlayer fplayer, FLocation loc)
 	{
 		// in own faction, with sufficient role or permission to bypass
 		// ownership?
 		if (fplayer.getFaction() == this
-				&& ((fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN) && fplayer.getFaction()
-						.playerHasPermission(fplayer, NPermission.OWNER)) || Permission.OWNERSHIP_BYPASS.has(fplayer.getPlayer())))
+				&& ((fplayer.getRole().isAtLeast(Conf.ownedAreaModeratorsBypass ? Role.MODERATOR : Role.ADMIN)
+						&& fplayer.getFaction().playerHasPermission(fplayer, NPermission.OWNER))
+						|| Permission.OWNERSHIP_BYPASS.has(fplayer.getPlayer())))
 		{
 			return true;
 		}
@@ -965,10 +956,12 @@ public class Faction extends Entity implements EconomyParticipator
 
 		// if no owner list, owner list is empty, or player is in owner list,
 		// they're allowed
-		if (ownerData == null || ownerData.isEmpty() || ownerData.contains(fplayer.getName().toLowerCase()))
-			return true;
+		return ownerData == null || ownerData.isEmpty() || ownerData.contains(fplayer.getUniqueId());
+	}
 
-		return false;
+	public Map<FLocation, Set<String>> getClaimOwnership()
+	{
+		return claimOwnership;
 	}
 
 	public boolean playerHasPermission(FPlayer player, NPermission perm)
@@ -1043,5 +1036,4 @@ public class Faction extends Entity implements EconomyParticipator
 		// Clean the fplayers
 		FPlayers.i.clean();
 	}
-
 }

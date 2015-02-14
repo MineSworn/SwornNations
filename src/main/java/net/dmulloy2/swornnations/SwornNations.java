@@ -306,8 +306,8 @@ public class SwornNations extends SwornPlugin
 			startAutoLeaveTask(false);
 
 			// Clean owner lists, if applicable
-			if (Conf.cleanOwnerLists)
-				cleanOwnerLists();
+//			if (Conf.cleanOwnerLists)
+//				cleanOwnerLists();
 
 			// Register Listeners
 			PluginManager pm = getServer().getPluginManager();
@@ -502,13 +502,13 @@ public class SwornNations extends SwornPlugin
 		}
 	}
 
-	public void cleanOwnerLists()
+	/*public void cleanOwnerLists()
 	{
 		for (Faction faction : Factions.i.get())
 		{
 			faction.cleanOwnerList();
 		}
-	}
+	}*/
 
 	public void postAutoSave()
 	{

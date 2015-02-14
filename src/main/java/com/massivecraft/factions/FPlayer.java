@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
@@ -75,58 +75,38 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.factionId = faction.getId();
 	}
 
-	// FIELDS: Unique ID
-	private String uniqueId;
+	// FIELD: lastKnownBy
 	private String lastKnownBy;
 
-	public void updateUniqueId()
+	public void updateName()
 	{
 		Player player = getPlayer();
 		if (player == null)
 			return;
 
-		uniqueId = player.getUniqueId().toString();
 		lastKnownBy = player.getName();
+	}
+
+	public void setLastKnownBy(String lastKnownBy)
+	{
+		this.lastKnownBy = lastKnownBy;
 	}
 
 	@Override
 	public String getUniqueId()
 	{
-		// Really this shouldn't ever be null
-		// But just in case...
-		if (uniqueId == null)
-		{
-			// Check online players first
-			Player player = Util.matchPlayer(getName());
-			if (player != null)
-			{
-				uniqueId = player.getUniqueId().toString();
-				lastKnownBy = player.getName();
-				return uniqueId;
-			}
-
-			try
-			{
-				// Then send a request to Mojang's servers
-				UUID uuid = UUIDFetcher.getUUID(getName());
-				if (uuid != null)
-				{
-					uniqueId = uuid.toString();
-					lastKnownBy = getName();
-					return uniqueId;
-				}
-			}
-			catch (Throwable ex)
-			{
-				SwornNations.get().log(Util.getUsefulStack(ex, "getting unique id for " + getName()));
-			}
-		}
-
-		return uniqueId;
+		return getId();
 	}
 
-	public UUID getUUID() { return UUID.fromString(getUniqueId()); }
-	public String getLastKnownBy() { return lastKnownBy; }
+	public UUID getUUID()
+	{
+		return UUID.fromString(getId());
+	}
+
+	public String getLastKnownBy()
+	{
+		return lastKnownBy;
+	}
 
 	// FIELD: role
 	private Role role;
@@ -411,7 +391,14 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	@Override
 	public String getName()
 	{
-		return getId();
+		if (lastKnownBy == null)
+		{
+			OfflinePlayer player = Util.matchOfflinePlayer(getUniqueId());
+			if (player != null)
+				lastKnownBy = player.getName();
+		}
+
+		return lastKnownBy;
 	}
 
 	public String getTag()

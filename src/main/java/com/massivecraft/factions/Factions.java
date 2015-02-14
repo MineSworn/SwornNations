@@ -35,9 +35,7 @@ public class Factions extends EntityCollection<Faction>
 	@Override
 	public Type getMapType()
 	{
-		return new TypeToken<Map<String, Faction>>()
-		{
-		}.getType();
+		return new TypeToken<Map<String, Faction>>() { }.getType();
 	}
 
 	@Override
