@@ -498,7 +498,7 @@ public abstract class EntityCollection<E extends Entity>
 		}
 		catch (Throwable ex)
 		{
-			SwornNations.get().log("Failed to load core." + (gson != null ? " Gson does not exist!" : ""));
+			SwornNations.get().log("Failed to load core." + (gson == null ? " Gson does not exist!" : ""));
 			ex.printStackTrace();
 			return null;
 		}

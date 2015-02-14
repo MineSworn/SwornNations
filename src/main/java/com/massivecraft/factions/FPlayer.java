@@ -105,7 +105,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	public String getUniqueId()
 	{
 		String id = getId();
-		if (id.length() == 36)
+		if (id != null && id.length() == 36)
 			return id;
 
 		return uniqueId;
