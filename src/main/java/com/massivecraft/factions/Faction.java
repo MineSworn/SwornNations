@@ -715,7 +715,7 @@ public class Faction extends Entity implements EconomyParticipator
 
 			// no members left and faction isn't permanent, so disband it
 			if (Conf.logFactionDisband)
-				SwornNations.get().log("The faction {0} ({1}) has been disbanded since it has no members left.", getTag(), getId());
+				SwornNations.get().log("The faction %s (%s) has been disbanded since it has no members left.", getTag(), getId());
 
 			for (FPlayer fplayer : FPlayers.i.getOnline())
 			{
@@ -732,7 +732,7 @@ public class Faction extends Entity implements EconomyParticipator
 			replacements.get(0).setRole(Role.ADMIN);
 			msg("<i>Faction admin <h>%s<i> has been removed. %s<i> has been promoted as the new faction admin.",
 					oldLeader == null ? "" : oldLeader.getName(), replacements.get(0).getName());
-			SwornNations.get().log("Faction {0} ({1}) admin{2} was removed. Replacement admin: {3}", getTag(), getId(),
+			SwornNations.get().log("Faction %s (%s) admin%s was removed. Replacement admin: %s", getTag(), getId(),
 					oldLeader == null ? "" : " " + oldLeader.getName(), replacements.get(0).getName());
 		}
 	}

@@ -307,7 +307,7 @@ public abstract class EntityCollection<E extends Entity>
 					saveCore(backup, (Map<String, E>) data);
 					SwornNations.get().log("Backed up old players.json to " + backup);
 
-					SwornNations.get().log("Please wait while SwornNations converts {0} names to UUID.", keys.size());
+					SwornNations.get().log("Please wait while SwornNations converts %s names to UUID.", keys.size());
 
 					try
 					{
@@ -354,7 +354,7 @@ public abstract class EntityCollection<E extends Entity>
 						SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "converting players to UUID"));
 					}
 
-					SwornNations.get().log("Converted players to UUID. Took {0} ms.", System.currentTimeMillis() - start);
+					SwornNations.get().log("Converted players to UUID. Took %s ms.", System.currentTimeMillis() - start);
 				}
 
 				return (Map<String, E>) data;
@@ -397,7 +397,7 @@ public abstract class EntityCollection<E extends Entity>
 						saveCore(backup, (Map<String, E>) data);
 						SwornNations.get().log("Backed up old factions.json to " + backup);
 
-						SwornNations.get().log("Please wait while SwornNations converts {0} factions to UUID.", data.size());
+						SwornNations.get().log("Please wait while SwornNations converts %s factions to UUID.", data.size());
 
 						for (Entry<String, Faction> entry : data.entrySet())
 						{
@@ -456,7 +456,7 @@ public abstract class EntityCollection<E extends Entity>
 							}
 						}
 
-						SwornNations.get().log("Converted Factions to UUID. Took {0} ms.", System.currentTimeMillis() - start);
+						SwornNations.get().log("Converted Factions to UUID. Took %s ms.", System.currentTimeMillis() - start);
 					}
 					catch (Throwable ex)
 					{
