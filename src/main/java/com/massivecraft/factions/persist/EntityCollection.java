@@ -21,6 +21,8 @@ import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.util.Util;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 
 import com.google.common.collect.ImmutableList;
@@ -311,16 +313,17 @@ public abstract class EntityCollection<E extends Entity>
 
 					// Remove duplicates
 					int duplicates = 0;
-					for (Entry<String, FPlayer> entry : data.entrySet())
+					for (Entry<String, FPlayer> entry : new HashMap<String, FPlayer>(data).entrySet())
 					{
 						FPlayer player = entry.getValue();
+						String name = player.getName();
 						String uniqueId = player.getUniqueId();
 
 						inner:
 						for (Entry<String, FPlayer> entry1 : data.entrySet())
 						{
 							FPlayer other = entry1.getValue();
-							if (uniqueId.equals(other.getUniqueId()))
+							if (! name.equalsIgnoreCase(other.getName()) && uniqueId.equals(other.getUniqueId()))
 							{
 								// Remove the older one
 								if (player.getLastLoginTime() > other.getLastLoginTime())
@@ -353,27 +356,57 @@ public abstract class EntityCollection<E extends Entity>
 							fetchers.add(new UUIDFetcher(namesList));
 						}
 
+						// Compile it into a master list
+						Map<String, UUID> uuids = new HashMap<>();
+
 						ExecutorService e = Executors.newFixedThreadPool(3);
 						List<Future<Map<String, UUID>>> results = e.invokeAll(fetchers);
 						for (Future<Map<String, UUID>> result : results)
 						{
-							Map<String, UUID> uuids = result.get();
-							for (Entry<String, UUID> entry : uuids.entrySet())
+							uuids.putAll(result.get());
+						}
+
+						// Actually convert the players
+						for (Entry<String, FPlayer> entry : new HashMap<>(data).entrySet())
+						{
+							String name = entry.getKey();
+							FPlayer player = entry.getValue();
+
+							UUID uniqueId = uuids.get(name);
+							if (uniqueId == null)
 							{
-								String name = entry.getKey();
-								FPlayer player = data.get(name);
-								if (player == null)
+								// Attempt to resolve locally
+								uniqueId = player.getUUID();
+								if (uniqueId == null)
 								{
-									invalid.add(name);
-									continue;
+									OfflinePlayer offline = Util.matchOfflinePlayer(name);
+									if (offline != null)
+										uniqueId = offline.getUniqueId();
 								}
 
-								UUID uniqueId = entry.getValue();
-								player.setId(uniqueId.toString());
-
-								data.remove(name);
-								data.put(uniqueId.toString(), player);
 							}
+
+							if (uniqueId == null)
+							{
+								invalid.add(name);
+								continue;
+							}
+
+							
+							player.setId(uniqueId.toString());
+
+							data.remove(name);
+							data.put(uniqueId.toString(), player);
+						}
+
+						if (invalid.size() > 0)
+						{
+							for (String name : invalid)
+							{
+								data.remove(name);
+							}
+
+							SwornNations.get().log("Removed %s invalid names: %s", invalid.size(), StringUtils.join(invalid, ", "));
 						}
 					}
 					catch (Throwable ex)
@@ -390,21 +423,18 @@ public abstract class EntityCollection<E extends Entity>
 			{
 				Map<String, Faction> data = gson.fromJson(content, type);
 
-				int needsUpdate = 0;
+				Set<String> keys = new HashSet<String>();
 				for (Faction faction : data.values())
 				{
-					needsUpdate += keysRequiringUpdate(faction.getInvites()).size();
+					keys.addAll(keysRequiringUpdate(faction.getInvites()));
 					Map<FLocation, Set<String>> claims = faction.getClaimOwnership();
 					for (FLocation key : faction.getClaimOwnership().keySet())
 					{
-						needsUpdate += keysRequiringUpdate(claims.get(key)).size();
+						keys.addAll(keysRequiringUpdate(claims.get(key)));
 					}
-
-					if (needsUpdate > 0)
-						break;
 				}
 
-				if (needsUpdate > 0)
+				if (keys.size() > 0)
 				{
 					long start = System.currentTimeMillis();
 					SwornNations.get().log("Converting factions.json to UUID");
@@ -426,6 +456,44 @@ public abstract class EntityCollection<E extends Entity>
 
 						SwornNations.get().log("Please wait while SwornNations converts %s factions to UUID.", data.size());
 
+						// Fetch UUIDs from Mojang
+						Map<String, UUID> uuids = new HashMap<>();
+
+						try
+						{
+							UUIDFetcher fetcher = new UUIDFetcher(new ArrayList<>(keys));
+							uuids = fetcher.call();
+
+							// Convert names to lower case, since that's how they're stored
+							for (Entry<String, UUID> entry : new HashMap<>(uuids).entrySet())
+							{
+								uuids.remove(entry.getKey());
+								uuids.put(entry.getKey().toLowerCase(), entry.getValue());
+							}
+						}
+						catch (Throwable ex)
+						{
+							SwornNations.get().log(Level.WARNING, "Failed to fetch UUIDs from Mojang: %s", ex);
+							SwornNations.get().log("Resolving UUIDs locally...");
+
+							for (String key : keys)
+							{
+								// Attempt to grab from the cache
+								UUID uniqueId = UUIDFetcher.fromCache(key);
+								if (uniqueId == null)
+								{
+									OfflinePlayer player = Util.matchOfflinePlayer(key);
+									if (player != null)
+										uniqueId = player.getUniqueId();
+								}
+
+								if (uniqueId != null)
+									uuids.put(key.toLowerCase(), uniqueId);
+								else
+									SwornNations.get().log(Level.WARNING, "Could not resolve UUID for %s", key);
+							}
+						}
+
 						for (Entry<String, Faction> entry : data.entrySet())
 						{
 							Faction faction = entry.getValue();
@@ -435,25 +503,13 @@ public abstract class EntityCollection<E extends Entity>
 							for (Entry<FLocation, Set<String>> claim : claims.entrySet())
 							{
 								Set<String> owners = claim.getValue();
-
-								Set<String> keys = keysRequiringUpdate(owners);
-								if (keys.size() > 0)
+								for (String owner : owners.toArray(new String[0]))
 								{
-									UUIDFetcher fetcher = new UUIDFetcher(new ArrayList<String>(keys));
+									owners.remove(owner.toLowerCase());
 
-									try
-									{
-										Map<String, UUID> uuids = fetcher.call();
-										for (Entry<String, UUID> entry1 : uuids.entrySet())
-										{
-											owners.remove(entry1.getKey().toLowerCase());
-											owners.add(entry1.getValue().toString());
-										}
-									}
-									catch (Throwable ex)
-									{
-										SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "fetching UUIDs from Mojang"));
-									}
+									UUID uniqueId = uuids.get(owner);
+									if (uniqueId != null)
+										owners.add(uniqueId.toString());
 								}
 
 								claims.put(claim.getKey(), owners);
@@ -461,25 +517,13 @@ public abstract class EntityCollection<E extends Entity>
 
 							// Convert invites
 							Set<String> invites = faction.getInvites();
-
-							Set<String> keys = keysRequiringUpdate(invites);
-							if (keys.size() > 0)
+							for (String invite : invites.toArray(new String[0]))
 							{
-								UUIDFetcher fetcher = new UUIDFetcher(new ArrayList<String>(keys));
+								invites.remove(invite.toLowerCase());
 
-								try
-								{
-									Map<String, UUID> uuids = fetcher.call();
-									for (Entry<String, UUID> entry1 : uuids.entrySet())
-									{
-										invites.remove(entry1.getKey().toLowerCase());
-										invites.add(entry1.getValue().toString());
-									}
-								}
-								catch (Throwable ex)
-								{
-									SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "fetching UUIDs from Mojang"));
-								}
+								UUID uniqueId = uuids.get(invite);
+								if (uniqueId != null)
+									invites.add(uniqueId.toString());
 							}
 						}
 
@@ -509,7 +553,7 @@ public abstract class EntityCollection<E extends Entity>
 		Set<String> ret = new HashSet<String>();
 		for (String key : keys)
 		{
-			if (! key.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))
+			if (key.length() != 36)
 			{
 				if (key.matches("[a-zA-Z0-9_]{2,16}"))
 					ret.add(key);
