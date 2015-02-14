@@ -288,7 +288,7 @@ public abstract class EntityCollection<E extends Entity>
 				Set<String> invalid = new HashSet<String>();
 				if (keys.size() > 0)
 				{
-					// Enable caching if we're converting
+					// Enable caching since we're converting
 					UUIDFetcher.setCachingEnabled(true);
 
 					long start = System.currentTimeMillis();
@@ -308,6 +308,33 @@ public abstract class EntityCollection<E extends Entity>
 					SwornNations.get().log("Backed up old players.json to " + backup);
 
 					SwornNations.get().log("Please wait while SwornNations converts %s names to UUID.", keys.size());
+
+					// Remove duplicates
+					int duplicates = 0;
+					for (Entry<String, FPlayer> entry : data.entrySet())
+					{
+						FPlayer player = entry.getValue();
+						String uniqueId = player.getUniqueId();
+
+						inner:
+						for (Entry<String, FPlayer> entry1 : data.entrySet())
+						{
+							FPlayer other = entry1.getValue();
+							if (uniqueId.equals(other.getUniqueId()))
+							{
+								// Remove the older one
+								if (player.getLastLoginTime() > other.getLastLoginTime())
+									data.remove(entry1.getKey());
+								else
+									data.remove(entry.getKey());
+
+								duplicates++;
+								break inner;
+							}
+						}
+					}
+
+					SwornNations.get().log("Removed %s duplicates", duplicates);
 
 					try
 					{

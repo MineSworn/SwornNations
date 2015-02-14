@@ -78,13 +78,9 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	// FIELD: lastKnownBy
 	private String lastKnownBy;
 
-	public void updateName()
+	public String getLastKnownBy()
 	{
-		Player player = getPlayer();
-		if (player == null)
-			return;
-
-		lastKnownBy = player.getName();
+		return lastKnownBy;
 	}
 
 	public void setLastKnownBy(String lastKnownBy)
@@ -92,20 +88,32 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.lastKnownBy = lastKnownBy;
 	}
 
+	public void updateName()
+	{
+		Player player = getPlayer();
+		if (player == null)
+			return;
+
+		lastKnownBy = player.getName();
+		uniqueId = player.getUniqueId().toString();
+	}
+
+	// FIELD: uniqueId
+	private String uniqueId;
+
 	@Override
 	public String getUniqueId()
 	{
-		return getId();
+		String id = getId();
+		if (id.length() == 36)
+			return id;
+
+		return uniqueId;
 	}
 
 	public UUID getUUID()
 	{
-		return UUID.fromString(getId());
-	}
-
-	public String getLastKnownBy()
-	{
-		return lastKnownBy;
+		return UUID.fromString(getUniqueId());
 	}
 
 	// FIELD: role
