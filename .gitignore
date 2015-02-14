@@ -16,7 +16,6 @@ local.properties
 .settings/
 .loadpath
 target/
-.gitignore
 
 # External tool builders
 .externalToolBuilders/
