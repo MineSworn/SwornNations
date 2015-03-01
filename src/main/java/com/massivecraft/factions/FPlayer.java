@@ -264,11 +264,10 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		return spyingChat;
 	}
 
-	// FIELD: account
 	@Override
 	public String getAccountId()
 	{
-		return this.getId();
+		return this.getName();
 	}
 
 	// -------------------------------------------- //
@@ -753,9 +752,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 			myFaction.detach();
 			if (Conf.logFactionDisband)
-				SwornNations.get().log(
-						"The faction " + myFaction.getTag() + " (" + myFaction.getId() + ") was disbanded due to the last player ("
-								+ this.getName() + ") leaving.");
+				SwornNations.get().log(String.format("The faction %s (%s) was disbanded due to the last player (%s) leaving.",
+						myFaction.getTag(), myFaction.getId(), getName()));
 		}
 	}
 
@@ -764,14 +762,10 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		if (forFaction.isNone())
 			return false;
 
-		if (this.isAdminBypassing() || (forFaction == this.getFaction() && this.getFaction().playerHasPermission(this, NPermission.CLAIM))
+		return (this.isAdminBypassing()
+				|| (forFaction == this.getFaction() && this.getFaction().playerHasPermission(this, NPermission.CLAIM))
 				|| (forFaction.isSafeZone() && Permission.MANAGE_SAFE_ZONE.has(getPlayer()))
-				|| (forFaction.isWarZone() && Permission.MANAGE_WAR_ZONE.has(getPlayer())))
-		{
-			return true;
-		}
-
-		return false;
+				|| (forFaction.isWarZone() && Permission.MANAGE_WAR_ZONE.has(getPlayer())));
 	}
 
 	public boolean canClaimForFactionAtLocation(Faction forFaction, Location location, boolean notifyFailure)
@@ -784,8 +778,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 
 		if (Conf.worldGuardChecking && WorldGuard.checkForRegionsInChunk(location))
 		{
-			// Checks for WorldGuard regions in the chunk attempting to be
-			// claimed
+			// Checks for WorldGuard regions in the chunk attempting to be claimed
 			error = SwornNations.get().txt.parse("<b>This land is protected");
 		}
 		else if (Conf.worldsNoClaiming.contains(flocation.getWorldName()))

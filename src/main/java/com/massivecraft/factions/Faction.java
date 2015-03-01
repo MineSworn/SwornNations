@@ -604,9 +604,7 @@ public class Faction extends Entity implements EconomyParticipator
 		for (FPlayer fplayer : fplayers)
 		{
 			if (fplayer.isOnline() == online)
-			{
 				ret.add(fplayer);
-			}
 		}
 
 		return ret;
@@ -620,10 +618,9 @@ public class Faction extends Entity implements EconomyParticipator
 		for (FPlayer fplayer : fplayers)
 		{
 			if (fplayer.getRole() == Role.ADMIN)
-			{
 				return fplayer;
-			}
 		}
+
 		return null;
 	}
 
@@ -636,9 +633,7 @@ public class Faction extends Entity implements EconomyParticipator
 		for (FPlayer fplayer : fplayers)
 		{
 			if (fplayer.getRole() == role)
-			{
 				ret.add(fplayer);
-			}
 		}
 
 		return ret;
@@ -788,38 +783,29 @@ public class Faction extends Entity implements EconomyParticipator
 		claimOwnership.remove(loc);
 	}
 
-	public void clearClaimOwnership(String playerName)
+	public void clearClaimOwnership(String uniqueId)
 	{
-		if (playerName == null || playerName.isEmpty())
-		{
+		if (uniqueId == null || uniqueId.isEmpty())
 			return;
-		}
-
-		Set<String> ownerData;
-		String player = playerName.toLowerCase();
 
 		for (Entry<FLocation, Set<String>> entry : claimOwnership.entrySet())
 		{
-			ownerData = entry.getValue();
-
+			Set<String> ownerData = entry.getValue();
 			if (ownerData == null)
 				continue;
 
 			Iterator<String> iter = ownerData.iterator();
 			while (iter.hasNext())
 			{
-				if (iter.next().equals(player))
-				{
+				if (iter.next().equals(uniqueId))
 					iter.remove();
-				}
 			}
 
 			if (ownerData.isEmpty())
 			{
 				if (Conf.onUnclaimResetLwcLocks && LWCFeatures.isEnabled())
-				{
 					LWCFeatures.clearAllChests(entry.getKey());
-				}
+
 				claimOwnership.remove(entry.getKey());
 			}
 		}
@@ -828,12 +814,13 @@ public class Faction extends Entity implements EconomyParticipator
 	public int getCountOfClaimsWithOwner(FPlayer player)
 	{
 		int count = 0;
-		String playerName = player.getName().toLowerCase();
+		String uniqueId = player.getUniqueId();
 		for (Set<String> ownerData : claimOwnership.values())
 		{
-			if (ownerData.contains(playerName))
+			if (ownerData.contains(uniqueId))
 				count++;
 		}
+
 		return count;
 	}
 
@@ -845,9 +832,7 @@ public class Faction extends Entity implements EconomyParticipator
 	public boolean doesLocationHaveOwnersSet(FLocation loc)
 	{
 		if (claimOwnership.isEmpty() || ! claimOwnership.containsKey(loc))
-		{
 			return false;
-		}
 
 		Set<String> ownerData = claimOwnership.get(loc);
 		return ownerData != null && ! ownerData.isEmpty();
@@ -982,17 +967,13 @@ public class Faction extends Entity implements EconomyParticipator
 
 	public boolean roleHasPermission(Role role, NPermission perm)
 	{
-		if (permManager.hasPerm(role, perm))
-			return true;
-		return false;
+		return permManager.hasPerm(role, perm);
 	}
 
 	public void addPermission(FPlayer player, NPermission perm)
 	{
 		if (player.getFaction() == this)
-		{
 			permManager.addPerm(player, perm);
-		}
 	}
 
 	public void addPermission(Role role, NPermission perm)
@@ -1003,9 +984,7 @@ public class Faction extends Entity implements EconomyParticipator
 	public void removePermission(FPlayer player, NPermission perm)
 	{
 		if (player.getFaction() == this)
-		{
 			permManager.removePerm(player, perm);
-		}
 	}
 
 	public void removePermission(Role role, NPermission perm)
