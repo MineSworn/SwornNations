@@ -11,16 +11,15 @@ import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
 
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonArray;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializationContext;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializer;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonElement;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonObject;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonParseException;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonPrimitive;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.massivecraft.factions.FLocation;
 
 public class MapFLocToStringSetTypeAdapter implements JsonDeserializer<Map<FLocation, Set<String>>>,

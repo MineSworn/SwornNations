@@ -9,8 +9,9 @@ import java.util.Set;
 import net.dmulloy2.util.Util;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 import org.bukkit.entity.Player;
+
+import com.google.gson.Gson;
 
 /**
  * The PlayerEntityCollection is an EntityCollection with the extra features a

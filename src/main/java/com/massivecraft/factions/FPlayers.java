@@ -9,8 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.dmulloy2.swornnations.SwornNations;
 
-import org.bukkit.craftbukkit.libs.com.google.gson.reflect.TypeToken;
-
+import com.google.gson.reflect.TypeToken;
 import com.massivecraft.factions.persist.PlayerEntityCollection;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.TextUtil;

@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import net.dmulloy2.types.MyMaterial;
 
-import org.bukkit.craftbukkit.libs.com.google.gson.TypeAdapter;
-import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonReader;
-import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonToken;
-import org.bukkit.craftbukkit.libs.com.google.gson.stream.JsonWriter;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 
 public class MyMaterialTypeAdapter extends TypeAdapter<MyMaterial>
 {

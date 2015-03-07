@@ -12,15 +12,14 @@ import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.swornnations.types.NPermissionManager;
 
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonArray;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializationContext;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonDeserializer;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonElement;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonObject;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonPrimitive;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializationContext;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonSerializer;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.massivecraft.factions.struct.Role;
 
 public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissionManager>, JsonSerializer<NPermissionManager>

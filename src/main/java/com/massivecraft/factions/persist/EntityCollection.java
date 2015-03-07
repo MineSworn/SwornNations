@@ -23,9 +23,9 @@ import net.dmulloy2.util.Util;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.libs.com.google.gson.Gson;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
