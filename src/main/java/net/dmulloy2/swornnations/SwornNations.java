@@ -768,12 +768,12 @@ public class SwornNations extends SwornPlugin
 
 	public void log(String str, Object... args)
 	{
-		log(Level.INFO, this.txt.parse(str, args));
+		log(Level.INFO, txt.parse(str, args));
 	}
 
 	public void log(Level level, String str, Object... args)
 	{
-		log(level, this.txt.parse(str, args));
+		log(level, txt.parse(str, args));
 	}
 
 	public void log(Level level, String msg)

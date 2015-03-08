@@ -363,9 +363,16 @@ public abstract class EntityCollection<E extends Entity>
 						List<Future<Map<String, UUID>>> results = e.invokeAll(fetchers);
 						for (Future<Map<String, UUID>> result : results)
 						{
-							Map<String, UUID> map = result.get();
-							if (map != null)
-								uuids.putAll(map);
+							try
+							{
+								Map<String, UUID> map = result.get();
+								if (map != null)
+									uuids.putAll(map);
+							}
+							catch (Throwable ex)
+							{
+								SwornNations.get().log(Level.SEVERE, Util.getUsefulStack(ex, "fetching UUIDs from Mojang"));
+							}
 						}
 
 						// Actually convert the players
@@ -413,7 +420,7 @@ public abstract class EntityCollection<E extends Entity>
 					}
 					catch (Throwable ex)
 					{
-						SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "converting players to UUID"));
+						SwornNations.get().log(Level.SEVERE, Util.getUsefulStack(ex, "converting players to UUID"));
 					}
 
 					SwornNations.get().log("Converted players to UUID. Took %s ms.", System.currentTimeMillis() - start);
@@ -475,7 +482,7 @@ public abstract class EntityCollection<E extends Entity>
 						}
 						catch (Throwable ex)
 						{
-							SwornNations.get().log(Level.WARNING, "Failed to fetch UUIDs from Mojang: %s", ex);
+							SwornNations.get().log(Level.SEVERE, Util.getUsefulStack(ex, "fetching UUIDs from Mojang"));
 							SwornNations.get().log("Resolving UUIDs locally...");
 
 							for (String key : keys)
@@ -533,7 +540,7 @@ public abstract class EntityCollection<E extends Entity>
 					}
 					catch (Throwable ex)
 					{
-						SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "converting Factions to UUID"));
+						SwornNations.get().log(Level.SEVERE, Util.getUsefulStack(ex, "converting Factions to UUID"));
 					}
 
 					return (Map<String, E>) data;
