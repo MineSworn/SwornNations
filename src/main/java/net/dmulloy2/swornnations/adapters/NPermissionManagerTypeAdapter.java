@@ -5,12 +5,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
 import net.dmulloy2.swornnations.types.NPermissionManager;
+import net.dmulloy2.util.Util;
+
+import org.bukkit.OfflinePlayer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -44,11 +48,13 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			{
 				String[] s = e.getAsString().split(",");
 				Role r = Role.match(s[0]);
+
 				HashSet<NPermission> perms = new HashSet<NPermission>();
 				for (int i = 1; i < s.length; i++)
 				{
 					perms.add(NPermission.match(s[i]));
 				}
+
 				rankPerms.put(r, perms);
 			}
 
@@ -56,17 +62,35 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			{
 				String[] s = e.getAsString().split(",");
 				String id = s[0];
+
 				HashMap<NPermission, Boolean> perms = new HashMap<NPermission, Boolean>();
 				for (int i = 1; i < s.length; i++)
 				{
 					String[] ss = s[i].split(":");
-
 					perms.put(NPermission.match(ss[0]), (ss[1].equalsIgnoreCase("t")) ? true : false);
 				}
 
 				// Make sure id is a UUID
 				if (id.length() != 36)
-					id = UUIDFetcher.getUUID(id).toString();
+				{
+					UUID uniqueId = UUIDFetcher.getUUID(id);
+					if (uniqueId == null)
+					{
+						OfflinePlayer player = Util.matchOfflinePlayer(id);
+						if (player != null)
+							uniqueId = player.getUniqueId();
+					}
+
+					if (uniqueId != null)
+					{
+						id = uniqueId.toString();
+					}
+					else
+					{
+						SwornNations.get().log(Level.WARNING, "Failed to resolve UUID for %s", id);
+						continue;
+					}
+				}
 
 				playerPerms.put(id, perms);
 			}

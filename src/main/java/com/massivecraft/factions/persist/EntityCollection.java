@@ -363,7 +363,9 @@ public abstract class EntityCollection<E extends Entity>
 						List<Future<Map<String, UUID>>> results = e.invokeAll(fetchers);
 						for (Future<Map<String, UUID>> result : results)
 						{
-							uuids.putAll(result.get());
+							Map<String, UUID> map = result.get();
+							if (map != null)
+								uuids.putAll(map);
 						}
 
 						// Actually convert the players
