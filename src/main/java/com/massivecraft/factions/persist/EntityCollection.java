@@ -563,15 +563,18 @@ public abstract class EntityCollection<E extends Entity>
 	private Set<String> keysRequiringUpdate(Set<String> keys)
 	{
 		Set<String> ret = new HashSet<String>();
-		for (String key : keys)
-		{
-			if (key.length() != 36)
-			{
-				if (key.matches("[a-zA-Z0-9_]{2,16}"))
-					ret.add(key);
-			}
-		}
 
+		try
+		{
+			for (String key : keys)
+			{
+				if (key.length() != 36)
+				{
+					if (key.matches("[a-zA-Z0-9_]{2,16}"))
+						ret.add(key);
+				}
+			}
+		} catch (Throwable ex) { }
 		return ret;
 	}
 
