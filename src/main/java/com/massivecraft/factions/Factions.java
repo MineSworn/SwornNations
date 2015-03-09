@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
 import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.exception.EnableException;
 
 import org.bukkit.ChatColor;
 
@@ -26,9 +27,8 @@ public class Factions extends EntityCollection<Faction>
 
 	private Factions()
 	{
-		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(), new File(SwornNations.get()
-				.getDataFolder(), "factions.json"), SwornNations.get().gson);
-
+		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(),
+				new File(SwornNations.get().getDataFolder(), "factions.json"), SwornNations.get().gson);
 		this.p = SwornNations.get();
 	}
 
@@ -39,7 +39,7 @@ public class Factions extends EntityCollection<Faction>
 	}
 
 	@Override
-	public boolean loadFromDisc()
+	public boolean loadFromDisc() throws EnableException
 	{
 		if (! super.loadFromDisc())
 			return false;

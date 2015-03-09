@@ -3,6 +3,8 @@ package com.massivecraft.factions.persist;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.dmulloy2.swornnations.exception.EnableException;
+
 public class EM
 {
 	public static Map<Class<? extends Entity>, EntityCollection<? extends Entity>> class2Entities = new LinkedHashMap<Class<? extends Entity>, EntityCollection<? extends Entity>>();
@@ -62,7 +64,7 @@ public class EM
 		}
 	}
 
-	public static void loadAllFromDisc()
+	public static void loadAllFromDisc() throws EnableException
 	{
 		for (EntityCollection<? extends Entity> ec : class2Entities.values())
 		{

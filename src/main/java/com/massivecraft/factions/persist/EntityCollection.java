@@ -19,6 +19,7 @@ import java.util.logging.Level;
 
 import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
+import net.dmulloy2.swornnations.exception.EnableException;
 import net.dmulloy2.util.Util;
 
 import org.apache.commons.lang.StringUtils;
@@ -254,7 +255,7 @@ public abstract class EntityCollection<E extends Entity>
 		return DiscUtil.writeCatch(file, gson.toJson(entities));
 	}
 
-	public boolean loadFromDisc()
+	public boolean loadFromDisc() throws EnableException
 	{
 		Map<String, E> id2entity = this.loadCore();
 		if (id2entity == null)
@@ -268,7 +269,7 @@ public abstract class EntityCollection<E extends Entity>
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, E> loadCore()
+	private Map<String, E> loadCore() throws EnableException
 	{
 		try
 		{
@@ -551,9 +552,11 @@ public abstract class EntityCollection<E extends Entity>
 		}
 		catch (Throwable ex)
 		{
-			SwornNations.get().log("Failed to load core." + (gson == null ? " Gson does not exist!" : ""));
-			ex.printStackTrace();
-			return null;
+			SwornNations.get().log(Level.SEVERE, "Failed to load core.");
+			if (gson == null)
+				SwornNations.get().log(Level.SEVERE, "Gson does not exist!");
+
+			throw new EnableException("Failed to load core.", ex);
 		}
 	}
 

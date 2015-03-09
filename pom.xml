@@ -84,7 +84,6 @@
               <artifactSet>
                 <includes>
                   <include>net.dmulloy2:swornapi*</include>
-                  <include>com.google.code.gson:gson*</include>
                 </includes>
               </artifactSet>
               <relocations>
@@ -95,10 +94,6 @@
                     <exclude>net.dmulloy2.swornnations*</exclude>
                   </excludes>
                 </relocation>
-                <!--<relocation>
-                  <pattern>com.google.gson</pattern>
-                  <shadedPattern>net.dmulloy2.swornnations.gson</shadedPattern>
-                </relocation>-->
               </relocations>
             </configuration>
           </execution>
@@ -161,10 +156,5 @@
       <artifactId>lwc</artifactId>
       <version>4.4.0-SNAPSHOT</version>
     </dependency>
-    <!--<dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.2.4</version>
-    </dependency>-->
   </dependencies>
 </project>

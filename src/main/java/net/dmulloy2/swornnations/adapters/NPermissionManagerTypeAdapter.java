@@ -48,13 +48,11 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			{
 				String[] s = e.getAsString().split(",");
 				Role r = Role.match(s[0]);
-
 				HashSet<NPermission> perms = new HashSet<NPermission>();
 				for (int i = 1; i < s.length; i++)
 				{
 					perms.add(NPermission.match(s[i]));
 				}
-
 				rankPerms.put(r, perms);
 			}
 
@@ -62,11 +60,11 @@ public class NPermissionManagerTypeAdapter implements JsonDeserializer<NPermissi
 			{
 				String[] s = e.getAsString().split(",");
 				String id = s[0];
-
 				HashMap<NPermission, Boolean> perms = new HashMap<NPermission, Boolean>();
 				for (int i = 1; i < s.length; i++)
 				{
 					String[] ss = s[i].split(":");
+
 					perms.put(NPermission.match(ss[0]), (ss[1].equalsIgnoreCase("t")) ? true : false);
 				}
 
