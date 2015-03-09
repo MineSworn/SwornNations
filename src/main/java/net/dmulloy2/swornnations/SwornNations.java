@@ -18,11 +18,13 @@ import net.dmulloy2.swornnations.adapters.MyMaterialTypeAdapter;
 import net.dmulloy2.swornnations.adapters.NPermissionManagerTypeAdapter;
 import net.dmulloy2.swornnations.types.NPermissionManager;
 import net.dmulloy2.types.MyMaterial;
+import net.dmulloy2.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -51,6 +53,7 @@ import com.massivecraft.factions.listeners.FactionsBlockListener;
 import com.massivecraft.factions.listeners.FactionsChatListener;
 import com.massivecraft.factions.listeners.FactionsEntityListener;
 import com.massivecraft.factions.listeners.FactionsExploitListener;
+import com.massivecraft.factions.listeners.FactionsFallbackListener;
 import com.massivecraft.factions.listeners.FactionsPlayerListener;
 import com.massivecraft.factions.listeners.SecretPlayerListener;
 import com.massivecraft.factions.listeners.SecretServerListener;
@@ -136,6 +139,7 @@ public class SwornNations extends SwornPlugin
 	private Integer saveTask = null;
 	private boolean autoSave = true;
 	protected boolean loadSuccessful = false;
+	protected boolean loadFailed = false;
 
 	public Gson getGson()
 	{
@@ -192,6 +196,13 @@ public class SwornNations extends SwornPlugin
 	{
 		try
 		{
+			// Did we already try to enable?
+			if (loadFailed)
+			{
+				crashEnable();
+				return;
+			}
+
 			// MPlugin start
 			long start = System.currentTimeMillis();
 			this.loadSuccessful = false;
@@ -335,10 +346,48 @@ public class SwornNations extends SwornPlugin
 
 			log("Disabling...");
 			getServer().getPluginManager().disablePlugin(this);
+
+			// Crash enable
+			this.loadFailed = true;
+			getServer().getPluginManager().enablePlugin(this);
 		}
 	}
 
-	private final void backupFiles()
+	private void crashEnable()
+	{
+		// This enables the bare necessities, like protecting spawn
+		log("SwornNations failed to enable. Loading fallback mechanisms.");
+
+		// Attempt to at least load the board
+		// The board is usually ok
+		try
+		{
+			Board.load();
+		}
+		catch (Throwable ex)
+		{
+			log(Level.SEVERE, Util.getUsefulStack(ex, "loading board from disk"));
+			log("Board failed to load. Claimed areas will not be protected.");
+		}
+
+		// Register fallback listener
+		getServer().getPluginManager().registerEvents(new FactionsFallbackListener(), this);
+
+		// Register command
+		getCommand("factions").setExecutor(new CommandExecutor()
+		{
+			@Override
+			public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+			{
+				sender.sendMessage(ChatColor.RED + "SwornNations failed to enable. Check console!");
+				return true;
+			}
+		});
+
+		log("SwornNations backup mechanisms enabled.");
+	}
+
+	private void backupFiles()
 	{
 		try
 		{
