@@ -10,7 +10,8 @@ public abstract class PlayerEntity extends Entity
 {
 	public final Player getPlayer()
 	{
-		return Util.matchPlayer(getUniqueId());
+		String id = getId();
+		return id != null ? Util.matchPlayer(id) : null;
 	}
 
 	// -------------------------------------------- //
