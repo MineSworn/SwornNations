@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.types.NPermission;
-import net.dmulloy2.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -75,6 +74,8 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.factionId = faction.getId();
 	}
 
+	// ---- Identifiers
+
 	// FIELD: lastKnownBy
 	private String lastKnownBy;
 
@@ -86,6 +87,24 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	public void setLastKnownBy(String lastKnownBy)
 	{
 		this.lastKnownBy = lastKnownBy;
+	}
+
+
+	@Override
+	public String getName()
+	{
+		String id = getId();
+		if (id != null && id.length() < 36)
+			return id;
+
+		if (lastKnownBy == null)
+		{
+			OfflinePlayer player = getOfflinePlayer();
+			if (player != null)
+				lastKnownBy = player.getName();
+		}
+
+		return lastKnownBy;
 	}
 
 	public void updateName()
@@ -107,6 +126,13 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		String id = getId();
 		if (id != null && id.length() == 36)
 			return id;
+
+		if (uniqueId == null)
+		{
+			OfflinePlayer player = getOfflinePlayer();
+			if (player != null)
+				uniqueId = player.getUniqueId().toString();
+		}
 
 		return uniqueId;
 	}
@@ -393,19 +419,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	public void setTitle(String title)
 	{
 		this.title = title;
-	}
-
-	@Override
-	public String getName()
-	{
-		if (lastKnownBy == null)
-		{
-			OfflinePlayer player = Util.matchOfflinePlayer(getUniqueId());
-			if (player != null)
-				lastKnownBy = player.getName();
-		}
-
-		return lastKnownBy;
 	}
 
 	public String getTag()

@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.dmulloy2.util.Util;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public abstract class PlayerEntity extends Entity
@@ -12,6 +13,12 @@ public abstract class PlayerEntity extends Entity
 	{
 		String id = getId();
 		return id != null ? Util.matchPlayer(id) : null;
+	}
+
+	public final OfflinePlayer getOfflinePlayer()
+	{
+		String id = getId();
+		return id != null ? Util.matchOfflinePlayer(id) : null;
 	}
 
 	// -------------------------------------------- //

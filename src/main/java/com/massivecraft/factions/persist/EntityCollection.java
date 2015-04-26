@@ -291,57 +291,59 @@ public abstract class EntityCollection<E extends Entity>
 				Set<String> invalid = new HashSet<String>();
 				if (keys.size() > 0)
 				{
-					// Enable caching since we're converting
-					UUIDFetcher.setCachingEnabled(true);
-
 					long start = System.currentTimeMillis();
-					SwornNations.get().log("Converting players.json to UUID");
-
-					// Back it up
-					File backup = new File(file.getParentFile(), "players.json_old");
-					if (! backup.exists())
-					{
-						try
-						{
-							backup.createNewFile();
-						} catch (IOException ex) { }
-					}
-
-					saveCore(backup, (Map<String, E>) data);
-					SwornNations.get().log("Backed up old players.json to " + backup);
-
-					SwornNations.get().log("Please wait while SwornNations converts %s names to UUID.", keys.size());
-
-					// Remove duplicates
-					int duplicates = 0;
-					for (Entry<String, FPlayer> entry : new HashMap<String, FPlayer>(data).entrySet())
-					{
-						FPlayer player = entry.getValue();
-						String name = player.getName();
-						String uniqueId = player.getUniqueId();
-
-						inner:
-						for (Entry<String, FPlayer> entry1 : data.entrySet())
-						{
-							FPlayer other = entry1.getValue();
-							if (! name.equalsIgnoreCase(other.getName()) && uniqueId.equals(other.getUniqueId()))
-							{
-								// Remove the older one
-								if (player.getLastLoginTime() > other.getLastLoginTime())
-									data.remove(entry1.getKey());
-								else
-									data.remove(entry.getKey());
-
-								duplicates++;
-								break inner;
-							}
-						}
-					}
-
-					SwornNations.get().log("Removed %s duplicates", duplicates);
 
 					try
 					{
+						// Enable caching since we're converting
+						UUIDFetcher.setCachingEnabled(true);
+
+						SwornNations.get().log("Converting players.json to UUID");
+
+						// Back it up
+						File backup = new File(file.getParentFile(), "players.json_old");
+						if (! backup.exists())
+						{
+							try
+							{
+								backup.createNewFile();
+							} catch (IOException ex) { }
+						}
+
+						saveCore(backup, (Map<String, E>) data);
+						SwornNations.get().log("Backed up old players.json to " + backup);
+
+						SwornNations.get().log("Please wait while SwornNations converts %s names to UUID.", keys.size());
+
+						// Remove duplicates
+						int duplicates = 0;
+						for (Entry<String, FPlayer> entry : new HashMap<String, FPlayer>(data).entrySet())
+						{
+							FPlayer player = entry.getValue();
+							String name = player.getName();
+							String uniqueId = player.getUniqueId();
+
+							inner:
+							for (Entry<String, FPlayer> entry1 : data.entrySet())
+							{
+								FPlayer other = entry1.getValue();
+								if (! name.equalsIgnoreCase(other.getName()) && uniqueId.equals(other.getUniqueId()))
+								{
+									// Remove the older one
+									if (player.getLastLoginTime() > other.getLastLoginTime())
+										data.remove(entry1.getKey());
+									else
+										data.remove(entry.getKey());
+
+									duplicates++;
+									break inner;
+								}
+							}
+						}
+
+						if (duplicates > 0)
+							SwornNations.get().log("Removed %s duplicates", duplicates);
+
 						List<String> names = new ArrayList<String>(keys);
 						ImmutableList.Builder<List<String>> builder = ImmutableList.builder();
 						int namesCopied = 0;
@@ -402,7 +404,6 @@ public abstract class EntityCollection<E extends Entity>
 								continue;
 							}
 
-							
 							player.setId(uniqueId.toString());
 
 							data.remove(name);

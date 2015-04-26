@@ -393,10 +393,7 @@ public class SwornNations extends SwornPlugin
 		{
 			File folder = getDataFolder();
 			if (! folder.exists())
-			{
 				folder.mkdirs();
-				return;
-			}
 
 			File backups = new File(folder, "backups");
 			if (backups.exists())
@@ -419,7 +416,8 @@ public class SwornNations extends SwornPlugin
 
 			for (File file : files)
 			{
-				Files.copy(file, new File(backups, file.getName()));
+				if (! file.equals(backups))
+					Files.copy(file, new File(backups, file.getName()));
 			}
 
 			log("Files successfully backed up!");
