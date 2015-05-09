@@ -1,5 +1,7 @@
 package com.massivecraft.factions.util;
 
+import lombok.Getter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,6 +11,7 @@ import org.bukkit.World;
  * initialized yet when an object of this class is created, only when the
  * Location is first accessed.
  */
+@Getter
 public class LazyLocation
 {
 	private Location location = null;
@@ -73,35 +76,5 @@ public class LazyLocation
 
 		// store the Location for future calls, and pass it on
 		location = new Location(world, x, y, z, yaw, pitch);
-	}
-
-	public final String getWorldName()
-	{
-		return worldName;
-	}
-
-	public final double getX()
-	{
-		return x;
-	}
-
-	public final double getY()
-	{
-		return y;
-	}
-
-	public final double getZ()
-	{
-		return z;
-	}
-
-	public final double getPitch()
-	{
-		return pitch;
-	}
-
-	public final double getYaw()
-	{
-		return yaw;
 	}
 }

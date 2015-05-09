@@ -1,6 +1,7 @@
 package com.massivecraft.factions.util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 
@@ -8,11 +9,17 @@ public class AsciiCompass
 {
 	public enum Point
 	{
-		N('N'), NE('/'), E('E'), SE('\\'), S('S'), SW('/'), W('W'), NW('\\');
+		N('N'),
+		NE('/'),
+		E('E'),
+		SE('\\'),
+		S('S'),
+		SW('/'),
+		W('W'),
+		NW('\\');
 
 		public final char asciiChar;
-
-		private Point(final char asciiChar)
+		private Point(char asciiChar)
 		{
 			this.asciiChar = asciiChar;
 		}
@@ -20,12 +27,12 @@ public class AsciiCompass
 		@Override
 		public String toString()
 		{
-			return String.valueOf(this.asciiChar);
+			return String.valueOf(asciiChar);
 		}
 
 		public String toString(boolean isActive, ChatColor colorActive, String colorDefault)
 		{
-			return (isActive ? colorActive : colorDefault) + String.valueOf(this.asciiChar);
+			return (isActive ? colorActive : colorDefault) + String.valueOf(asciiChar);
 		}
 	}
 
@@ -57,9 +64,9 @@ public class AsciiCompass
 			return null;
 	}
 
-	public static ArrayList<String> getAsciiCompass(Point point, ChatColor colorActive, String colorDefault)
+	public static List<String> getAsciiCompass(Point point, ChatColor colorActive, String colorDefault)
 	{
-		ArrayList<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<String>();
 		String row;
 
 		row = "";
@@ -83,7 +90,7 @@ public class AsciiCompass
 		return ret;
 	}
 
-	public static ArrayList<String> getAsciiCompass(double inDegrees, ChatColor colorActive, String colorDefault)
+	public static List<String> getAsciiCompass(double inDegrees, ChatColor colorActive, String colorDefault)
 	{
 		return getAsciiCompass(getCompassPointForDirection(inDegrees), colorActive, colorDefault);
 	}

@@ -8,12 +8,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.Getter;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public class TextUtil
 {
-	public Map<String, String> tags;
+	@Getter
+	private final Map<String, String> tags;
 
 	public TextUtil()
 	{
@@ -26,12 +29,12 @@ public class TextUtil
 
 	public String parse(String str, Object... args)
 	{
-		return String.format(this.parse(str), args);
+		return String.format(parse(str), args);
 	}
 
 	public String parse(String str)
 	{
-		return this.parseTags(parseColor(str));
+		return parseTags(parseColor(str));
 	}
 
 	// -------------------------------------------- //
@@ -40,7 +43,7 @@ public class TextUtil
 
 	public String parseTags(String str)
 	{
-		return replaceTags(str, this.tags);
+		return replaceTags(str, tags);
 	}
 
 	public static final transient Pattern patternTag = Pattern.compile("<([a-zA-Z0-9_]*)>");
@@ -62,6 +65,7 @@ public class TextUtil
 				matcher.appendReplacement(ret, repl);
 			}
 		}
+
 		matcher.appendTail(ret);
 		return ret.toString();
 	}
@@ -119,11 +123,11 @@ public class TextUtil
 		for (int i = 0; i < list.size(); i++)
 		{
 			if (i != 0)
-			{
 				ret.append(glue);
-			}
+
 			ret.append(list.get(i));
 		}
+
 		return ret.toString();
 	}
 
@@ -148,8 +152,9 @@ public class TextUtil
 	// Paging and chrome-tools like titleize
 	// -------------------------------------------- //
 
-	private final static String titleizeLine = repeat("_", 52);
-	private final static int titleizeBalance = - 1;
+	private static final int lineSize = 52;
+	private static final int titleizeBalance = - 1;
+	private static final String titleizeLine = repeat("_", lineSize);
 
 	public String titleize(String str)
 	{
@@ -165,23 +170,23 @@ public class TextUtil
 			return parseTags("<a>") + center;
 	}
 
-	public ArrayList<String> getPage(List<String> lines, int pageHumanBased, String title)
+	public List<String> getPage(List<String> lines, int pageHumanBased, String title)
 	{
-		ArrayList<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<String>();
 		int pageZeroBased = pageHumanBased - 1;
 		int pageheight = 9;
 		int pagecount = (lines.size() / pageheight) + 1;
 
-		ret.add(this.titleize(title + " " + pageHumanBased + "/" + pagecount));
+		ret.add(titleize(title + " " + pageHumanBased + "/" + pagecount));
 
 		if (pagecount == 0)
 		{
-			ret.add(this.parseTags("<i>Sorry. No Pages available."));
+			ret.add(parseTags("<i>Sorry. No Pages available."));
 			return ret;
 		}
 		else if (pageZeroBased < 0 || pageHumanBased > pagecount)
 		{
-			ret.add(this.parseTags("<i>Invalid page. Must be between 1 and " + pagecount));
+			ret.add(parseTags("<i>Invalid page. Must be between 1 and " + pagecount));
 			return ret;
 		}
 
@@ -274,12 +279,6 @@ public class TextUtil
 	// String comparison
 	// -------------------------------------------- //
 
-	/*
-	 * private static int commonStartLength(String a, String b) { int len =
-	 * a.length() < b.length() ? a.length() : b.length(); int i; for (i = 0; i <
-	 * len; i++) { if (a.charAt(i) != b.charAt(i)) break; } return i; }
-	 */
-
 	public static String getBestStartWithCI(Collection<String> candidates, String start)
 	{
 		String ret = null;
@@ -291,21 +290,22 @@ public class TextUtil
 		{
 			if (candidate.length() < minlength)
 				continue;
+
 			if (! candidate.toLowerCase().startsWith(start))
 				continue;
 
 			// The closer to zero the better
 			int lendiff = candidate.length() - minlength;
 			if (lendiff == 0)
-			{
 				return candidate;
-			}
+
 			if (lendiff < best || best == 0)
 			{
 				best = lendiff;
 				ret = candidate;
 			}
 		}
+
 		return ret;
 	}
 }

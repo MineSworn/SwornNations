@@ -17,6 +17,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.swornnations.exception.EnableException;
@@ -46,17 +48,8 @@ public abstract class EntityCollection<E extends Entity>
 
 	// If the entities are creative they will create a new instance if a non
 	// existent id was requested
+	@Getter @Setter
 	private boolean creative;
-
-	public boolean isCreative()
-	{
-		return creative;
-	}
-
-	public void setCreative(boolean creative)
-	{
-		this.creative = creative;
-	}
 
 	// This is the auto increment for the primary key "id"
 	private int nextId;
@@ -67,29 +60,11 @@ public abstract class EntityCollection<E extends Entity>
 	public abstract Type getMapType(); // This is special stuff for GSON.
 
 	// Info on how to persist
+	@Getter @Setter
 	private Gson gson;
 
-	public Gson getGson()
-	{
-		return gson;
-	}
-
-	public void setGson(Gson gson)
-	{
-		this.gson = gson;
-	}
-
+	@Getter @Setter
 	private File file;
-
-	public File getFile()
-	{
-		return file;
-	}
-
-	public void setFile(File file)
-	{
-		this.file = file;
-	}
 
 	// -------------------------------------------- //
 	// CONSTRUCTORS
@@ -124,13 +99,14 @@ public abstract class EntityCollection<E extends Entity>
 
 	public Map<String, E> getMap()
 	{
-		return this.id2entity;
+		return id2entity;
 	}
 
 	public E get(String id)
 	{
-		if (this.creative)
-			return this.getCreative(id);
+		if (creative)
+			return getCreative(id);
+
 		return id2entity.get(id);
 	}
 
@@ -139,22 +115,25 @@ public abstract class EntityCollection<E extends Entity>
 		E e = id2entity.get(id);
 		if (e != null)
 			return e;
-		return this.create(id);
+
+		return create(id);
 	}
 
 	public boolean exists(String id)
 	{
 		if (id == null)
 			return false;
+
 		return id2entity.get(id) != null;
 	}
 
 	public E getBestIdMatch(String pattern)
 	{
-		String id = TextUtil.getBestStartWithCI(this.id2entity.keySet(), pattern);
+		String id = TextUtil.getBestStartWithCI(id2entity.keySet(), pattern);
 		if (id == null)
 			return null;
-		return this.id2entity.get(id);
+
+		return id2entity.get(id);
 	}
 
 	// -------------------------------------------- //
@@ -163,28 +142,30 @@ public abstract class EntityCollection<E extends Entity>
 
 	public synchronized E create()
 	{
-		return this.create(this.getNextId());
+		return create(getNextId());
 	}
 
 	public synchronized E create(String id)
 	{
-		if (! this.isIdFree(id))
+		if (! isIdFree(id))
 			return null;
 
 		E e = null;
+
 		try
 		{
-			e = this.entityClass.newInstance();
+			e = entityClass.newInstance();
 		}
-		catch (Exception ignored)
+		catch (Throwable ex)
 		{
-			ignored.printStackTrace();
+			SwornNations.get().log(Level.WARNING, Util.getUsefulStack(ex, "creating new " + entityClass));
+			return null;
 		}
 
 		e.setId(id);
-		this.entities.add(e);
-		this.id2entity.put(e.getId(), e);
-		this.updateNextIdForId(id);
+		entities.add(e);
+		id2entity.put(e.getId(), e);
+		updateNextIdForId(id);
 		return e;
 	}
 
@@ -196,35 +177,37 @@ public abstract class EntityCollection<E extends Entity>
 	{
 		if (entity.getId() != null)
 			return;
-		entity.setId(this.getNextId());
-		this.entities.add(entity);
-		this.id2entity.put(entity.getId(), entity);
+
+		entity.setId(getNextId());
+		entities.add(entity);
+		id2entity.put(entity.getId(), entity);
 	}
 
 	public void detach(E entity)
 	{
 		entity.preDetach();
-		this.entities.remove(entity);
-		this.id2entity.remove(entity.getId());
+		entities.remove(entity);
+		id2entity.remove(entity.getId());
 		entity.postDetach();
 	}
 
 	public void detach(String id)
 	{
-		E entity = this.id2entity.get(id);
+		E entity = id2entity.get(id);
 		if (entity == null)
 			return;
-		this.detach(entity);
+
+		detach(entity);
 	}
 
 	public boolean attached(E entity)
 	{
-		return this.entities.contains(entity);
+		return entities.contains(entity);
 	}
 
 	public boolean detached(E entity)
 	{
-		return ! this.attached(entity);
+		return ! attached(entity);
 	}
 
 	// -------------------------------------------- //
@@ -234,15 +217,13 @@ public abstract class EntityCollection<E extends Entity>
 	public boolean saveToDisc()
 	{
 		Map<String, E> entitiesThatShouldBeSaved = new HashMap<String, E>();
-		for (E entity : this.entities)
+		for (E entity : entities)
 		{
 			if (entity.shouldBeSaved())
-			{
 				entitiesThatShouldBeSaved.put(entity.getId(), entity);
-			}
 		}
 
-		return this.saveCore(entitiesThatShouldBeSaved);
+		return saveCore(entitiesThatShouldBeSaved);
 	}
 
 	private boolean saveCore(Map<String, E> entities)
@@ -257,14 +238,15 @@ public abstract class EntityCollection<E extends Entity>
 
 	public boolean loadFromDisc() throws EnableException
 	{
-		Map<String, E> id2entity = this.loadCore();
+		Map<String, E> id2entity = loadCore();
 		if (id2entity == null)
 			return false;
-		this.entities.clear();
-		this.entities.addAll(id2entity.values());
-		this.id2entity.clear();
-		this.id2entity.putAll(id2entity);
-		this.fillIds();
+
+		entities.clear();
+		entities.addAll(id2entity.values());
+		id2entity.clear();
+		id2entity.putAll(id2entity);
+		fillIds();
 		return true;
 	}
 
@@ -585,11 +567,12 @@ public abstract class EntityCollection<E extends Entity>
 
 	public String getNextId()
 	{
-		while (! isIdFree(this.nextId))
+		while (id2entity.containsKey(nextId))
 		{
-			this.nextId += 1;
+			nextId++;
 		}
-		return Integer.toString(this.nextId);
+
+		return Integer.toString(nextId);
 	}
 
 	public boolean isIdFree(String id)
@@ -605,21 +588,20 @@ public abstract class EntityCollection<E extends Entity>
 	protected synchronized void fillIds()
 	{
 		this.nextId = 1;
-		for (Entry<String, E> entry : this.id2entity.entrySet())
+
+		for (Entry<String, E> entry : id2entity.entrySet())
 		{
 			String id = entry.getKey();
 			E entity = entry.getValue();
 			entity.id = id;
-			this.updateNextIdForId(id);
+			updateNextIdForId(id);
 		}
 	}
 
 	protected synchronized void updateNextIdForId(int id)
 	{
-		if (this.nextId < id)
-		{
-			this.nextId = id + 1;
-		}
+		if (nextId < id)
+			nextId = id + 1;
 	}
 
 	protected void updateNextIdForId(String id)
@@ -627,7 +609,7 @@ public abstract class EntityCollection<E extends Entity>
 		try
 		{
 			int idAsInt = Integer.parseInt(id);
-			this.updateNextIdForId(idAsInt);
+			updateNextIdForId(idAsInt);
 		} catch (Throwable ex) { }
 	}
 }

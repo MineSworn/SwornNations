@@ -1,6 +1,6 @@
 package com.massivecraft.factions.cmd;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.dmulloy2.swornnations.SwornNations;
 
@@ -64,7 +64,7 @@ public class CmdCreate extends FCommand
 			}
 		}
 
-		ArrayList<String> tagValidationErrors = Factions.validateTag(tag);
+		List<String> tagValidationErrors = Factions.validateTag(tag);
 		if (tagValidationErrors.size() > 0)
 		{
 			sendMessage(tagValidationErrors);

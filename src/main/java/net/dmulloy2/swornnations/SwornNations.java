@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.dmulloy2.SwornPlugin;
 import net.dmulloy2.swornnations.adapters.MyMaterialTypeAdapter;
 import net.dmulloy2.swornnations.adapters.NPermissionManagerTypeAdapter;
@@ -88,98 +90,56 @@ import com.massivecraft.factions.util.TextUtil;
 public class SwornNations extends SwornPlugin
 {
 	private static SwornNations i;
+	public static SwornNations get() { return i; }
 
-	public static SwornNations get()
-	{
-		return i;
-	}
+	// ---- Listeners
+	private final FactionsPlayerListener playerListener;
+	private final FactionsChatListener chatListener;
+	private final FactionsEntityListener entityListener;
+	private final FactionsExploitListener exploitListener;
+	private final FactionsBlockListener blockListener;
 
-	// Listeners
-	public final FactionsPlayerListener playerListener;
-	public final FactionsChatListener chatListener;
-	public final FactionsEntityListener entityListener;
-	public final FactionsExploitListener exploitListener;
-	public final FactionsBlockListener blockListener;
+	// Seeeecret Listeners
+	private SecretPlayerListener secretPlayerListener;
+	private SecretServerListener secretServerListener;
 
-	// Persistance related
+	// ---- Persistence
+
+	@Getter @Setter
 	private boolean locked = false;
 
+	@Getter @Setter
 	private String lockReason = "locked by Admin";
 
-	public boolean getLocked()
-	{
-		return this.locked;
-	}
+	private Gson gson;
+	public Gson getGson() { return gson == null ? gson = getGsonBuilder().create() : gson; }
 
-	public void setLocked(boolean val)
-	{
-		this.locked = val;
-		this.setAutoSave(val);
-	}
+	@Getter @Setter
+	private boolean autoSave = true;
 
-	public String getLockReason()
-	{
-		return lockReason;
-	}
+	// ---- Utils
 
-	public void setLockReason(String val)
-	{
-		this.lockReason = val;
-	}
-
-	// MPlugin start
-
-	// Some utils
 	public Persist persist;
 	public TextUtil txt;
 	public PermUtil perm;
 
-	// Persist related
-	public Gson gson;
-	private Integer saveTask = null;
-	private boolean autoSave = true;
-	protected boolean loadSuccessful = false;
-	protected boolean loadFailed = false;
-
-	public Gson getGson()
-	{
-		if (gson == null)
-			gson = getGsonBuilder().create();
-
-		return gson;
-	}
-
-	public boolean getAutoSave()
-	{
-		return this.autoSave;
-	}
-
-	public void setAutoSave(boolean val)
-	{
-		this.autoSave = val;
-	}
-
-	public String refCommand = "";
-
-	// Seeeecret Listeners
-	private SecretPlayerListener mPluginSecretPlayerListener;
-	private SecretServerListener mPluginSecretServerListener;
-
-	// Our stored base commands
-	private List<MCommand<?>> baseCommands = new ArrayList<MCommand<?>>();
-
-	public List<MCommand<?>> getBaseCommands()
-	{
-		return this.baseCommands;
-	}
-
-	// MPlugin end
-
-	private Integer autoLeaveTask;
-
 	// Commands
 	public FCmdRoot cmdBase;
 	public CmdAutoHelp cmdAutoHelp;
+
+	@Getter
+	private String refCommand = "";
+
+	@Getter
+	private List<MCommand<?>> baseCommands = new ArrayList<MCommand<?>>();
+
+	// Tasks
+	private Integer saveTask = null;
+	private Integer autoLeaveTask = null;
+
+	// Loading
+	protected boolean loadSuccessful = false;
+	protected boolean loadFailed = false;
 
 	public SwornNations()
 	{
@@ -203,7 +163,6 @@ public class SwornNations extends SwornPlugin
 				return;
 			}
 
-			// MPlugin start
 			long start = System.currentTimeMillis();
 			this.loadSuccessful = false;
 
@@ -218,36 +177,29 @@ public class SwornNations extends SwornPlugin
 			this.txt = new TextUtil();
 			initTXT();
 
-			// attempt to get first command defined in plugin.yml as reference
-			// command, if any commands are defined in there
-			// reference command will be used to prevent "unknown command"
-			// console
-			// messages
+			// Attempt to get first command defined in plugin.yml as reference command,
+			// if any commands are defined in there reference command will be used to prevent
+			// "unknown command" console messages
+
 			try
 			{
-				Map<String, Map<String, Object>> refCmd = this.getDescription().getCommands();
+				Map<String, Map<String, Object>> refCmd = getDescription().getCommands();
 				if (refCmd != null && ! refCmd.isEmpty())
 					this.refCommand = (String) (refCmd.keySet().toArray()[0]);
-			}
-			catch (ClassCastException ex)
-			{
-			}
+			} catch (Throwable ex) { }
 
 			// Create and register listeners
-			this.mPluginSecretPlayerListener = new SecretPlayerListener();
-			this.mPluginSecretServerListener = new SecretServerListener();
-			getServer().getPluginManager().registerEvents(this.mPluginSecretPlayerListener, this);
-			getServer().getPluginManager().registerEvents(this.mPluginSecretServerListener, this);
+			this.secretPlayerListener = new SecretPlayerListener(this);
+			this.secretServerListener = new SecretServerListener(this);
+			getServer().getPluginManager().registerEvents(secretPlayerListener, this);
+			getServer().getPluginManager().registerEvents(secretServerListener, this);
 
 			// Register recurring tasks
 			long saveTicks = 20 * 60 * 30; // Approximately every 30 min
 			if (saveTask == null)
-			{
 				saveTask = new SaveTask(this).runTaskTimer(this, saveTicks, saveTicks).getTaskId();
-			}
-			// MPlugin end
 
-			// Load Conf from disk
+			// Load everything
 			Conf.load();
 			FPlayers.i.loadFromDisc();
 			Factions.i.loadFromDisc();
@@ -332,7 +284,7 @@ public class SwornNations extends SwornPlugin
 			// command interface, provide it
 			getCommand(refCommand).setExecutor(this);
 
-			log("%s has been enabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
+			log("%s has been enabled. Took %s ms.", getDescription().getFullName(), System.currentTimeMillis() - start);
 			this.loadSuccessful = true;
 		}
 		catch (final Throwable ex)
@@ -342,7 +294,7 @@ public class SwornNations extends SwornPlugin
 			ex.printStackTrace();
 
 			log("Backing up files...");
-			this.backupFiles();
+			backupFiles();
 
 			log("Disabling...");
 			getServer().getPluginManager().disablePlugin(this);
@@ -446,7 +398,7 @@ public class SwornNations extends SwornPlugin
 		long start = System.currentTimeMillis();
 
 		// Only save data if plugin actually completely loaded successfully
-		if (this.loadSuccessful)
+		if (loadSuccessful)
 		{
 			Board.save();
 			Conf.save();
@@ -461,7 +413,7 @@ public class SwornNations extends SwornPlugin
 		if (saveTask != null)
 		{
 			getServer().getScheduler().cancelTask(saveTask);
-			saveTask = null;
+			this.saveTask = null;
 		}
 
 		// Cancel any other tasks
@@ -471,10 +423,9 @@ public class SwornNations extends SwornPlugin
 		if (loadSuccessful)
 			EM.saveAllToDisc();
 
-		log("%s has been disabled (%s ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
+		log("%s has been disabled. Took %s ms.", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
-	// MPlugin Start
 	// -------------------------------------------- //
 	// LANG AND TAGS
 	// -------------------------------------------- //
@@ -498,30 +449,21 @@ public class SwornNations extends SwornPlugin
 
 	public void initTXT()
 	{
-		this.addRawTags();
+		addRawTags();
 
-		Type type = new TypeToken<Map<String, String>>()
-		{
-		}.getType();
+		Type type = new TypeToken<Map<String, String>>() { }.getType();
 
-		Map<String, String> tagsFromFile = this.persist.load(type, "tags");
+		Map<String, String> tagsFromFile = persist.load(type, "tags");
 		if (tagsFromFile != null)
-			this.rawTags.putAll(tagsFromFile);
-		this.persist.save(this.rawTags, "tags");
+			rawTags.putAll(tagsFromFile);
 
-		for (Entry<String, String> rawTag : this.rawTags.entrySet())
+		persist.save(rawTags, "tags");
+
+		for (Entry<String, String> rawTag : rawTags.entrySet())
 		{
-			this.txt.tags.put(rawTag.getKey(), TextUtil.parseColor(rawTag.getValue()));
+			txt.getTags().put(rawTag.getKey(), TextUtil.parseColor(rawTag.getValue()));
 		}
 	}
-
-	public void suicide()
-	{
-		log("Now I suicide!");
-		this.getServer().getPluginManager().disablePlugin(this);
-	}
-
-	// MPlugin end
 
 	public void startAutoLeaveTask(boolean restartIfRunning)
 	{
@@ -549,13 +491,13 @@ public class SwornNations extends SwornPlugin
 		}
 	}
 
-	/*public void cleanOwnerLists()
+	/* public void cleanOwnerLists()
 	{
 		for (Faction faction : Factions.i.get())
 		{
 			faction.cleanOwnerList();
 		}
-	}*/
+	} */
 
 	public void postAutoSave()
 	{
@@ -580,7 +522,7 @@ public class SwornNations extends SwornPlugin
 			commandString = commandString.substring(1);
 		}
 
-		for (MCommand<?> command : this.getBaseCommands())
+		for (MCommand<?> command : getBaseCommands())
 		{
 			if (noSlash && ! command.allowNoSlashAccess)
 				continue;
@@ -608,7 +550,7 @@ public class SwornNations extends SwornPlugin
 
 	public boolean handleCommand(CommandSender sender, String commandString)
 	{
-		return this.handleCommand(sender, commandString, false);
+		return handleCommand(sender, commandString, false);
 	}
 
 	@Override
@@ -787,8 +729,8 @@ public class SwornNations extends SwornPlugin
 	// check if player is allowed to build/destroy in a particular location
 	public boolean isPlayerAllowedToBuildHere(Player player, Location location)
 	{
-		return FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "", true, location.getWorld().getBlockAt(location)
-				.getType());
+		return FactionsBlockListener.playerCanBuildDestroyBlock(player, location, "", true,
+				location.getWorld().getBlockAt(location).getType());
 	}
 
 	// check if player is allowed to interact with the specified block
@@ -815,12 +757,12 @@ public class SwornNations extends SwornPlugin
 
 	public void log(String str, Object... args)
 	{
-		log(Level.INFO, this.txt.parse(str, args));
+		log(Level.INFO, txt.parse(str, args));
 	}
 
 	public void log(Level level, String str, Object... args)
 	{
-		log(level, this.txt.parse(str, args));
+		log(level, txt.parse(str, args));
 	}
 
 	public void log(Level level, String msg)
