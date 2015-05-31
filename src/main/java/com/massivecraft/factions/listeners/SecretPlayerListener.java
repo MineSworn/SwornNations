@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import com.massivecraft.factions.persist.EM;
-import com.massivecraft.factions.persist.Entity;
 import com.massivecraft.factions.persist.EntityCollection;
 import com.massivecraft.factions.persist.PlayerEntityCollection;
 
@@ -43,12 +42,10 @@ public class SecretPlayerListener implements Listener
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
-		for (EntityCollection<? extends Entity> ecoll : EM.class2Entities.values())
+		for (EntityCollection<?> ecoll : EM.class2Entities.values())
 		{
 			if (ecoll instanceof PlayerEntityCollection)
-			{
-				ecoll.get(event.getPlayer().getName());
-			}
+				ecoll.get(event.getPlayer().getUniqueId().toString());
 		}
 	}
 }
