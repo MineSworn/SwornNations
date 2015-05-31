@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import lombok.Data;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.util.MiscUtil;
 
-@Data
 public class FLocation
 {
 	private String worldName = "world";
@@ -62,9 +59,44 @@ public class FLocation
 	// Getters and Setters
 	// ----------------------------------------------//
 
+	public String getWorldName()
+	{
+		return worldName;
+	}
+
 	public World getWorld()
 	{
 		return Bukkit.getWorld(worldName);
+	}
+
+	public void setWorldName(String worldName)
+	{
+		this.worldName = worldName;
+	}
+
+	public long getX()
+	{
+		return x;
+	}
+
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+
+	public long getZ()
+	{
+		return z;
+	}
+
+	public void setZ(int z)
+	{
+		this.z = z;
+	}
+
+	public long getY()
+	{
+		return y;
 	}
 
 	public String getCoordString()
@@ -75,7 +107,7 @@ public class FLocation
 	@Override
 	public String toString()
 	{
-		return "[" + getWorldName() + "," + getCoordString() + "]";
+		return "[" + this.getWorldName() + "," + this.getCoordString() + "]";
 	}
 
 	// ----------------------------------------------//

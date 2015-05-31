@@ -2,6 +2,7 @@ package com.massivecraft.factions.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.dmulloy2.swornnations.SwornNations;
 
@@ -13,31 +14,47 @@ import com.massivecraft.factions.types.Lang;
 
 public class PermUtil
 {
-	private final Map<String, String> descriptions;
-	private final SwornNations plugin;
+	public Map<String, String> permissionDescriptions = new HashMap<String, String>();
 
-	public PermUtil(SwornNations plugin)
+	protected SwornNations p;
+
+	public PermUtil(SwornNations p)
 	{
-		this.descriptions = new HashMap<>();
-		for (Permission perm : plugin.getDescription().getPermissions())
-		{
-			descriptions.put(perm.getName(), perm.getDescription());
-		}
-
-		this.plugin = plugin;
+		this.p = p;
+		this.setup();
 	}
 
 	public String getForbiddenMessage(String perm)
 	{
-		return plugin.txt.parse(Lang.permForbidden, getPermissionDescription(perm));
+		return p.txt.parse(Lang.permForbidden, getPermissionDescription(perm));
+	}
+
+	/**
+	 * This method hooks into all permission plugins we are supporting
+	 */
+	public final void setup()
+	{
+		for (Permission permission : p.getDescription().getPermissions())
+		{
+			// p.log("\""+permission.getName()+"\" = \""+permission.getDescription()+"\"");
+			this.permissionDescriptions.put(permission.getName(), permission.getDescription());
+		}
 	}
 
 	public String getPermissionDescription(String perm)
 	{
-		String desc = descriptions.get(perm);
-		return desc != null ? desc : Lang.permDoThat;
+		String desc = permissionDescriptions.get(perm);
+		if (desc == null)
+		{
+			return Lang.permDoThat;
+		}
+		return desc;
 	}
 
+	/**
+	 * This method tests if me has a certain permission and returns true if me
+	 * has. Otherwise false
+	 */
 	public boolean has(CommandSender me, String perm)
 	{
 		if (me == null)
@@ -53,18 +70,31 @@ public class PermUtil
 
 	public boolean has(CommandSender me, String perm, boolean informSenderIfNot)
 	{
-		if (me == null)
-			return false;
-
 		if (has(me, perm))
 		{
 			return true;
 		}
-		else if (informSenderIfNot)
+		else if (informSenderIfNot && me != null)
 		{
-			me.sendMessage(getForbiddenMessage(perm));
+			me.sendMessage(this.getForbiddenMessage(perm));
 		}
-
 		return false;
 	}
+
+	public <T> T pickFirstVal(CommandSender me, Map<String, T> perm2val)
+	{
+		if (perm2val == null)
+			return null;
+		T ret = null;
+
+		for (Entry<String, T> entry : perm2val.entrySet())
+		{
+			ret = entry.getValue();
+			if (has(me, entry.getKey()))
+				break;
+		}
+
+		return ret;
+	}
+
 }

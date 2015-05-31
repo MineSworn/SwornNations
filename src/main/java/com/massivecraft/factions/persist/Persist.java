@@ -4,16 +4,19 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.logging.Level;
 
-import lombok.AllArgsConstructor;
 import net.dmulloy2.swornnations.SwornNations;
 import net.dmulloy2.util.Util;
 
 import com.massivecraft.factions.util.DiscUtil;
 
-@AllArgsConstructor
 public class Persist
 {
-	private final SwornNations plugin;
+	private SwornNations p;
+
+	public Persist(SwornNations p)
+	{
+		this.p = p;
+	}
 
 	// ------------------------------------------------------------ //
 	// GET NAME - What should we call this type of object?
@@ -40,7 +43,7 @@ public class Persist
 
 	public File getFile(String name)
 	{
-		return new File(plugin.getDataFolder(), name + ".json");
+		return new File(p.getDataFolder(), name + ".json");
 	}
 
 	public File getFile(Class<?> clazz)
@@ -74,7 +77,7 @@ public class Persist
 	{
 		if (! file.exists())
 		{
-			plugin.log("Creating default: " + file);
+			p.log("Creating default: " + file);
 			this.save(def, file);
 			return def;
 		}
@@ -83,14 +86,14 @@ public class Persist
 
 		if (loaded == null)
 		{
-			plugin.log(Level.WARNING, "Using default as I failed to load: " + file);
+			p.log(Level.WARNING, "Using default as I failed to load: " + file);
 
 			// backup bad file, so user can attempt to recover their changes
 			// from it
 			File backup = new File(file.getPath() + "_bad");
 			if (backup.exists())
 				backup.delete();
-			plugin.log(Level.WARNING, "Backing up copy of bad file to: " + backup);
+			p.log(Level.WARNING, "Backing up copy of bad file to: " + backup);
 			file.renameTo(backup);
 
 			return def;
@@ -113,7 +116,7 @@ public class Persist
 
 	public boolean save(Object instance, File file)
 	{
-		return DiscUtil.writeCatch(file, plugin.getGson().toJson(instance));
+		return DiscUtil.writeCatch(file, p.gson.toJson(instance));
 	}
 
 	// LOAD BY CLASS
@@ -136,12 +139,12 @@ public class Persist
 
 		try
 		{
-			T instance = plugin.getGson().fromJson(content, clazz);
+			T instance = p.gson.fromJson(content, clazz);
 			return instance;
 		}
 		catch (Throwable ex)
 		{
-			plugin.log(Level.WARNING, Util.getUsefulStack(ex, "loading file " + file.getName()));
+			p.log(Level.WARNING, Util.getUsefulStack(ex, "loading file " + file.getName()));
 			return null;
 		}
 	}
@@ -162,7 +165,7 @@ public class Persist
 			return null;
 		}
 
-		return (T) plugin.getGson().fromJson(content, typeOfT);
+		return (T) p.gson.fromJson(content, typeOfT);
 	}
 
 }

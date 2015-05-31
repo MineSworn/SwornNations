@@ -10,7 +10,7 @@ import org.bukkit.World;
 
 import com.massivecraft.factions.FLocation;
 
-/**
+/*
  * reference diagram, task should move in this pattern out from chunk 0 in the
  * center. 8 [>][>][>][>][>] etc. [^][6][>][>][>][>][>][6]
  * [^][^][4][>][>][>][4][v] [^][^][^][2][>][2][v][v] [^][^][^][^][0][v][v][v]
@@ -57,7 +57,7 @@ public abstract class SpiralTask implements Runnable
 		this.setTaskID(Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(SwornNations.get(), this, 2, 2));
 	}
 
-	/**
+	/*
 	 * This is where the necessary work is done; you'll need to override this
 	 * method with whatever you want done at each chunk in the spiral pattern.
 	 * Return false if the entire task needs to be aborted, otherwise return
@@ -65,7 +65,7 @@ public abstract class SpiralTask implements Runnable
 	 */
 	public abstract boolean work();
 
-	/**
+	/*
 	 * Returns an FLocation pointing at the current chunk X and Z values.
 	 */
 	public final FLocation currentFLocation()
@@ -73,7 +73,7 @@ public abstract class SpiralTask implements Runnable
 		return new FLocation(world.getName(), x, z);
 	}
 
-	/**
+	/*
 	 * Returns a Location pointing at the current chunk X and Z values. note
 	 * that the Location is at the corner of the chunk, not the center.
 	 */
@@ -82,17 +82,14 @@ public abstract class SpiralTask implements Runnable
 		return new Location(world, FLocation.chunkToBlock(x), 65.0, FLocation.chunkToBlock(z));
 	}
 
-	/**
-	 * Returns current chunk X value.
+	/*
+	 * Returns current chunk X and Z values.
 	 */
 	public final int getX()
 	{
 		return x;
 	}
 
-	/**
-	 * Returns current chunk Z value.
-	 */
 	public final int getZ()
 	{
 		return z;
@@ -148,10 +145,8 @@ public abstract class SpiralTask implements Runnable
 		readyToGo = true;
 	}
 
-	/**
-	 * Step through chunks in spiral pattern from center; returns false if we're
-	 * done, otherwise returns true
-	 */
+	// step through chunks in spiral pattern from center; returns false if we're
+	// done, otherwise returns true
 	public final boolean moveToNext()
 	{
 		if (! this.valid())
@@ -199,6 +194,7 @@ public abstract class SpiralTask implements Runnable
 	// for successful completion
 	public void finish()
 	{
+		// SwornNations.get().log("SpiralTask successfully completed!");
 		this.stop();
 	}
 

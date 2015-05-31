@@ -2,7 +2,10 @@ package com.massivecraft.factions.persist;
 
 public abstract class Entity
 {
-	public Entity() { }
+	public Entity()
+	{
+
+	}
 
 	protected transient String id = null;
 

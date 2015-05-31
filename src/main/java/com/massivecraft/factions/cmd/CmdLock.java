@@ -24,9 +24,9 @@ public class CmdLock extends FCommand
 	@Override
 	public void perform()
 	{
-		p.setLocked(argAsBool(0, ! p.isLocked()));
+		p.setLocked(argAsBool(0, ! p.getLocked()));
 
-		if (p.isLocked())
+		if (p.getLocked())
 		{
 			msg("<i>Factions is now locked");
 		}

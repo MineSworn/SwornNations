@@ -4,15 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import net.dmulloy2.swornnations.SwornNations;
-
-import com.google.common.base.Charsets;
 
 public class DiscUtil
 {
@@ -20,7 +18,7 @@ public class DiscUtil
 	// CONSTANTS
 	// -------------------------------------------- //
 
-	private final static Charset UTF8 = Charsets.UTF_8;
+	private final static String UTF8 = "UTF-8";
 
 	// -------------------------------------------- //
 	// BYTE
@@ -114,16 +112,14 @@ public class DiscUtil
 	{
 		if (! path.exists())
 			throw new FileNotFoundException(path.getAbsolutePath());
-
 		boolean ret = true;
 		if (path.isDirectory())
 		{
 			for (File f : path.listFiles())
 			{
-				ret &= deleteRecursive(f);
+				ret = ret && deleteRecursive(f);
 			}
 		}
-
 		return ret && path.delete();
 	}
 
@@ -133,12 +129,28 @@ public class DiscUtil
 
 	public static byte[] utf8(String string)
 	{
-		return string.getBytes(UTF8);
+		try
+		{
+			return string.getBytes(UTF8);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static String utf8(byte[] bytes)
 	{
-		return new String(bytes, UTF8);
+		try
+		{
+			return new String(bytes, UTF8);
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	// -------------------------------------------- //

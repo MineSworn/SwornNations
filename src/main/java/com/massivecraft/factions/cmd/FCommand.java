@@ -79,7 +79,7 @@ public abstract class FCommand extends MCommand<SwornNations>
 	@Override
 	public boolean isEnabled()
 	{
-		if (p.isLocked() && this.disableOnLock)
+		if (p.getLocked() && this.disableOnLock)
 		{
 			msg("<b>Factions is currently locked. Reason: %s", p.getLockReason());
 			return false;

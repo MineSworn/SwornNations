@@ -15,7 +15,7 @@ public class SaveTask extends BukkitRunnable
 	@Override
 	public void run()
 	{
-		if (! plugin.isAutoSave())
+		if (! plugin.getAutoSave())
 			return;
 
 		EM.saveAllToDisc();

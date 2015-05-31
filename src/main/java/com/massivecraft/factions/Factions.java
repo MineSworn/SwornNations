@@ -4,7 +4,6 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,7 +28,7 @@ public class Factions extends EntityCollection<Faction>
 	private Factions()
 	{
 		super(Faction.class, new CopyOnWriteArrayList<Faction>(), new ConcurrentHashMap<String, Faction>(),
-				new File(SwornNations.get().getDataFolder(), "factions.json"), SwornNations.get().getGson());
+				new File(SwornNations.get().getDataFolder(), "factions.json"), SwornNations.get().gson);
 		this.p = SwornNations.get();
 	}
 
@@ -46,17 +45,17 @@ public class Factions extends EntityCollection<Faction>
 			return false;
 
 		// Make sure the default neutral faction exists
-		if (! exists("0"))
+		if (! this.exists("0"))
 		{
-			Faction faction = create("0");
+			Faction faction = this.create("0");
 			faction.setTag(ChatColor.DARK_GREEN + "Wilderness");
 			faction.setDescription("");
 		}
 
 		// Make sure the safe zone faction exists
-		if (! exists("-1"))
+		if (! this.exists("-1"))
 		{
-			Faction faction = create("-1");
+			Faction faction = this.create("-1");
 			faction.setTag("SafeZone");
 			faction.setDescription("Free from PVP and monsters");
 		}
@@ -64,15 +63,15 @@ public class Factions extends EntityCollection<Faction>
 		{
 			// if SafeZone has old pre-1.6.0 name, rename it to remove
 			// troublesome " "
-			Faction faction = getSafeZone();
+			Faction faction = this.getSafeZone();
 			if (faction.getTag().contains(" "))
 				faction.setTag("SafeZone");
 		}
 
 		// Make sure the war zone faction exists
-		if (! exists("-2"))
+		if (! this.exists("-2"))
 		{
-			Faction faction = create("-2");
+			Faction faction = this.create("-2");
 			faction.setTag("WarZone");
 			faction.setDescription("Not the safest place to be");
 		}
@@ -80,7 +79,7 @@ public class Factions extends EntityCollection<Faction>
 		{
 			// if WarZone has old pre-1.6.0 name, rename it to remove
 			// troublesome " "
-			Faction faction = getWarZone();
+			Faction faction = this.getWarZone();
 			if (faction.getTag().contains(" "))
 				faction.setTag("WarZone");
 		}
@@ -105,8 +104,6 @@ public class Factions extends EntityCollection<Faction>
 		{
 			if (! DiscUtil.checkDiskSpace())
 			{
-				// TODO This becomes the bane of server owners' existances
-				// Surely there must be a better way to handle this
 				p.log(Level.WARNING, "Non existing factionId " + id + " requested! Issuing cleaning!");
 				Board.clean();
 				FPlayers.i.clean();
@@ -118,26 +115,26 @@ public class Factions extends EntityCollection<Faction>
 
 	public Faction getNone()
 	{
-		return get("0");
+		return this.get("0");
 	}
 
 	public Faction getSafeZone()
 	{
-		return get("-1");
+		return this.get("-1");
 	}
 
 	public Faction getWarZone()
 	{
-		return get("-2");
+		return this.get("-2");
 	}
 
 	// ----------------------------------------------//
 	// Faction tag
 	// ----------------------------------------------//
 
-	public static List<String> validateTag(String str)
+	public static ArrayList<String> validateTag(String str)
 	{
-		List<String> errors = new ArrayList<String>();
+		ArrayList<String> errors = new ArrayList<String>();
 
 		if (MiscUtil.getComparisonString(str).length() < Conf.factionTagLengthMin)
 		{
@@ -163,7 +160,7 @@ public class Factions extends EntityCollection<Faction>
 	public Faction getByTag(String str)
 	{
 		String compStr = MiscUtil.getComparisonString(str);
-		for (Faction faction : get())
+		for (Faction faction : this.get())
 		{
 			if (faction.getComparisonTag().equals(compStr))
 				return faction;
@@ -174,7 +171,7 @@ public class Factions extends EntityCollection<Faction>
 
 	public Faction getById(String str)
 	{
-		for (Faction faction : get())
+		for (Faction faction : this.get())
 		{
 			if (faction.getId().equalsIgnoreCase(str))
 				return faction;
@@ -201,6 +198,7 @@ public class Factions extends EntityCollection<Faction>
 
 	public boolean isTagTaken(String str)
 	{
-		return getByTag(str) != null;
+		return this.getByTag(str) != null;
 	}
+
 }
