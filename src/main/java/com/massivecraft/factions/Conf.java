@@ -87,6 +87,7 @@ public class Conf
 	public static boolean removePlayerDataWhenBanned = false;
 
 	public static boolean autoCleanupClaimsEnabled = true;
+	public static double autoCleanupClaimsRadius = 20.0;
 	public static double autoCleanupClaimsAfterXHours = 6.0;
 	public static double autoCleanupClaimsRunsEveryXMinutes = 15.0;
 

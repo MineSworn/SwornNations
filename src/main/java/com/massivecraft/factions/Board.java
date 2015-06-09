@@ -145,9 +145,17 @@ public class Board
 	// Cleanup faction claims which are not near home OR outpost
 	public static void autoCleanupClaimsRoutine()
 	{
+		double distance = Conf.autoCleanupClaimsRadius;
 		for (Entry<FLocation, Long> entry : flocationClaimTimes.entrySet())
 		{
 			Faction faction = getAbsoluteFactionAt(entry.getKey());
+			if (faction == null)
+			{
+				SwornNations.get().log("Removing claim at %s because the faction was null.", entry.getKey());
+				removeAt(entry.getKey());
+				return;
+			}
+			
 			if (faction.isNormal())
 			{
 				if ((entry.getValue() - System.currentTimeMillis()) < (long) (60 * 1000 * 60 * Conf.autoCleanupClaimsAfterXHours))
@@ -156,7 +164,7 @@ public class Board
 					{
 						FLocation home = new FLocation(faction.getHome());
 						FLocation outpost = new FLocation(faction.getOutpost());
-						if ((home.getDistanceTo(entry.getKey()) > 20.0) && outpost.getDistanceTo(entry.getKey()) > 20.0)
+						if ((home.getDistanceTo(entry.getKey()) > distance) && outpost.getDistanceTo(entry.getKey()) > distance)
 						{
 							removeAt(entry.getKey());
 						}
@@ -165,7 +173,7 @@ public class Board
 					if (faction.hasHome() && ! faction.hasOutpost())
 					{
 						FLocation home = new FLocation(faction.getHome());
-						if (home.getDistanceTo(entry.getKey()) > 20.0)
+						if (home.getDistanceTo(entry.getKey()) > distance)
 						{
 							removeAt(entry.getKey());
 						}
@@ -174,7 +182,7 @@ public class Board
 					if (! faction.hasHome() && faction.hasOutpost())
 					{
 						FLocation outpost = new FLocation(faction.getOutpost());
-						if (outpost.getDistanceTo(entry.getKey()) > 20.0)
+						if (outpost.getDistanceTo(entry.getKey()) > distance)
 						{
 							removeAt(entry.getKey());
 						}
