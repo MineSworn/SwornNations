@@ -13,6 +13,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.event.FactionCreateEvent;
+import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.types.Permission;
 
@@ -95,6 +96,9 @@ public class CmdCreate extends FCommand
 
 		// finish setting up the Faction
 		faction.setTag(tag);
+
+		// set their balance to 0
+		Econ.setBalance(faction.getAccountId(), 0);
 
 		// trigger the faction join event for the creator
 		FPlayerJoinEvent joinEvent = new FPlayerJoinEvent(fme, faction, FPlayerJoinEvent.PlayerJoinReason.CREATE);
