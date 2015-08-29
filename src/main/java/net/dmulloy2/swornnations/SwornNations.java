@@ -48,6 +48,7 @@ import com.massivecraft.factions.cmd.MCommand;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
+import com.massivecraft.factions.integration.ProtocolLibFeatures;
 import com.massivecraft.factions.integration.WorldGuard;
 import com.massivecraft.factions.listeners.FactionsBlockListener;
 import com.massivecraft.factions.listeners.FactionsChatListener;
@@ -295,18 +296,8 @@ public class SwornNations extends SwornPlugin
 			this.cmdAutoHelp = new CmdAutoHelp();
 			this.getBaseCommands().add(cmdBase);
 
-			try
-			{
-				EssentialsFeatures.setup();
-			} catch (Throwable ex) { }
-
-			Econ.setup();
-			LWCFeatures.setup();
-
-			if (Conf.worldGuardChecking)
-			{
-				WorldGuard.init(this);
-			}
+			// Setup integration
+			setupIntegration();
 
 			// start up task which runs the autoRemoveClaimsAfterTime routine
 			if (Conf.autoCleanupClaimsEnabled)
@@ -350,6 +341,37 @@ public class SwornNations extends SwornPlugin
 			// Crash enable
 			this.loadFailed = true;
 			getServer().getPluginManager().enablePlugin(this);
+		}
+	}
+
+	private void setupIntegration()
+	{
+		try
+		{
+			EssentialsFeatures.setup();
+		} catch (Throwable ex) { }
+
+		try
+		{
+			ProtocolLibFeatures.setup();
+		} catch (Throwable ex) { }
+
+		try
+		{
+			Econ.setup();
+		} catch (Throwable ex) { }
+
+		try
+		{
+			LWCFeatures.setup();
+		} catch (Throwable ex) { }
+
+		if (Conf.worldGuardChecking)
+		{
+			try
+			{
+				WorldGuard.init(this);
+			} catch (Throwable ex) { }
 		}
 	}
 

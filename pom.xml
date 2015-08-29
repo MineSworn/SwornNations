@@ -8,7 +8,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.number>LOCAL</project.build.number>
+    <project.build.number></project.build.number>
   </properties>
 
   <repositories>
@@ -26,7 +26,7 @@
     </repository>
     <repository>
       <id>vault-repo</id>
-      <url>http://nexus.theyeticave.net/content/groups/public/</url>
+      <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
     </repository>
     <repository>
       <id>mcstats-repo</id>
@@ -54,7 +54,7 @@
         </property>
       </activation>
       <properties>
-        <project.build.number>${env.BUILD_NUMBER}</project.build.number>
+        <project.build.number>-b${env.BUILD_NUMBER}</project.build.number>
       </properties>
     </profile>
   </profiles>
@@ -85,6 +85,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>2.3</version>
+        <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+          <minimizeJar>true</minimizeJar>
+        </configuration>
         <executions>
           <execution>
             <phase>package</phase>
@@ -139,7 +143,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>0.12.0</version>
+      <version>1.16.4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -150,22 +154,27 @@
     <dependency>
       <groupId>net.milkbowl.vault</groupId>
       <artifactId>Vault</artifactId>
-      <version>1.5.0</version>
+      <version>1.5.6</version>
     </dependency>
     <dependency>
-      <groupId>com.sk89q</groupId>
-      <artifactId>worldedit</artifactId>
-      <version>6.0.0-SNAPSHOT</version>
+      <groupId>com.sk89q.worldedit</groupId>
+      <artifactId>worldedit-bukkit</artifactId>
+      <version>6.1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldguard</artifactId>
-      <version>6.0.0-SNAPSHOT</version>
+      <version>6.1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.comphenix.protocol</groupId>
+      <artifactId>ProtocolLib</artifactId>
+      <version>3.6.4</version>
     </dependency>
     <dependency>
       <groupId>com.griefcraft</groupId>
       <artifactId>lwc</artifactId>
-      <version>4.4.0-SNAPSHOT</version>
+      <version>4.5.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

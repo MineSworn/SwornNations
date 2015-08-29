@@ -17,6 +17,7 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.integration.ProtocolLibFeatures;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.types.ChatMode;
 
@@ -46,10 +47,8 @@ public class FactionsChatListener implements Listener
 		}
 	}
 
-	// This is for handling insertion of the player's faction tag and faction
-	// chat,
-	// set at highest priority to give other plugins a chance to modify chat
-	// first
+	// This is for handling insertion of the player's faction tag and faction chat,
+	// set at highest priority to give other plugins a chance to modify chat first
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
@@ -62,7 +61,7 @@ public class FactionsChatListener implements Listener
 		FPlayer me = FPlayers.i.get(talkingPlayer);
 		ChatMode chat = me.getChatMode();
 
-		// Is it a faction chat message?
+		// Handle factions chat channels
 		if (chat == ChatMode.FACTION)
 		{
 			Faction myFaction = me.getFaction();
@@ -125,6 +124,12 @@ public class FactionsChatListener implements Listener
 		// If we are not to insert it - we are done.
 		if (! Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin)
 			return;
+
+		if (Conf.chatTagHandledByProtocolLib && ProtocolLibFeatures.isEnabled())
+		{
+			ProtocolLibFeatures.addMessage(ChatColor.stripColor(eventFormat), talkingPlayer);
+			return;
+		}
 
 		if (Conf.chatTagReplaceString.isEmpty() || ! eventFormat.contains(Conf.chatTagReplaceString))
 			return;
