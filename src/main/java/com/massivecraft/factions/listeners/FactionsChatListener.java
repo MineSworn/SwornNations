@@ -17,7 +17,6 @@ import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.integration.ProtocolLibFeatures;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.types.ChatMode;
 
@@ -125,11 +124,11 @@ public class FactionsChatListener implements Listener
 		if (! Conf.chatTagEnabled || Conf.chatTagHandledByAnotherPlugin)
 			return;
 
-		if (Conf.chatTagHandledByProtocolLib && ProtocolLibFeatures.isEnabled())
+		/*if (Conf.chatTagHandledByProtocolLib && ProtocolLibFeatures.isEnabled())
 		{
 			ProtocolLibFeatures.addMessage(ChatColor.stripColor(eventFormat), talkingPlayer);
 			return;
-		}
+		}*/
 
 		if (Conf.chatTagReplaceString.isEmpty() || ! eventFormat.contains(Conf.chatTagReplaceString))
 			return;

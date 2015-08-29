@@ -48,7 +48,6 @@ import com.massivecraft.factions.cmd.MCommand;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.EssentialsFeatures;
 import com.massivecraft.factions.integration.LWCFeatures;
-import com.massivecraft.factions.integration.ProtocolLibFeatures;
 import com.massivecraft.factions.integration.WorldGuard;
 import com.massivecraft.factions.listeners.FactionsBlockListener;
 import com.massivecraft.factions.listeners.FactionsChatListener;
@@ -351,10 +350,10 @@ public class SwornNations extends SwornPlugin
 			EssentialsFeatures.setup();
 		} catch (Throwable ex) { }
 
-		try
+		/*try
 		{
 			ProtocolLibFeatures.setup();
-		} catch (Throwable ex) { }
+		} catch (Throwable ex) { }*/
 
 		try
 		{
