@@ -303,7 +303,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 	// GSON need this noarg constructor.
 	public FPlayer()
 	{
-		this.resetFactionData(false);
+		this.resetFactionData();
 		this.power = Conf.powerPlayerStarting;
 		this.lastPowerUpdateTime = System.currentTimeMillis();
 		this.lastLoginTime = System.currentTimeMillis();
@@ -321,7 +321,7 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		}
 	}
 
-	public final void resetFactionData(boolean doSpoutUpdate)
+	public final void resetFactionData()
 	{
 		// clean up any territory ownership in old faction, if there is one
 		if (Factions.i.exists(this.getFactionId()))
@@ -339,11 +339,6 @@ public class FPlayer extends PlayerEntity implements EconomyParticipator
 		this.role = Role.NORMAL;
 		this.title = "";
 		this.autoClaimFor = null;
-	}
-
-	public void resetFactionData()
-	{
-		this.resetFactionData(true);
 	}
 
 	// -------------------------------------------- //

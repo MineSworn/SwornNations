@@ -72,7 +72,6 @@ public class Conf
 
 	public static boolean chatTagEnabled = true;
 	public static transient boolean chatTagHandledByAnotherPlugin = false;
-	public static boolean chatTagHandledByProtocolLib = true;
 	public static boolean chatTagRelationColored = true;
 
 	public static String chatTagReplaceString = "[FACTION]";

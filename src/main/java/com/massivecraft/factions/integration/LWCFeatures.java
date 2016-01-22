@@ -3,6 +3,7 @@ package com.massivecraft.factions.integration;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 
+@SuppressWarnings("unused")
 public class LWCFeatures
 {
 //	private static LWC lwc;

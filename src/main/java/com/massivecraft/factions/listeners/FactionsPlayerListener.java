@@ -407,13 +407,14 @@ public class FactionsPlayerListener implements Listener
 				return true;
 
 			if (item == null)
-				return true; // Clicking with air
-
-			if (item != null)
+			{
+				// Clicking with air
+				return true;
+			}
+			else
 			{
 				if (! Conf.safeZoneDenyUseageMaterials.contains(new MyMaterial(item.getType())))
-					return true; // Item isn't one we're preventing for
-									// safezones.
+					return true; // Item isn't one we're preventing for safezones.
 			}
 
 			if (! justCheck)
@@ -717,10 +718,10 @@ public class FactionsPlayerListener implements Listener
 
 		try
 		{
-			if (me == null || me.getPlayer() == null || new FLocation(me) == null)
+			if (me.getPlayer() == null)
 				return false;
 		}
-		catch (Exception e)
+		catch (Throwable ex)
 		{
 			return false;
 		}

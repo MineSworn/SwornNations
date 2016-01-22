@@ -277,21 +277,16 @@ public abstract class FCommand extends MCommand<SwornNations>
 
 		if (name != null)
 		{
-			Faction faction = null;
+			// Try to find an exact match
+			Faction faction = Factions.i.getByTag(name);
 
-			// First we try an exact match
-			if (faction == null)
-			{
-				faction = Factions.i.getByTag(name);
-			}
-
-			// Next we match faction tags
+			// Then the next best match
 			if (faction == null)
 			{
 				faction = Factions.i.getBestTagMatch(name);
 			}
 
-			// Next we match player names
+			// Try player names
 			if (faction == null)
 			{
 				Player player = Util.matchPlayer(name);
@@ -305,7 +300,7 @@ public abstract class FCommand extends MCommand<SwornNations>
 				}
 			}
 
-			// Next we match id's
+			// Finally try ids
 			if (faction == null)
 			{
 				faction = Factions.i.getById(name);
