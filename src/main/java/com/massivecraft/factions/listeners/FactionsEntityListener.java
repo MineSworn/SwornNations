@@ -2,10 +2,8 @@ package com.massivecraft.factions.listeners;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -32,7 +30,6 @@ import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -43,8 +40,6 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
@@ -238,25 +233,10 @@ public class FactionsEntityListener implements Listener
 		}
 	}
 
-	private static final Function<? super Double, Double> ZERO = Functions.constant(-0.0);
-
-	@SuppressWarnings("deprecation") // Old Event
+	@SuppressWarnings("deprecation") // Damage event catastrophe
 	private final EntityDamageByEntityEvent getDamageEvent(Entity damager, Entity entity, DamageCause cause, double damage)
 	{
-		try
-		{
-			Map<DamageModifier, Double> modifiers = new HashMap<>();
-			modifiers.put(DamageModifier.BASE, damage);
-
-			Map<DamageModifier, Function<? super Double, Double>> functions = new HashMap<>();
-			functions.put(DamageModifier.BASE, ZERO);
-
-			return new EntityDamageByEntityEvent(damager, entity, cause, modifiers, functions);
-		}
-		catch (Throwable ex)
-		{
-			return new EntityDamageByEntityEvent(damager, entity, cause, damage);
-		}
+		return new EntityDamageByEntityEvent(damager, entity, cause, damage);
 	}
 
 	// Mainly for flaming arrows - don't want allies or people in safe zones to
