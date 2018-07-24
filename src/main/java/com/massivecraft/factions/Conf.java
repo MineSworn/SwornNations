@@ -335,38 +335,35 @@ public class Conf
 		territoryEnemyDenyCommands.add("tpa");
 
 		safeZoneProtectedMaterials.add(new MyMaterial(Material.DISPENSER));
-		safeZoneProtectedMaterials.add(new MyMaterial(Material.DIODE_BLOCK_ON));
-		safeZoneProtectedMaterials.add(new MyMaterial(Material.DIODE_BLOCK_OFF));
+		safeZoneProtectedMaterials.add(new MyMaterial(Material.REPEATER));
 
 		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.WATER_BUCKET));
 		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.LAVA_BUCKET));
 		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.BUCKET));
 		safeZoneDenyUseageMaterials.add(new MyMaterial(Material.FLINT_AND_STEEL));
 
-		ownTerritoryOnlyMaterials.add(new MyMaterial(Material.EXPLOSIVE_MINECART));
+		ownTerritoryOnlyMaterials.add(new MyMaterial(Material.TNT_MINECART));
 
-		territoryProtectedMaterials.add(new MyMaterial(Material.WOODEN_DOOR));
-		territoryProtectedMaterials.add(new MyMaterial(Material.TRAP_DOOR));
-		territoryProtectedMaterials.add(new MyMaterial(Material.FENCE_GATE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.OAK_DOOR));
+		territoryProtectedMaterials.add(new MyMaterial(Material.OAK_TRAPDOOR));
+		territoryProtectedMaterials.add(new MyMaterial(Material.OAK_FENCE_GATE));
 		territoryProtectedMaterials.add(new MyMaterial(Material.DISPENSER));
 		territoryProtectedMaterials.add(new MyMaterial(Material.CHEST));
 		territoryProtectedMaterials.add(new MyMaterial(Material.FURNACE));
-		territoryProtectedMaterials.add(new MyMaterial(Material.BURNING_FURNACE));
-		territoryProtectedMaterials.add(new MyMaterial(Material.DIODE_BLOCK_OFF));
-		territoryProtectedMaterials.add(new MyMaterial(Material.DIODE_BLOCK_ON));
+		territoryProtectedMaterials.add(new MyMaterial(Material.REPEATER));
 		territoryProtectedMaterials.add(new MyMaterial(Material.JUKEBOX));
 		territoryProtectedMaterials.add(new MyMaterial(Material.BREWING_STAND));
-		territoryProtectedMaterials.add(new MyMaterial(Material.ENCHANTMENT_TABLE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.ENCHANTING_TABLE));
 		territoryProtectedMaterials.add(new MyMaterial(Material.CAULDRON));
-		territoryProtectedMaterials.add(new MyMaterial(Material.SOIL));
-		territoryProtectedMaterials.add(new MyMaterial(Material.WOOD_PLATE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.FARMLAND));
+		territoryProtectedMaterials.add(new MyMaterial(Material.OAK_PRESSURE_PLATE));
 		territoryProtectedMaterials.add(new MyMaterial(Material.LEVER));
 		territoryProtectedMaterials.add(new MyMaterial(Material.STONE_BUTTON));
-		territoryProtectedMaterials.add(new MyMaterial(Material.STONE_PLATE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.STONE_PRESSURE_PLATE));
 		territoryProtectedMaterials.add(new MyMaterial(Material.ENDER_CHEST));
 		territoryProtectedMaterials.add(new MyMaterial(Material.TRAPPED_CHEST));
-		territoryProtectedMaterials.add(new MyMaterial(Material.IRON_PLATE));
-		territoryProtectedMaterials.add(new MyMaterial(Material.GOLD_PLATE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.HEAVY_WEIGHTED_PRESSURE_PLATE));
+		territoryProtectedMaterials.add(new MyMaterial(Material.LIGHT_WEIGHTED_PRESSURE_PLATE));
 		territoryProtectedMaterials.add(new MyMaterial(Material.DROPPER));
 		territoryProtectedMaterials.add(new MyMaterial(Material.HOPPER));
 
@@ -375,28 +372,26 @@ public class Conf
 		territoryDenyUseageMaterials.add(new MyMaterial(Material.WATER_BUCKET));
 		territoryDenyUseageMaterials.add(new MyMaterial(Material.LAVA_BUCKET));
 
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.WOODEN_DOOR));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.TRAP_DOOR));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.FENCE_GATE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.OAK_DOOR));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.OAK_TRAPDOOR));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.OAK_FENCE_GATE));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.DISPENSER));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.CHEST));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.FURNACE));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.BURNING_FURNACE));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.DIODE_BLOCK_OFF));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.DIODE_BLOCK_ON));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.REPEATER));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.JUKEBOX));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.BREWING_STAND));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.ENCHANTMENT_TABLE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.ENCHANTING_TABLE));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.CAULDRON));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.SOIL));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.WOOD_PLATE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.FARMLAND));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.OAK_PRESSURE_PLATE));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.LEVER));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.STONE_BUTTON));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.STONE_PLATE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.STONE_PRESSURE_PLATE));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.ENDER_CHEST));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.TRAPPED_CHEST));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.IRON_PLATE));
-		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.GOLD_PLATE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.HEAVY_WEIGHTED_PRESSURE_PLATE));
+		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.LIGHT_WEIGHTED_PRESSURE_PLATE));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.DROPPER));
 		territoryProtectedMaterialsWhenOffline.add(new MyMaterial(Material.HOPPER));
 

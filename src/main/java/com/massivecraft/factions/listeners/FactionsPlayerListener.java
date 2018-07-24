@@ -15,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Powerable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -305,7 +306,7 @@ public class FactionsPlayerListener implements Listener
 			return;
 		}
 
-		if (block.getType() == Material.BED_BLOCK && Conf.playerHomesEnabled)
+		if (block.getType().name().contains("BED") && Conf.playerHomesEnabled)
 		{
 			if (Board.getFactionAt(new FLocation(block)) != fme.getFaction())
 				return;
@@ -525,7 +526,7 @@ public class FactionsPlayerListener implements Listener
 			if (block != null)
 			{
 				if (! justCheck)
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.SOIL ? "trample" : "use",
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.FARMLAND ? "trample" : "use",
 							otherFaction.getTag(myFaction));
 			}
 			return false;
@@ -537,17 +538,16 @@ public class FactionsPlayerListener implements Listener
 			{
 				if (! me.getFaction().playerHasPermission(me, NPermission.CHEST))
 				{
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.SOIL ? "trample" : "use",
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.FARMLAND ? "trample" : "use",
 							otherFaction.getTag(myFaction));
 					return false;
 				}
 			}
-			if (block.getType() == Material.LEVER || block.getType() == Material.STONE_BUTTON || block.getType() == Material.STONE_PLATE
-					|| block.getType() == Material.WOOD_PLATE)
+			if (block.getBlockData() instanceof Powerable)
 			{
 				if (! me.getFaction().playerHasPermission(me, NPermission.SWITCH))
 				{
-					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.SOIL ? "trample" : "use",
+					me.msg("<b>You can't %s this in the territory of <h>%s<b>.", block.getType() == Material.FARMLAND ? "trample" : "use",
 							otherFaction.getTag(myFaction));
 					return false;
 				}
