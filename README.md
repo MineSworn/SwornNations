@@ -14,6 +14,11 @@ The goal of the SwornFactions fork is to add extra functionality to the
 original plugin and continue support of the 1.6 branch of Factions for future
 Minecraft updates.
 
+Compiling
+---------
+
+SwornNations is compiled using [Maven](https://maven.apache.org/) and Java 8. To compile, run `mvn install`.
+
 Usage
 ---------
 

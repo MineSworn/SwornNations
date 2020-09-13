@@ -1,10 +1,19 @@
 package com.massivecraft.factions.integration;
 
-import static com.sk89q.worldguard.bukkit.BukkitUtil.toVector;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.internal.platform.WorldGuardPlatform;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import net.dmulloy2.swornnations.SwornNations;
 
@@ -13,15 +22,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
  * WorldGuard region checking
@@ -35,7 +35,7 @@ public class WorldGuard
 	public static void init(Plugin plugin)
 	{
 		Plugin wgplug = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-		if (wgplug == null || ! (wgplug instanceof WorldGuardPlugin))
+		if (!(wgplug instanceof WorldGuardPlugin))
 		{
 			enabled = false;
 			wg = null;
@@ -69,11 +69,13 @@ public class WorldGuard
 
 		Location loc = player.getLocation();
 		World world = loc.getWorld();
-		Vector pt = toVector(loc);
+		BlockVector3 pt = BlockVector3.at(loc.getX(), loc.getY(), loc.getZ());
 
-		RegionManager regionManager = wg.getRegionManager(world);
+		WorldGuardPlatform platform = com.sk89q.worldguard.WorldGuard.getInstance().getPlatform();
+		RegionManager regionManager = platform.getRegionContainer().get(BukkitAdapter.adapt(world));
 		ApplicableRegionSet set = regionManager.getApplicableRegions(pt);
-		return set.allows(DefaultFlag.PVP);
+
+		return set.queryValue(wg.wrapPlayer(player), Flags.PVP) == StateFlag.State.ALLOW;
 	}
 
 	// Check for Regions in chunk the chunk
@@ -95,13 +97,14 @@ public class WorldGuard
 		int maxChunkX = minChunkX + 15;
 		int maxChunkZ = minChunkZ + 15;
 
-		int worldHeight = world.getMaxHeight(); // Allow for heights other than
-												// default
+		int worldHeight = world.getMaxHeight(); // Allow for heights other than default
 
-		BlockVector minChunk = new BlockVector(minChunkX, 0, minChunkZ);
-		BlockVector maxChunk = new BlockVector(maxChunkX, worldHeight, maxChunkZ);
+		BlockVector3 minChunk = BlockVector3.at(minChunkX, 0, minChunkZ);
+		BlockVector3 maxChunk = BlockVector3.at(maxChunkX, worldHeight, maxChunkZ);
 
-		RegionManager regionManager = wg.getRegionManager(world);
+		WorldGuardPlatform platform = com.sk89q.worldguard.WorldGuard.getInstance().getPlatform();
+		RegionManager regionManager = platform.getRegionContainer().get(BukkitAdapter.adapt(world));
+
 		ProtectedCuboidRegion region = new ProtectedCuboidRegion("wgfactionoverlapcheck", minChunk, maxChunk);
 		Map<String, ProtectedRegion> allregions = regionManager.getRegions();
 		List<ProtectedRegion> allregionslist = new ArrayList<ProtectedRegion>(allregions.values());
@@ -111,11 +114,7 @@ public class WorldGuard
 		try
 		{
 			overlaps = region.getIntersectingRegions(allregionslist);
-			if (overlaps == null || overlaps.isEmpty())
-			{
-				foundregions = false;
-			}
-			else
+			if (overlaps != null && !overlaps.isEmpty())
 			{
 				foundregions = true;
 			}
@@ -124,10 +123,6 @@ public class WorldGuard
 		{
 			ex.printStackTrace();
 		}
-
-		region = null;
-		allregionslist = null;
-		overlaps = null;
 
 		return foundregions;
 	}
